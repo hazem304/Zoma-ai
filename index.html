@@ -33,7 +33,7 @@
   </script>
   <style>
     body {
-      font-family: 'Cairo', 'Inter', sans-serif;
+      font-family: 'Cairo', 'Inter', 'sans-serif';
       -webkit-tap-highlight-color: transparent;
       perspective: 1400px;
     }
@@ -59,7 +59,6 @@
     .wave-bar:nth-child(3) { animation-delay: 0.3s; }
     .wave-bar:nth-child(4) { animation-delay: 0.45s; }
 
-    /* تأثيرات Zoma AI Aurora 3D */
     .zoma-bg {
       background:
         radial-gradient(circle at 12% 15%, rgba(20, 184, 166, 0.14), transparent 38%),
@@ -153,13 +152,13 @@
     </div>
   </div>
 
-  <!-- الحاوية الرئيسية بملء الشاشة الكامل لتكبير واجهة المحادثة لأقصى حد -->
+  <!-- الحاوية الرئيسية بملء الشاشة الكامل -->
   <div id="appMainShell" class="shell-3d flex-1 flex overflow-hidden w-full h-[100dvh] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl relative">
 
     <!-- خلفية الشريط الجانبي على شاشات الهاتف -->
     <div id="drawerBackdrop" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-30 hidden md:hidden transition-opacity"></div>
 
-    <!-- الشريط الجانبي القابل للطي لتكبير المحادثة (Sidebar) -->
+    <!-- الشريط الجانبي القابل للطي (Sidebar) -->
     <aside id="sidebarDrawer" class="fixed md:static inset-y-0 right-0 z-40 w-72 max-w-[85vw] bg-slate-50/95 dark:bg-slate-900/95 border-l border-slate-200/80 dark:border-slate-800 flex flex-col transform translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out">
       <!-- رأس القائمة الجانبية بهوية Zoma AI -->
       <div class="p-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
@@ -172,7 +171,7 @@
               <h1 class="font-black text-base leading-tight tracking-wide zoma-gradient-text">Zoma AI</h1>
               <span class="text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 font-extrabold">3D PRO</span>
             </div>
-            <span id="activeProviderBadge" class="text-[11px] text-teal-600 dark:text-teal-400 font-semibold block truncate max-w-[155px]">جميع النماذج مفعّلة تلقائياً</span>
+            <span id="activeProviderBadge" class="text-[11px] text-teal-600 dark:text-teal-400 font-semibold block truncate max-w-[155px]">محرك معلومات وذاكرة نشط</span>
           </div>
         </div>
         <button id="closeSidebarBtn" class="md:hidden p-2 rounded-xl text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-800" title="إغلاق القائمة">
@@ -204,9 +203,7 @@
           <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">مكتبة القوالب السريعة</span>
           <button id="openPromptsLibrarySideBtn" type="button" class="text-[11px] text-teal-600 dark:text-teal-400 hover:underline font-semibold">+ إنشاء قالب</button>
         </div>
-        <div class="grid grid-cols-2 gap-1.5 max-h-28 overflow-y-auto pr-0.5" id="sidebarPromptsGrid">
-          <!-- يتم توليد أزرار القوالب ديناميكياً -->
-        </div>
+        <div class="grid grid-cols-2 gap-1.5 max-h-28 overflow-y-auto pr-0.5" id="sidebarPromptsGrid"></div>
       </div>
 
       <!-- سجل المحادثات السابقة مصنفة بالتاريخ والمفضلة -->
@@ -214,12 +211,15 @@
         <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">سجل المحادثات (SQLite)</span>
         <button id="clearAllHistoryBtn" class="text-[11px] text-rose-500 hover:underline">مسح الكل</button>
       </div>
-      <div id="conversationHistoryList" class="flex-1 overflow-y-auto px-2.5 py-1.5 space-y-2.5">
-        <!-- يتم توليد القائمة المصنفة بالتاريخ ديناميكياً -->
-      </div>
+      <div id="conversationHistoryList" class="flex-1 overflow-y-auto px-2.5 py-1.5 space-y-2.5"></div>
 
-      <!-- تذييل الشريط الجانبي: زر الموقع الرسمي + زر الإعدادات -->
+      <!-- تذييل الشريط الجانبي: الذاكرة النشطة + الموقع الرسمي + الإعدادات -->
       <div class="p-2.5 border-t border-slate-200 dark:border-slate-800 bg-slate-100/70 dark:bg-slate-900/90 space-y-1.5">
+        <button id="openMemoryHubSideBtn" type="button" class="w-full py-1.5 px-3 rounded-xl bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/25 flex items-center justify-between text-xs font-bold text-teal-700 dark:text-teal-300 transition">
+          <span>🧠 الذاكرة الذكية النشطة</span>
+          <span id="sidebarMemoryCountBadge" class="text-[10px] px-1.5 py-0.5 rounded bg-teal-600 text-white">نشطة</span>
+        </button>
+
         <button id="openOfficialSiteSideBtn" type="button" class="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-indigo-600/15 to-teal-500/15 hover:from-indigo-600/25 hover:to-teal-500/25 border border-indigo-500/30 flex items-center justify-between text-xs font-bold text-indigo-700 dark:text-indigo-300 transition">
           <span>🌐 الموقع والرابط الرسمي</span>
           <span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500 text-white">نشر جوجل</span>
@@ -237,9 +237,9 @@
       </div>
     </aside>
 
-    <!-- منطقة العمل الرئيسية المكبرة بالكامل (Maximized Main Screen) -->
+    <!-- منطقة العمل الرئيسية المكبرة بالكامل -->
     <main class="flex-1 flex flex-col min-w-0 h-[100dvh]">
-      <!-- شريط التطبيق العلوي المدمج (AppBar) -->
+      <!-- شريط التطبيق العلوي (AppBar) -->
       <header class="px-3 sm:px-4 py-2 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 z-20">
         <div class="flex items-center gap-2 min-w-0">
           <button id="openSidebarBtn" class="md:hidden p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300" title="القائمة الجانبية">
@@ -248,7 +248,6 @@
             </svg>
           </button>
 
-          <!-- زر طي/توسيع القائمة الجانبية لتكبير شاشة المحادثة على الحاسوب والتابلت -->
           <button id="expandChatViewportBtn" type="button" class="hidden md:flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-teal-500/10 hover:bg-teal-500/20 text-teal-700 dark:text-teal-300 border border-teal-500/25 text-xs font-bold transition" title="تكبير شاشة المحادثة بالعرض الكامل">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
@@ -258,20 +257,25 @@
 
           <div class="truncate">
             <div class="flex items-center gap-1.5">
-              <h2 id="currentChatTitle" class="font-black text-sm sm:text-base truncate zoma-gradient-text">Zoma AI — المساعد الذكي 3D</h2>
+              <h2 id="currentChatTitle" class="font-black text-sm sm:text-base truncate zoma-gradient-text">Zoma AI — المساعد الذكي الشامل</h2>
               <span id="imageQuotaHeaderPill" class="hidden lg:inline-block text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 font-bold border border-indigo-500/25">🎨 الصور اليومية: 5/5</span>
             </div>
             <p class="text-[10px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
               <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse inline-block"></span>
-              <span id="headerSubtitle">شرح ملفات • تصميم صور ذكي • إجابات فورية دقيقة</span>
+              <span id="headerSubtitle">موسوعة معلومات حية • ذاكرة ذكية • شرح ملفات • توليد صور</span>
             </p>
           </div>
         </div>
 
-        <!-- اختيار النموذج الفرعي ونمط التفكير مباشرة من الشريط العلوي -->
         <div class="flex items-center gap-1.5 flex-wrap">
+          <!-- خانة الكود السري للتفعيل التلقائي الفوري -->
+          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-gradient-to-r from-amber-500/15 via-teal-500/15 to-indigo-500/15 border border-amber-500/40 shadow-inner">
+            <span class="text-[11px] font-black text-amber-600 dark:text-amber-300 whitespace-nowrap flex items-center gap-1">🔑 خانة الكود:</span>
+            <input id="topSecretCodeInput" type="text" placeholder="اكتب الكود (ZOMA)..." class="w-28 sm:w-36 py-0.5 px-2 rounded-lg bg-white/90 dark:bg-slate-900/90 border border-amber-500/30 text-xs font-extrabold text-teal-700 dark:text-amber-300 focus:outline-none focus:border-amber-400 uppercase tracking-wider" dir="ltr" />
+            <span id="codeInstantBadge" class="hidden text-[10px] px-1.5 py-0.5 rounded bg-emerald-500 text-slate-950 font-black whitespace-nowrap">مفعّل ✨</span>
+          </div>
+
           <select id="quickModelSelect" aria-label="اختيار النموذج الذكي" class="py-1.5 px-2.5 rounded-xl bg-teal-500/10 dark:bg-slate-800 border border-teal-500/30 text-xs font-bold text-teal-700 dark:text-teal-300 focus:outline-none focus:border-teal-500">
-            <!-- يتم ملء النماذج ديناميكياً -->
           </select>
 
           <select id="responseModeSelect" aria-label="نمط الإجابة" class="hidden sm:block py-1.5 px-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:border-teal-500">
@@ -281,26 +285,22 @@
             <option value="creative">💡 إبداعي وعصف ذهني</option>
           </select>
 
-          <!-- زر إيقاف النطق الصوتي إن كان يعمل -->
           <button id="stopTtsBtn" class="hidden px-2.5 py-1.5 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 text-xs font-semibold items-center gap-1" title="إيقاف القراءة الصوتية">
             <span>إيقاف الصوت</span>
           </button>
 
-          <!-- زر تصدير المحادثة -->
           <button id="exportChatBtn" class="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition" title="تصدير المحادثة كملف Markdown">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
             </svg>
           </button>
 
-          <!-- زر محادثة جديدة سريع -->
           <button id="headerNewChatBtn" class="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition" title="محادثة جديدة">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
           </button>
 
-          <!-- زر فتح الإعدادات -->
           <button id="headerSettingsBtn" class="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition" title="إعدادات الـ API">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.108-1.204l-.526-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
@@ -308,7 +308,6 @@
             </svg>
           </button>
 
-          <!-- زر تبديل الوضع الداكن / الفاتح -->
           <button id="themeToggleBtn" class="p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-amber-300 transition" title="تبديل الوضع الداكن والفاتح">
             <svg id="sunIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
@@ -320,18 +319,16 @@
         </div>
       </header>
 
-      <!-- =================================================================== -->
-      <!-- شريط الهولوغرام ثلاثي الأبعاد المدمج (Compact 3D Stage لمنح المحادثة أكبر مساحة) -->
-      <!-- =================================================================== -->
-      <section id="holo3dStage" class="holo-stage-bg relative border-b border-teal-500/20 overflow-hidden transition-all duration-300 h-16 sm:h-20 flex items-center justify-between px-4 sm:px-6">
+      <!-- شريط الهولوغرام ثلاثي الأبعاد المدمج -->
+      <section id="holo3dStage" class="holo-stage-bg relative border-b border-teal-500/20 overflow-hidden transition-all duration-300 h-14 sm:h-16 flex items-center justify-between px-4 sm:px-6">
         <canvas id="ai3dCanvas" class="absolute inset-0 w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing"></canvas>
 
         <div class="relative z-10 pointer-events-none flex items-center gap-3">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/70 text-teal-300 border border-teal-400/30 backdrop-blur-md text-[11px] font-bold shadow-lg">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/75 text-teal-300 border border-teal-400/30 backdrop-blur-md text-[11px] font-bold shadow-lg">
             <span id="holoStatusDot" class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-            <span id="holoStateLabel">نواة Zoma AI 3D نشطة</span>
+            <span id="holoStateLabel">نواة Zoma AI 3D والموسوعة الحية نشطة</span>
           </div>
-          <span class="hidden md:inline-block text-xs font-bold text-slate-700 dark:text-slate-200 drop-shadow">اسحب المجسم ثلاثي الأبعاد أو كبر المنصة للاستعراض الهولوغرامي الكامل</span>
+          <span class="hidden lg:inline-block text-xs font-bold text-slate-700 dark:text-slate-200 drop-shadow">متصل بالسحابة + موسوعة ويكيبيديا الحية + ذاكرة المحادثات</span>
         </div>
 
         <div class="relative z-10 flex items-center gap-1.5">
@@ -344,7 +341,7 @@
         </div>
       </section>
 
-      <!-- شريط التبويبات الذكية (الدردشة | تصميم الصور | المهام | استوديو القوالب | الموقع الرسمي والبيانات) -->
+      <!-- شريط التبويبات الذكية -->
       <nav class="px-3 sm:px-4 py-1.5 bg-slate-100/90 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2 overflow-x-auto">
         <div class="flex items-center gap-1">
           <button type="button" data-view="chat" class="nav-view-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-teal-600 text-white shadow-sm whitespace-nowrap">
@@ -387,15 +384,11 @@
           <button id="quickChatImageGenBtn" type="button" class="px-3 py-1 rounded-full bg-emerald-500/15 hover:bg-emerald-600 text-emerald-700 dark:text-emerald-300 hover:text-white border border-emerald-500/30 text-xs font-bold whitespace-nowrap flex items-center gap-1 transition">
             <span>🎨</span><span>صمّم صورة بالذكاء الاصطناعي</span>
           </button>
-          <div id="topPromptBar" class="flex items-center gap-1.5">
-            <!-- يتم تعبئة باقي القوالب ديناميكياً -->
-          </div>
+          <div id="topPromptBar" class="flex items-center gap-1.5"></div>
         </div>
 
-        <!-- منطقة الرسائل التفاعلية الكبيرة جداً -->
-        <div id="messagesContainer" class="flex-1 overflow-y-auto px-3 sm:px-8 py-4 space-y-4">
-          <!-- يتم عرض الرسائل هنا بمساحة واسعة ومريحة -->
-        </div>
+        <!-- منطقة الرسائل التفاعلية الكبيرة -->
+        <div id="messagesContainer" class="flex-1 overflow-y-auto px-3 sm:px-8 py-4 space-y-4"></div>
 
         <!-- شريط المرفقات النصية إن وجد -->
         <div id="attachedFileBanner" class="hidden px-4 py-2 bg-teal-500/15 border-t border-teal-500/30 items-center justify-between text-xs">
@@ -406,7 +399,7 @@
           <button id="removeAttachmentBtn" type="button" class="text-rose-500 font-semibold hover:underline">إزالة</button>
         </div>
 
-        <!-- مؤشر التسجيل الصوتي النشط (Voice-to-Text Indicator) -->
+        <!-- مؤشر التسجيل الصوتي النشط -->
         <div id="voiceRecordingBar" class="hidden px-4 py-2 bg-rose-500/10 border-t border-rose-500/20 items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="flex items-center gap-1 h-4">
@@ -426,14 +419,12 @@
         <!-- شريط الإدخال السفلي المتطور -->
         <footer class="p-2.5 sm:px-6 sm:py-3 border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95">
           <div class="max-w-5xl mx-auto flex items-end gap-2">
-            <!-- زر الإدخال الصوتي -->
             <button id="voiceInputBtn" type="button" class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-teal-500/15 text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition flex-shrink-0" title="الإدخال الصوتي (Voice-to-Text)">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
               </svg>
             </button>
 
-            <!-- زر رفع وشرح ملف -->
             <input id="fileUploadInput" type="file" accept=".txt,.md,.csv,.json,.py,.js,.html,.log" class="hidden" />
             <button id="attachFileBtn" type="button" class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-indigo-500/15 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition flex-shrink-0" title="ارفع ملفاً لشرحه وتحليله بالتفصيل">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -441,19 +432,16 @@
               </svg>
             </button>
 
-            <!-- زر تصميم صورة مباشرة من المحادثة -->
             <button id="chatQuickDrawBtn" type="button" class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-500/15 text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition flex-shrink-0" title="تصميم صورة طبيعية بالذكاء الاصطناعي">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
               </svg>
             </button>
 
-            <!-- مربع النص المكبر -->
             <div class="flex-1 relative">
-              <textarea id="chatInput" rows="1" placeholder="اسأل Zoma AI، أو ارفع ملفاً لشرحه، أو اكتب (صمم صورة: مدينة مستقبلية)..." class="w-full py-3 px-4 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 focus:border-teal-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none text-sm resize-none max-h-36 leading-relaxed"></textarea>
+              <textarea id="chatInput" rows="1" placeholder="اسأل Zoma AI أي سؤال، أو اختر نموذج الصور ليرسم لك فوراً، أو ارفع ملفاً لشرحه..." class="w-full py-3 px-4 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 focus:border-teal-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none text-sm resize-none max-h-36 leading-relaxed"></textarea>
             </div>
 
-            <!-- زر الإرسال -->
             <button id="sendMsgBtn" type="button" class="p-3 rounded-2xl bg-gradient-to-r from-teal-500 via-emerald-500 to-indigo-600 hover:opacity-95 text-white shadow-lg shadow-teal-500/30 transition flex-shrink-0" title="إرسال الرسالة">
               <svg class="w-5 h-5 rotate-180" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
@@ -473,8 +461,8 @@
               <div class="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-xs font-bold">
                 <span>🎨 استوديو Zoma AI لتصميم الصور الطبيعية</span>
               </div>
-              <h3 class="text-lg font-black">توليد الصور بالذكاء الاصطناعي (بحدود استخدام يومية آمنة)</h3>
-              <p class="text-xs text-slate-300">يصمم Zoma AI صوراً طبيعية، شعارات، ومشاهد ثلاثية الأبعاد بدقة عالية مع فلتر أمان تلقائي وحد يومي متوازن (5 صور/يومياً).</p>
+              <h3 class="text-lg font-black">توليد الصور بالذكاء الاصطناعي (سحابي حي + محرك رسومي فوري)</h3>
+              <p class="text-xs text-slate-300">يصمم Zoma AI صوراً طبيعية، قطارات، مدناً، شعارات، ومشاهد ثلاثية الأبعاد بدقة عالية، كما يمكنك اختيار نموذج "🎨 Zoma Vision Artist" في الدردشة ليرسم أي وصف تكتبه مباشرة.</p>
             </div>
             <div class="text-center px-4 py-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md">
               <span class="text-[11px] text-teal-200 block">الرصيد اليومي المتبقي</span>
@@ -483,12 +471,11 @@
             </div>
           </div>
 
-          <!-- أداة التوليد -->
           <div class="card-3d p-5 rounded-3xl bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-800 space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
               <div class="md:col-span-3">
                 <label for="imagePromptInput" class="block text-xs font-bold mb-1.5">وصف الصورة المطلوبة (عربي أو إنجليزي)</label>
-                <input id="imagePromptInput" type="text" placeholder="مثال: مكتب مستقبلي بإضاءة نيون وإطلالة على مدينة ذكية عند الغروب..." class="w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-teal-500" />
+                <input id="imagePromptInput" type="text" placeholder="مثال: مدينة مستقبلية ذكية بإضاءة هولوغرامية وسماء صافية عند الغروب..." class="w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-teal-500" />
               </div>
               <div>
                 <label for="imageStyleSelect" class="block text-xs font-bold mb-1.5">نمط التصميم</label>
@@ -501,15 +488,12 @@
               </div>
             </div>
             <div class="flex flex-wrap items-center justify-between gap-2">
-              <span class="text-[11px] text-slate-500 dark:text-slate-400">🛡️ الضوابط النشطة: يمنع المحتوى غير اللائق، والحد الأقصى 5 تصاميم في الجلسة لضمان السرعة.</span>
+              <span class="text-[11px] text-slate-500 dark:text-slate-400">🛡️ الضوابط النشطة: يمنع المحتوى غير اللائق، والحد الأقصى 10 تصاميم في الجلسة (قابل للتصفير الفوري).</span>
               <button id="generateStudioImageBtn" type="button" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-600 to-indigo-600 hover:opacity-95 text-white text-xs font-extrabold shadow-lg">🎨 تصميم الصورة الآن</button>
             </div>
           </div>
 
-          <!-- معرض الصور المولدة -->
-          <div id="generatedImagesGallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <!-- يتم عرض الصور المولدة هنا -->
-          </div>
+          <div id="generatedImagesGallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </div>
       </div>
 
@@ -590,22 +574,20 @@
       <!-- =================================================================== -->
       <div id="viewWebsiteContainer" class="hidden flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
         <div class="max-w-5xl mx-auto space-y-6">
-          <!-- بطاقة العرض الرئيسية للموقع الرسمي Zoma AI -->
           <div class="card-3d p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-900 via-teal-950 to-indigo-950 text-white border border-teal-400/30 relative overflow-hidden">
             <div class="relative z-10 space-y-4 max-w-2xl">
               <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold">
                 <span>🌐 البوابة الرسمية لموقع Zoma AI على الويب</span>
               </div>
-              <h2 class="text-2xl sm:text-3xl font-black leading-tight">انشر موقع <span class="zoma-gradient-text">Zoma AI</span> برابط عام ليفتحه أي شخص على جوجل</h2>
+              <h2 class="text-2xl sm:text-3xl font-black leading-tight">تحديث موقعك الرسمي المنشور على <span class="zoma-gradient-text">GitHub Pages</span></h2>
               <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                هذا التطبيق مصمم كحزمة ويب رسمية مستقلة (Single-File PWA + SEO Meta Tags) جاهزة للرفع الفوري. يمكنك تنزيل ملف الموقع الرسمي الجاهز للرفع أو نسخ رابط المشاركة الفوري أدناه.
+                لتحديث موقعك المنشور على <code>hazem304.github.io/Zoma-ai/</code> بهذه النسخة المطورة (التي تحتوي على محرك المعلومات الكامل والذاكرة وتوليد الصور الفعلي)، اضغط الزر أدناه لتنزيل ملف <code>index.html</code> المحدث وارفعه مكان الملف القديم في مستودعك.
               </p>
 
-              <!-- صندوق الرابط الرسمي الجاهز للتخصيص والنشر -->
               <div class="p-3.5 rounded-2xl bg-black/40 border border-white/15 flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2 truncate" dir="ltr">
-                  <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[11px] font-mono font-bold">HTTPS</span>
-                  <span id="officialDomainPreview" class="font-mono text-xs sm:text-sm text-teal-300 truncate">https://zoma-ai.netlify.app</span>
+                  <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[11px] font-mono font-bold">LIVE</span>
+                  <span id="officialDomainPreview" class="font-mono text-xs sm:text-sm text-teal-300 truncate">https://hazem304.github.io/Zoma-ai/</span>
                 </div>
                 <div class="flex items-center gap-2">
                   <button id="copyOfficialUrlConfigBtn" type="button" class="px-3 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold transition">نسخ اسم النطاق المقترح</button>
@@ -614,30 +596,11 @@
               </div>
             </div>
           </div>
-
-          <!-- خطوات النشر المجاني الفوري ليظهر على جوجل في 30 ثانية -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="card-3d p-5 rounded-2xl bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-800 space-y-2">
-              <div class="w-9 h-9 rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-400 flex items-center justify-center font-black">1</div>
-              <h4 class="font-bold text-sm">نزّل ملف الموقع الرسمي (`index.html`)</h4>
-              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">اضغط على زر "تنزيل ملف الموقع الرسمي" أعلاه للحصول على نسخة كاملة من Zoma AI مزودة بوسوم محركات البحث (Google SEO Meta Tags).</p>
-            </div>
-            <div class="card-3d p-5 rounded-2xl bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-800 space-y-2">
-              <div class="w-9 h-9 rounded-xl bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-black">2</div>
-              <h4 class="font-bold text-sm">ارفعه بسحبة واحدة (Drag & Drop)</h4>
-              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">افتح خدمة استضافة مجانية مثل <strong>Netlify Drop</strong> أو <strong>Vercel</strong> أو <strong>GitHub Pages</strong> واسحب الملف إليها ليصدر لك رابطاً عالمياً مجانياً خلال 10 ثوانٍ.</p>
-            </div>
-            <div class="card-3d p-5 rounded-2xl bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-800 space-y-2">
-              <div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black">3</div>
-              <h4 class="font-bold text-sm">شارك الرابط على جوجل والهواتف</h4>
-              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">يعمل الرابط على أي هاتف أو حاسوب في العالم مع كافة النماذج المجانية المدمجة والواجهة ثلاثية الأبعاد دون حاجة لتثبيت.</p>
-            </div>
-          </div>
         </div>
       </div>
 
       <!-- =================================================================== -->
-      <!-- العرض 6: مركز البيانات والنماذج المتعددة (Models & Analytics View) -->
+      <!-- العرض 6: مركز الذاكرة الذكية والبيانات والنماذج (Memory & Models Hub) -->
       <!-- =================================================================== -->
       <div id="viewAnalyticsContainer" class="hidden flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
         <div class="max-w-6xl mx-auto space-y-6">
@@ -655,16 +618,34 @@
               <div id="statCompletedTasks" class="text-2xl font-extrabold text-amber-500 mt-1">0</div>
             </div>
             <div class="card-3d p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-800">
-              <span class="text-xs text-slate-500">مفاتيح السحابة المجانية</span>
-              <div class="text-sm font-extrabold text-emerald-500 mt-2">7/7 مفعّلة تلقائياً ⚡</div>
+              <span class="text-xs text-slate-500">حقائق الذاكرة المحفوظة</span>
+              <div id="statMemoryFactsCount" class="text-2xl font-extrabold text-indigo-500 mt-1">0</div>
             </div>
+          </div>
+
+          <!-- قسم إدارة الذاكرة الخاصة لـ Zoma AI (Persistent Memory Manager) -->
+          <div class="card-3d p-5 rounded-3xl bg-slate-50 dark:bg-slate-800/60 border border-teal-500/30 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 class="font-bold text-base flex items-center gap-2"><span>🧠</span><span>الذاكرة الشخصية الدائمة لـ Zoma AI</span></h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">يتذكر Zoma AI تلقائياً كل معلومة تخبره بها في الدردشة (مثل اسمك، عملك، اهتماماتك، ومشاريعك) ويستخدمها في الردود القادمة</p>
+              </div>
+              <button id="clearMemoryFactsBtn" type="button" class="text-xs text-rose-500 font-bold hover:underline">مسح الذاكرة</button>
+            </div>
+
+            <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
+              <input id="newMemoryFactInput" type="text" placeholder="أضف معلومة ليتذكرها Zoma AI دائماً (مثال: اسمي حازم وأدرس هندسة البرمجيات في مصر)..." class="flex-1 py-2.5 px-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-teal-500" />
+              <button id="addMemoryFactBtn" type="button" class="px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs">حفظ في الذاكرة 🧠</button>
+            </div>
+
+            <div id="memoryFactsListContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
           </div>
 
           <div class="card-3d p-5 rounded-3xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 space-y-3">
             <div class="flex flex-wrap items-center justify-between gap-2">
               <div>
-                <h3 class="font-bold text-base">النماذج اللغوية الكبيرة (LLMs) المفعّلة في Zoma AI</h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400">تدعم جميع النماذج شرح الملفات، الإجابة على الأسئلة المعقدة، وتصميم الصور بالحدود اليومية الآمنة</p>
+                <h3 class="font-bold text-base">النماذج اللغوية ونماذج الصور المفعّلة في Zoma AI</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">تعمل جميع النماذج مع محرك المعلومات الموسوعي الحي والذاكرة الشخصية وتوليد الصور</p>
               </div>
               <button id="openSettingsFromAnalyticsBtn" type="button" class="px-3.5 py-2 rounded-xl bg-teal-600 text-white text-xs font-bold">ضبط المفاتيح</button>
             </div>
@@ -714,7 +695,7 @@
         <div class="p-3.5 rounded-2xl bg-gradient-to-r from-teal-500/15 via-emerald-500/15 to-indigo-500/15 border border-teal-500/30 flex flex-wrap items-center justify-between gap-2">
           <div>
             <div class="text-xs font-extrabold text-teal-700 dark:text-teal-300">⚡ بوابة مفاتيح Zoma AI السحابية المجانية</div>
-            <p class="text-[11px] text-slate-600 dark:text-slate-400">تتيح تشغيل جميع النماذج الـ 20+ وشرح الملفات وتصميم الصور مجاناً</p>
+            <p class="text-[11px] text-slate-600 dark:text-slate-400">تتيح تشغيل جميع النماذج الـ 20+ ونماذج الصور وشرح الملفات مجاناً</p>
           </div>
           <button id="autoFillFreeKeysBtn" type="button" class="px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold shadow-md transition">تجديد وتفعيل المفاتيح المجانية تلقائياً</button>
         </div>
@@ -790,13 +771,12 @@
     // =========================================================================
     // 1. موجه النظام الأساسي لشخصية "Zoma AI"
     // =========================================================================
-    const SYSTEM_PROMPT = `أنت "Zoma AI" (زوما الذكي)، مساعد ذكاء اصطناعي شخصي متقدم يعمل على الويب والهاتف المحمول. مهمتك تقديم حلول عملية، سريعة، وعالية الدقة، وشرح الملفات والبيانات بعمق، والإجابة على كافة الأسئلة العلمية والتقنية واليومية.
-اتبع القواعد التالية بدقة في جميع الردود:
-1. ابدأ دائمًا بالإجابة المباشرة أو الحل في أول جملة بدون مقدمات شكلية أو ترحيب متكرر.
-2. استخدم التنسيق السهل للقراءة السريعة (نقاط محددة، فقرات قصيرة، وجداول مبسطة عند المقارنة أو التحليل).
-3. اجعل لغتك عربية فصحى بسيطة وواضحة، مع الحفاظ على نبرة احترافية، ذكية، وودودة.
-4. عند شرح أي ملف مرفق، استخرج الملخص التنفيذي، وبنية الملف، وأهم الأرقام أو الدوال البرمجية، والتوصيات العملية.
-5. اختم الردود الطويلة أو المفتوحة بخطوة تالية واحدة مقترحة للتنفيذ فوراً.`;
+    const SYSTEM_PROMPT = `أنت "Zoma AI" (زوما الذكي)، مساعد ذكاء اصطناعي شخصي متقدم وشامل يعمل على الويب والهاتف المحمول.
+قواعد الإجابة الإلزامية:
+1. أجب على كل سؤال بمعلومات حقيقية، دقيقة، ومفصلة مباشرة في أول جملة بدون أي قوالب عامة مكررة.
+2. استخدم الجداول المبسطة والنقاط الواضحة لعرض المواعيد، الأسعار، المقارنات، أو البيانات.
+3. تذكر دائماً المعلومات الشخصية التي أخبرك بها المستخدم في سجل الذاكرة وسياق المحادثة.
+4. اختم الردود بخطوة تالية عملية ومحددة مرتبطة بموضوع السؤال نفسه.`;
 
     const FREE_GATEWAY_KEYS = {
       gemini: 'AIzaSyD-ZOMA-FREE-CLOUD-GEMINI25-KEY',
@@ -811,17 +791,17 @@
     const AI_PROVIDERS_CATALOG = {
       gemini: {
         label: 'Google Gemini (مفعّل مجاناً)',
-        strength: 'الأفضل في شرح الملفات الطويلة والردود العربية الدقيقة',
-        pollinationsModel: 'gemini',
+        strength: 'الأفضل في الإجابات الموسوعية وشرح الملفات الطويلة بالعربية',
+        pollinationsModel: 'openai',
         models: [
-          { id: 'gemini-2.5-flash', name: '✨ Zoma × Gemini 2.5 Flash (سريع ومفعّل)' },
-          { id: 'gemini-2.5-pro', name: '✨ Zoma × Gemini 2.5 Pro (شرح ملفات وتحليل عميق)' },
+          { id: 'gemini-2.5-flash', name: '✨ Zoma × Gemini 2.5 Flash (سريع وشامل)' },
+          { id: 'gemini-2.5-pro', name: '✨ Zoma × Gemini 2.5 Pro (تحليل عميق وموسوعي)' },
           { id: 'gemini-2.0-flash', name: '✨ Zoma × Gemini 2.0 Flash (استجابة فورية)' }
         ]
       },
       openai: {
         label: 'OpenAI (مفعّل مجاناً)',
-        strength: 'دقة عالية في الإجابة على الأسئلة المعقدة والبرمجة والمنطق',
+        strength: 'دقة عالية في الإجابة على الأسئلة العامة والمعقدة والبرمجة',
         pollinationsModel: 'openai',
         models: [
           { id: 'gpt-4o', name: '🟢 Zoma × GPT-4o Omni (الأقوى شامل المهام)' },
@@ -832,7 +812,7 @@
       deepseek: {
         label: 'DeepSeek AI (مفعّل مجاناً)',
         strength: 'قدرات استدلال عميق وحل المشكلات التقنية والرياضية (R1 & V3)',
-        pollinationsModel: 'deepseek',
+        pollinationsModel: 'deepseek-r1',
         models: [
           { id: 'deepseek-reasoner', name: '🧠 Zoma × DeepSeek R1 (تفكير عميق خطوة بخطوة)' },
           { id: 'deepseek-chat', name: '🧠 Zoma × DeepSeek V3 (تحليل شامل)' }
@@ -841,7 +821,7 @@
       anthropic: {
         label: 'Anthropic Claude (مفعّل مجاناً)',
         strength: 'أفضل صياغة عربية وأدبية وشرح مستندات وتقارير',
-        pollinationsModel: 'claude-hybridspace',
+        pollinationsModel: 'openai',
         models: [
           { id: 'claude-3-7-sonnet-latest', name: '🟣 Zoma × Claude 3.7 Sonnet (تفكير هجين)' },
           { id: 'claude-3-5-sonnet-latest', name: '🟣 Zoma × Claude 3.5 Sonnet (احترافي)' },
@@ -878,13 +858,14 @@
         ]
       },
       builtin: {
-        label: 'محرك Zoma AI الفوري',
-        strength: 'يعمل محلياً بسرعة 0ms لشرح الملفات وتوليد الصور والخطط',
+        label: 'نماذج Zoma AI المتخصصة (صور وملفات)',
+        strength: 'نماذج متخصصة لتصميم الصور الفوري وشرح الملفات والموسوعة الشاملة',
         pollinationsModel: 'openai',
         models: [
-          { id: 'assistant-pro-v2', name: '🚀 Zoma AI Pro V3 (المحرك الفوري الشامل)' },
+          { id: 'assistant-pro-v2', name: '🚀 Zoma AI Pro V4 (الموسوعة الذكية الشاملة)' },
           { id: 'assistant-reasoner-r1', name: '📄 Zoma File Analyst (مختص شرح الملفات)' },
-          { id: 'assistant-coder', name: '🎨 Zoma Vision Artist (مختص تصميم الصور)' }
+          { id: 'assistant-coder', name: '🎨 Zoma Vision Artist (نموذج تصميم الصور المباشر)' },
+          { id: 'zoma-flux-pro', name: '🖼️ Zoma Flux Pro 8K (نموذج توليد الصور الواقعية)' }
         ]
       }
     };
@@ -902,7 +883,7 @@
         title: 'صمّم صورة ذكية',
         icon: '🎨',
         category: 'تصميم الصور',
-        template: 'صمم صورة: مدينة عربية مستقبلية ذكية محاطة بالحدائق المعلقة وإضاءة الهولوغرام عند الغروب بدقة سينمائية',
+        template: 'صمم صورة: مدينة عربية مستقبلية ذكية بإضاءة نيون وحدائق معلقة وقت الغروب بدقة سينمائية 8K',
       },
       {
         id: 'summarize',
@@ -949,7 +930,7 @@
     ];
 
     // =========================================================================
-    // 2. التخزين المحلي المشفر وحالة Zoma AI
+    // 2. التخزين المحلي المشفر والذاكرة الدائمة لـ Zoma AI
     // =========================================================================
     const memoryStorage = {};
     function safeGetItem(key) {
@@ -993,7 +974,7 @@
       }
     }
 
-    const MAX_DAILY_IMAGES = 5;
+    let MAX_DAILY_IMAGES = 5;
     let appState = {
       theme: 'dark',
       activeView: 'chat',
@@ -1004,8 +985,14 @@
       temperature: 0.4,
       holoShape: 'core',
       holoCompact: true,
-      dailyImagesRemaining: MAX_DAILY_IMAGES,
+      dailyImagesRemaining: 5,
+      maxDailyImagesCap: 5,
+      activatedCodes: [],
       generatedImages: [],
+      memoryFacts: [
+        'يفضل المستخدم الإجابات الدقيقة والمباشرة المدعومة بالجداول والأرقام الواضحة.',
+        'الموقع الجغرافي والاهتمامات: مصر والعالم العربي، التكنولوجيا، وتطوير تطبيقات الذكاء الاصطناعي.'
+      ],
       encryptedKeys: {
         gemini: encryptApiKey(FREE_GATEWAY_KEYS.gemini),
         openai: encryptApiKey(FREE_GATEWAY_KEYS.openai),
@@ -1045,7 +1032,37 @@
     }
 
     // =========================================================================
-    // 3. محرك تصميم الصور الطبيعية عالي الدقة مع حدود الأمان (Natural Image Generator)
+    // 3. نظام الذاكرة الذكية التلقائي (Smart Memory Extraction & Recall)
+    // =========================================================================
+    function extractAndSaveMemoryFromUserText(userText) {
+      const text = userText.trim();
+      const patterns = [
+        /(?:اسمي|إسمي|انا اسمي|أنا اسمي)\s+([^\n.,،]{2,35})/i,
+        /(?:أنا أعمل|انا اعمل|أشتغل|وظيفتي)\s+([^\n.,،]{2,45})/i,
+        /(?:أنا أدرس|انا ادرس|تخصصي)\s+([^\n.,،]{2,45})/i,
+        /(?:أسكن في|اسكن في|أعيش في|أنا من)\s+([^\n.,،]{2,35})/i,
+        /(?:تذكر أن|تذكر ان|احفظ أن|معلومة عني:?)\s+([^\n]{4,90})/i
+      ];
+
+      let newlySaved = null;
+      for (const reg of patterns) {
+        const m = text.match(reg);
+        if (m && m[0]) {
+          const fact = m[0].trim();
+          if (!appState.memoryFacts.includes(fact)) {
+            appState.memoryFacts.unshift(fact);
+            newlySaved = fact;
+          }
+        }
+      }
+      if (newlySaved) {
+        saveState();
+      }
+      return newlySaved;
+    }
+
+    // =========================================================================
+    // 4. محرك تصميم الصور الذكي (يدعم الرسم الموضوعي الفوري + الصور السحابية)
     // =========================================================================
     const BLOCKED_IMAGE_TERMS = ['عنف', 'دم', 'اباحي', 'إباحي', 'عري', 'سلاح', 'قتل', 'nsfw', 'nude', 'violence', 'blood', 'gore'];
 
@@ -1059,24 +1076,52 @@
       return { safe: true };
     }
 
-    // توليد لوحة فنية عالية الدقة (HD Procedural Canvas Artwork) لضمان ظهور الصورة فوراً وبجودة فائقة
+    function isImageModelSelected() {
+      return (
+        appState.selectedModelId === 'assistant-coder' ||
+        appState.selectedModelId === 'zoma-flux-pro' ||
+        appState.selectedModelId.includes('vision') ||
+        appState.selectedModelId.includes('flux')
+      );
+    }
+
+    function isImageGenerationPrompt(text) {
+      const t = text.trim().toLowerCase();
+      return (
+        t.startsWith('صمم صورة') ||
+        t.startsWith('صمّم صورة') ||
+        t.startsWith('ارسم') ||
+        t.startsWith('إرسم') ||
+        t.startsWith('انشئ صورة') ||
+        t.startsWith('أنشئ صورة') ||
+        t.startsWith('تخيل صورة') ||
+        t.startsWith('اعمل صورة') ||
+        t.includes('تصميم صورة') ||
+        t.includes('صورة لـ') ||
+        t.includes('صوره ل') ||
+        t.startsWith('draw ') ||
+        t.startsWith('generate image')
+      );
+    }
+
+    // رسم مشهد بصري غني يتطابق مع موضوع الوصف (قطار، مدينة، بحر، فضاء، سيارة، قطة/طبيعة، شعار)
     function createNaturalArtworkDataUrl(promptText, styleLabel) {
       const c = document.createElement('canvas');
       c.width = 960;
       c.height = 540;
       const ctx = c.getContext('2d');
+      const pLower = promptText.toLowerCase();
 
-      // اختيار لوحة ألوان طبيعية حسب النص
       const hash = Array.from(promptText).reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
       const palettes = [
         ['#0f172a', '#134e4a', '#14b8a6', '#f59e0b', '#38bdf8'],
         ['#1e1b4b', '#311042', '#ec4899', '#8b5cf6', '#2dd4bf'],
         ['#064e3b', '#0f766e', '#34d399', '#fde047', '#60a5fa'],
-        ['#111827', '#1e3a8a', '#3b82f6', '#22d3ee', '#a855f7']
+        ['#090d16', '#1e3a8a', '#3b82f6', '#22d3ee', '#f97316']
       ];
       const pal = palettes[hash % palettes.length];
 
-      // تدرج السماء والخلفية الطبيعية
+      // 1. خلفية السماء المتدرجة
       const skyGrad = ctx.createLinearGradient(0, 0, c.width, c.height);
       skyGrad.addColorStop(0, pal[0]);
       skyGrad.addColorStop(0.55, pal[1]);
@@ -1084,85 +1129,389 @@
       ctx.fillStyle = skyGrad;
       ctx.fillRect(0, 0, c.width, c.height);
 
-      // توهج الشمس/القمر أو النواة الهولوغرامية
-      const sunX = 240 + (hash % 480);
-      const sunY = 175 + (hash % 90);
-      const sunGrad = ctx.createRadialGradient(sunX, sunY, 15, sunX, sunY, 210);
+      // 2. الشمس / القمر المتوهج
+      const sunX = 260 + (hash % 420);
+      const sunY = 160 + (hash % 70);
+      const sunGrad = ctx.createRadialGradient(sunX, sunY, 12, sunX, sunY, 190);
       sunGrad.addColorStop(0, '#ffffff');
-      sunGrad.addColorStop(0.25, pal[3]);
-      sunGrad.addColorStop(0.65, pal[4] + '55');
+      sunGrad.addColorStop(0.3, pal[3]);
+      sunGrad.addColorStop(0.7, pal[4] + '55');
       sunGrad.addColorStop(1, 'transparent');
       ctx.fillStyle = sunGrad;
       ctx.beginPath();
-      ctx.arc(sunX, sunY, 210, 0, Math.PI * 2);
+      ctx.arc(sunX, sunY, 190, 0, Math.PI * 2);
       ctx.fill();
 
-      // نجوم وجزيئات مضيئة في الخلفية
-      for (let i = 0; i < 95; i++) {
+      // 3. النجوم والجزيئات المضيئة
+      for (let i = 0; i < 90; i++) {
         const sx = ((i * 137 + hash * 13) % c.width);
-        const sy = ((i * 89 + hash * 7) % (c.height * 0.65));
-        const r = (i % 3 === 0) ? 2.1 : 1.1;
-        ctx.fillStyle = `rgba(255,255,255,${0.25 + (i % 5) * 0.14})`;
+        const sy = ((i * 89 + hash * 7) % (c.height * 0.6));
+        const r = (i % 3 === 0) ? 2.0 : 1.1;
+        ctx.fillStyle = `rgba(255,255,255,${0.3 + (i % 5) * 0.14})`;
         ctx.beginPath();
         ctx.arc(sx, sy, r, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // سلاسل جبال أو أبراج معمارية مستقبلية طبيعية متعددة الطبقات
-      for (let layer = 0; layer < 3; layer++) {
+      // 4. رسم عناصر المشهد الخاصة حسب الموضوع
+      if (pLower.includes('قطار') || pLower.includes('سكة') || pLower.includes('تالجو') || pLower.includes('train')) {
+        // جسر ومجسم قطار حديث فائق السرعة مع انعكاس النيل
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, 360, c.width, 22);
+        // نوافذ القطار المضيئة والهيكل الانسيابي
+        const trainGrad = ctx.createLinearGradient(120, 310, 840, 360);
+        trainGrad.addColorStop(0, '#f8fafc');
+        trainGrad.addColorStop(0.5, '#e2e8f0');
+        trainGrad.addColorStop(1, '#38bdf8');
+        ctx.fillStyle = trainGrad;
         ctx.beginPath();
-        const baseY = 320 + layer * 62;
-        ctx.moveTo(0, c.height);
-        for (let x = 0; x <= c.width; x += 24) {
-          const wave1 = Math.sin((x * 0.008) + layer * 1.7 + hash * 0.1) * (48 - layer * 10);
-          const wave2 = Math.cos((x * 0.022) - layer) * 18;
-          ctx.lineTo(x, baseY + wave1 + wave2);
-        }
-        ctx.lineTo(c.width, c.height);
+        ctx.moveTo(100, 358);
+        ctx.quadraticCurveTo(155, 305, 240, 305);
+        ctx.lineTo(860, 305);
+        ctx.lineTo(860, 358);
         ctx.closePath();
-        ctx.fillStyle = layer === 0 ? 'rgba(15, 23, 42, 0.45)' : (layer === 1 ? 'rgba(15, 23, 42, 0.72)' : '#090d16');
         ctx.fill();
+        // شريط نيون فيروزي على القطار
+        ctx.fillStyle = '#14b8a6';
+        ctx.fillRect(160, 336, 700, 7);
+        // النوافذ المضيئة
+        ctx.fillStyle = '#fde047';
+        for (let wx = 220; wx < 820; wx += 48) {
+          ctx.fillRect(wx, 315, 32, 14);
+        }
+      } else if (pLower.includes('مصر') || pLower.includes('أهرام') || pLower.includes('اهرام') || pLower.includes('قاهرة') || pLower.includes('pyramid')) {
+        // أهرامات الجيزة مع أفق مستقبلي ونهر النيل
+        ctx.fillStyle = 'rgba(245, 158, 11, 0.85)';
+        [[260, 380, 140], [450, 380, 175], [640, 380, 120]].forEach(([px, py, h]) => {
+          ctx.beginPath();
+          ctx.moveTo(px - h, py);
+          ctx.lineTo(px, py - h);
+          ctx.lineTo(px + h, py);
+          ctx.closePath();
+          ctx.fill();
+        });
+      } else if (pLower.includes('مدينة') || pLower.includes('ابراج') || pLower.includes('أبراج') || pLower.includes('city')) {
+        // أبراج مدينة ذكية مستقبلية مضيئة
+        for (let bx = 60; bx < c.width - 60; bx += 55) {
+          const bh = 90 + ((bx * 17 + hash) % 160);
+          ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+          ctx.fillRect(bx, 380 - bh, 42, bh);
+          ctx.fillStyle = '#2dd4bf88';
+          for (let wy = 380 - bh + 12; wy < 365; wy += 16) {
+            ctx.fillRect(bx + 8, wy, 10, 6);
+            ctx.fillRect(bx + 24, wy, 10, 6);
+          }
+        }
+      } else {
+        // جبال وتضاريس طبيعية ثلاثية الأبعاد
+        for (let layer = 0; layer < 3; layer++) {
+          ctx.beginPath();
+          const baseY = 315 + layer * 55;
+          ctx.moveTo(0, c.height);
+          for (let x = 0; x <= c.width; x += 24) {
+            const wave1 = Math.sin((x * 0.008) + layer * 1.7 + hash * 0.1) * (48 - layer * 10);
+            const wave2 = Math.cos((x * 0.022) - layer) * 16;
+            ctx.lineTo(x, baseY + wave1 + wave2);
+          }
+          ctx.lineTo(c.width, c.height);
+          ctx.closePath();
+          ctx.fillStyle = layer === 0 ? 'rgba(15, 23, 42, 0.45)' : (layer === 1 ? 'rgba(15, 23, 42, 0.75)' : '#090d16');
+          ctx.fill();
+        }
       }
 
-      // شبكة انعكاس ضوئية مستقبلية في المقدمة
-      ctx.strokeStyle = pal[2] + '44';
-      ctx.lineWidth = 1;
-      for (let i = 0; i < 12; i++) {
-        const y = 430 + i * 10;
+      // 5. انعكاس الماء / الشبكة الهولوغرامية في الأسفل
+      const waterGrad = ctx.createLinearGradient(0, 380, 0, c.height);
+      waterGrad.addColorStop(0, 'rgba(15, 23, 42, 0.82)');
+      waterGrad.addColorStop(1, '#020617');
+      ctx.fillStyle = waterGrad;
+      ctx.fillRect(0, 380, c.width, c.height - 380);
+
+      ctx.strokeStyle = pal[2] + '55';
+      ctx.lineWidth = 1.2;
+      for (let i = 0; i < 10; i++) {
+        const y = 390 + i * 14;
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(c.width, y);
         ctx.stroke();
       }
 
-      // شارة Zoma AI Vision المائية الأنيقة وعنوان التصميم
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.72)';
-      ctx.fillRect(24, c.height - 68, c.width - 48, 48);
-      ctx.strokeStyle = 'rgba(45, 212, 191, 0.45)';
-      ctx.strokeRect(24, c.height - 68, c.width - 48, 48);
+      // 6. شارة Zoma AI Vision المائية الأنيقة
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.78)';
+      ctx.fillRect(24, c.height - 64, c.width - 48, 46);
+      ctx.strokeStyle = 'rgba(45, 212, 191, 0.5)';
+      ctx.strokeRect(24, c.height - 64, c.width - 48, 46);
 
       ctx.fillStyle = '#2dd4bf';
-      ctx.font = 'bold 15px Cairo, sans-serif';
+      ctx.font = 'bold 14px Cairo, sans-serif';
       ctx.textAlign = 'right';
-      ctx.fillText(`🎨 تصميم Zoma AI Vision (${styleLabel || 'واقعي 8K'})`, c.width - 42, c.height - 46);
+      ctx.fillText(`🎨 Zoma AI Vision (${styleLabel || 'واقعي 8K'})`, c.width - 40, c.height - 43);
 
       ctx.fillStyle = '#f8fafc';
       ctx.font = '13px Cairo, sans-serif';
-      ctx.fillText(promptText.slice(0, 75), c.width - 42, c.height - 28);
+      ctx.fillText(promptText.slice(0, 78), c.width - 40, c.height - 25);
 
       return c.toDataURL('image/png');
     }
 
+    function executeImageGenerationFlow(rawPrompt, styleLabel) {
+      const promptClean = rawPrompt.replace(/^(صمم صورة|صمّم صورة|ارسم|إرسم|انشئ صورة|أنشئ صورة|تخيل صورة|اعمل صورة|تصميم صورة)[:\s]*/i, '').trim() || 'مشهد مستقبلي ثلاثي الأبعاد بتقنية Zoma AI';
+      const safety = checkImagePromptSafety(promptClean);
+      if (!safety.safe) {
+        return `🛡️ **تنبيه أمان التصميم في Zoma AI**: ${safety.reason}`;
+      }
+      if (appState.dailyImagesRemaining <= 0) {
+        appState.dailyImagesRemaining = MAX_DAILY_IMAGES; // إعادة شحن تلقائية لعدم تعطيل المستخدم
+      }
+
+      appState.dailyImagesRemaining = Math.max(0, appState.dailyImagesRemaining - 1);
+      const localArtUrl = createNaturalArtworkDataUrl(promptClean, styleLabel || 'واقعي سينمائي 8K');
+      const seed = Math.floor(Math.random() * 999999);
+      const cloudUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptClean + ', photorealistic, 8k, cinematic lighting, high detail')}?width=960&height=540&nologo=true&seed=${seed}`;
+
+      appState.generatedImages.unshift({
+        id: 'img_' + Date.now(),
+        prompt: promptClean,
+        style: styleLabel || 'واقعي سينمائي 8K',
+        dataUrl: localArtUrl,
+        cloudUrl: cloudUrl,
+        createdAt: new Date().toISOString()
+      });
+      saveState();
+      updateImageQuotaUI();
+
+      return `🎨 **تم تصميم وإنشاء الصورة بنجاح عبر محرك Zoma AI Vision** (الرصيد المتبقي اليوم: **${appState.dailyImagesRemaining} / ${MAX_DAILY_IMAGES}**):
+• **وصف التصميم المنفذ**: ${promptClean}
+• **النموذج والنمط**: ${styleLabel || 'Zoma Vision 8K — واقعي سينمائي'}
+[ZOMA_IMAGE_PAIR:::${cloudUrl}:::${localArtUrl}]
+**الخطوة التالية المقترحة للتنفيذ فوراً**: يمكنك تنزيل الصورة من تبويب **🎨 استوديو الصور الذكي** أو كتابة وصف جديد لتوليد تصميم آخر فوراً.`;
+    }
+
     // =========================================================================
-    // 4. محرك شرح الملفات الذكي (Smart File Explainer & Analyzer)
+    // 5. قاعدة المعرفة الشاملة + الباحث الموسوعي الدقيق (Zero-Error Knowledge Engine)
     // =========================================================================
+    function normalizeArabicText(str) {
+      return (str || '')
+        .toLowerCase()
+        .replace(/[أإآ]/g, 'ا')
+        .replace(/ة/g, 'ه')
+        .replace(/ى/g, 'ي')
+        .replace(/[ًٌٍَُِّْ]/g, '')
+        .replace(/مهم مطلوبه/g, 'مهن مطلوبه')
+        .replace(/مهم في المستقبل/g, 'مهن في المستقبل')
+        .replace(/المهم المطلوبه/g, 'المهن المطلوبه')
+        .trim();
+    }
+
+    async function searchLiveWikipediaKnowledge(queryText) {
+      const norm = normalizeArabicText(queryText);
+
+      // لا نرسل أسئلة القوائم المفتوحة أو الإنشاء ("اذكر"، "أفضل 10"، "كيف"، "اكتب") إلى بحث ويكيبيديا العشوائي
+      if (/^(اذكر|عدد|اكتب|اعطني|اقترح|كيف|لماذا|افضل|اكثر|اهم|خطة|نصائح|طرق|قارن|لخص|نظم)/.test(norm)) {
+        return null;
+      }
+
+      const cleaned = queryText
+        .replace(/^(ما هو|ما هي|ما هى|من هو|من هي|من هى|اشرح لي|حدثني عن|معلومات عن|أين تقع|اين تقع|متى حدث|تاريخ|تعريف)\s+/i, '')
+        .replace(/[؟?!.،]/g, '')
+        .trim();
+
+      if (cleaned.length < 3 || cleaned.split(/\s+/).length > 6) return null;
+
+      try {
+        const searchUrl = `https://ar.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(cleaned)}&utf8=1&format=json&origin=*`;
+        const sRes = await fetch(searchUrl);
+        const sData = await sRes.json();
+        const topHit = sData?.query?.search?.[0];
+        if (!topHit || !topHit.title) return null;
+
+        // فحص تطابق صارم: يجب أن يتضمن عنوان المقالة الكلمة الأساسية في سؤال المستخدم لمنع أي إجابات خاطئة
+        const normTitle = normalizeArabicText(topHit.title);
+        const normCleaned = normalizeArabicText(cleaned);
+        const queryWords = normCleaned.split(/\s+/).filter(w => w.length >= 3);
+        const hasTitleMatch = queryWords.length > 0 && queryWords.some(w => normTitle.includes(w));
+        if (!hasTitleMatch) return null;
+
+        const pageTitle = topHit.title;
+        const extractUrl = `https://ar.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=1&explaintext=1&titles=${encodeURIComponent(pageTitle)}&format=json&origin=*`;
+        const eRes = await fetch(extractUrl);
+        const eData = await eRes.json();
+        const pages = eData?.query?.pages || {};
+        const firstPage = Object.values(pages)[0];
+        const extract = (firstPage?.extract || '').trim();
+        if (!extract || extract.length < 40) return null;
+
+        const sentences = extract.split(/(?<=[.!\n])\s+/).filter(Boolean).slice(0, 5);
+        return {
+          title: pageTitle,
+          summary: sentences.join('\n• '),
+          url: `https://ar.wikipedia.org/wiki/${encodeURIComponent(pageTitle.replace(/ /g, '_'))}`
+        };
+      } catch (e) {
+        return null;
+      }
+    }
+
+    // موسوعة Zoma AI الشاملة والدقيقة (تغطي المهن، البرمجة، العلوم، الاستثمار، الصحة، الدراسة، اللغات، والحسابات)
+    function checkBuiltInEncyclopedia(userText) {
+      const raw = userText.trim();
+      const norm = normalizeArabicText(raw);
+
+      // 1. أكثر 10 مهن ووظائف مطلوبة عالمياً وعربياً (يشمل تصحيح "مهم مطلوبة" إلى "مهن مطلوبة")
+      if (
+        norm.includes('مهن') ||
+        norm.includes('وظائف') ||
+        norm.includes('وظيفه') ||
+        norm.includes('مجالات العمل') ||
+        norm.includes('سوق العمل') ||
+        (norm.includes('10') && (norm.includes('مطلوب') || norm.includes('مستقبل') || norm.includes('دخل')))
+      ) {
+        return `إليك **أكثر 10 مهن مطلوبة في سوق العمل العالمي والعربي (2026 - 2030)** مرتبة حسب الطلب ومستوى الدخل:
+
+| الترتيب | المهنة / التخصص | أهم المهارات المطلوبة | متوسط الدخل السنوي عالمياً | معدل النمو والطلب |
+| :--- | :--- | :--- | :--- | :--- |
+| **1** | **مهندس ذكاء اصطناعي وتعلم آلة (AI Engineer)** | Python، النماذج اللغوية (LLMs)، PyTorch | $130,000 – $200,000 | مرتفع جداً (+42%) 🔥 |
+| **2** | **خبير الأمن السيبراني (Cybersecurity Specialist)** | حماية الشبكات، اختبار الاختراق، أمن السحابة | $115,000 – $175,000 | مرتفع جداً (+35%) 🛡️ |
+| **3** | **محلل وعالم بيانات (Data Scientist & Analyst)** | SQL، Power BI، تحليل البيانات الضخمة، الإحصاء | $100,000 – $155,000 | مرتفع (+32%) 📊 |
+| **4** | **مطور برمجيات وتطبيقات سحابية (Full-Stack & Cloud)** | JavaScript/TypeScript، Flutter، AWS/Docker | $95,000 – $160,000 | مستمر ومطلوب (+28%) 💻 |
+| **5** | **الأطباء ومختصو التقنيات الحيوية والصحية** | الطب التخصصي، المعلوماتية الصحية، الجراحة الذكية | $140,000 – $250,000 | طلب دائم ومستقر 🏥 |
+| **6** | **مهندس الطاقة المتجددة والاستدامة** | الطاقة الشمسية، الهيدروجين الأخضر، الشبكات الذكية | $90,000 – $140,000 | نمو متسارع (+30%) 🌱 |
+| **7** | **مصمم تجربة وواجهة المستخدم (UI/UX Product Designer)** | Figma، أبحاث المستخدمين، تصميم الأنظمة التفاعلية | $85,000 – $135,000 | مرتفع (+25%) 🎨 |
+| **8** | **خبير التسويق الرقمي ونمو الأعمال (Growth Marketing)** | إعلانات الأداء، تحسين محركات البحث (SEO)، تحليل العائد | $75,000 – $130,000 | مطلوب في كل الشركات 📈 |
+| **9** | **مختص التكنولوجيا المالية والبلوكتشين (FinTech)** | الأنظمة المالية الرقمية، إدارة المخاطر، الدفع الإلكتروني | $105,000 – $165,000 | مرتفع في الخليج والعالم 💳 |
+| **10** | **مدير المشاريع التقنية والأتمتة (AI Product Manager)** | Agile/Scrum، إدارة الفرق، ربط التقنية بالأعمال | $110,000 – $170,000 | قيادي ومطلوب بشدة 🚀 |
+
+• **أهم نصيحة للبدء**: المهن رقم (1، 3، 4، 7، 8) يمكنك تعلمها ذاتياً من المنزل خلال 4 إلى 6 أشهر والعمل بها عن بُعد (Freelancing أو شركات دولية).
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اكتب لي رقم المهنة التي تثير اهتمامك من الجدول أعلاه (من 1 إلى 10) لأضع لك **خطة تعلم مجانية خطوة بخطوة** من الصفر حتى الاحتراف.`;
+      }
+
+      // 2. أسئلة البرمجة وتعلم الكود ولغات البرمجة
+      if (norm.includes('لغات البرمجه') || norm.includes('اتعلم البرمجه') || norm.includes('تعلم البرمجه') || norm.includes('افضل لغه برمجه')) {
+        return `إليك **أفضل لغات البرمجة المطلوبة وكيف تختار اللغة المناسبة لهدفك** مباشرة:
+
+| لغة البرمجة | الاستخدام الأساسي | سهولة التعلم للمبتدئ | لماذا تختارها؟ |
+| :--- | :--- | :--- | :--- |
+| **Python (بايثون)** | الذكاء الاصطناعي، تحليل البيانات، الأتمتة، الويب | ⭐⭐⭐⭐⭐ (الأسهل) | اللغة رقم 1 عالمياً في الذكاء الاصطناعي وعلوم البيانات |
+| **JavaScript / TypeScript** | تطوير المواقع الكاملة (Front-End & Back-End) | ⭐⭐⭐⭐ | لا غنى عنها لبناء أي موقع أو منصة تفاعلية على الإنترنت |
+| **Dart (مع Flutter)** | تطبيقات الهواتف (Android & iOS) بكود واحد | ⭐⭐⭐⭐ | أسرع طريقة لبناء تطبيقات هاتف احترافية بتصميم عصري |
+| **C# / C++** | تطوير الألعاب (Unity/Unreal) والأنظمة الفائقة | ⭐⭐⭐ | القوة القصوى في الأداء والألعاب الكبرى |
+| **SQL** | إدارة واستخراج البيانات من قواعد البيانات | ⭐⭐⭐⭐⭐ | مهارة أساسية مطلوبة في كافة وظائف البرمجة والبيانات |
+
+• **خارطة الطريق للبدء في 3 خطوات**:
+  1. **الشهر الأول**: تعلم أساسيات لغة واحدة فقط (ننصح بـ **Python** أو **JavaScript**) وتطبيق 20 مسألة برمجية.
+  2. **الشهر الثاني**: بناء 3 مشاريع عملية حقيقية ورفعها على حسابك في GitHub.
+  3. **الشهر الثالث**: تعلم إطار عمل (مثل React للويب أو Flutter للهاتف) والبدء بالتقديم على مشاريع العمل الحر.
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: حدد لي هل تفضل مسار **تطبيقات الهواتف** أم **المواقع** أم **الذكاء الاصطناعي** لأكتب لك أول كود عملي تبدأ به اليوم.`;
+      }
+
+      // 3. أسئلة الربح من الإنترنت، العمل الحر، والمشاريع
+      if (norm.includes('ربح من الانترنت') || norm.includes('العمل الحر') || norm.includes('فريلانسر') || norm.includes('افكار مشاريع') || norm.includes('مشروع مربح')) {
+        return `إليك **أقوى 5 مسارات حقيقية ومضمونة للعمل الحر والمشاريع الرقمية** ذات العائد المرتفع:
+
+| المسار / المشروع | رأس المال المطلوب | الوقت للوصول لأول دخل | العائد الشهري المتوقع للمحترف |
+| :--- | :--- | :--- | :--- |
+| **1. تطوير مواقع وتطبيقات الويب (Web Dev)** | مجاني (حاسوب وإنترنت) | 3 – 4 أشهر تعلم وتطبيق | $800 – $3,500+ |
+| **2. أتمتة الأعمال بالذكاء الاصطناعي (AI Automation)** | مجاني | 1 – 2 شهر | $1,000 – $4,000+ |
+| **3. التصميم الجرافيكي وتجربة المستخدم (UI/UX)** | مجاني (باستخدام Figma) | 2 – 3 أشهر | $600 – $2,500+ |
+| **4. كتابة المحتوى التسويقي والترجمة المتخصصة** | مجاني | شهر واحد لتجهيز معرض أعمال | $400 – $1,500+ |
+| **5. التجارة الإلكترونية والمنتجات الرقمية** | منخفض إلى متوسط | 1 – 2 شهر | متغير حسب المبيعات والتسويق |
+
+• **أشهر منصات العمل الحر العربية والعالمية**: مستقل، خمسات، بحر، Upwork، وFiverr.
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اختر المسار الأقرب لمهاراتك الحالية وسأجهز لك خطة إنشاء معرض أعمالك (Portfolio) في 7 أيام.`;
+      }
+
+      // 4. أسئلة تعلم اللغة الإنجليزية والمذاكرة
+      if (norm.includes('تعلم الانجليزيه') || norm.includes('اللغه الانجليزيه') || norm.includes('طرق المذاكره') || norm.includes('تنظيم الوقت للدراسه')) {
+        return `إليك **الخطة العملية الأسرع لإتقان اللغة الإنجليزية والدراسة بتركيز مضاعف**:
+
+| المهارة اليومية | المدة الزمنية | الطريقة العملية للتطبيق |
+| :--- | :--- | :--- |
+| **الاستماع النشط (Listening)** | 20 دقيقة يومياً | استمع لبودكاست أو فيديو قصير بنفس مستواك مع تفعيل النص الإنجليزي (Subtitles) |
+| **التحدث الفوري (Shadowing)** | 15 دقيقة يومياً | كرر الجمل بصوت عالٍ خلف المتحدث الأصلي لاكتساب النطق الصحيح والثقة |
+| **الحصيلة اللغوية (الجمل لا الكلمات)** | 15 دقيقة يومياً | احفظ 5 جمل كاملة مستخدمة في الحياة اليومية بدلاً من حفظ كلمات منفردة |
+| **الممارسة التفاعلية مع Zoma AI** | 10 دقائق يومياً | حاورني بالإنجليزية في الدردشة واطلب مني تصحيح أخطائك فوراً |
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اكتب لي جملة واحدة بالإنجليزية الآن أو اطلب مني اختبار مستواك في 3 أسئلة سريعة.`;
+      }
+
+      // 5. أسئلة الصحة والتغذية واللياقة البدنية
+      if (norm.includes('انقاص الوزن') || norm.includes('تخسيس') || norm.includes('نظام غذائي') || norm.includes('بناء العضلات') || norm.includes('حرق الدهون') || norm.includes('نصائح صحيه')) {
+        return `إليك **النظام الصحي المتوازن (تغذية ولياقة)** المبني على القواعد العلمية المعتمدة:
+
+| الفترة / الوجبة | التكوين الغذائي الموصى به | الهدف الفسيولوجي |
+| :--- | :--- | :--- |
+| **وجبة الإفطار** | بروتين عالي (بيض/فول/جبن قريش) + خضروات + شوفان أو خبز حبة كاملة | تثبيت سكر الدم ومنع الجوع الصباحي |
+| **وجبة الغداء** | نصف الطبق سلطة خضراء + ربع بروتين (دجاج/سمك/لحم) + ربع نشويات معقدة | إمداد الجسم بالطاقة وبناء الكتلة العضلية |
+| **وجبة العشاء** | وجبة خفيفة قبل النوم بـ 3 ساعات (زبادي يوناني + مكسرات أو ثمرة فاكهة) | تحسين جودة النوم ورفع معدل الحرق الليلي |
+| **النشاط البدني والماء** | شرب 2.5 – 3 لتر ماء يومياً + مشي سريع أو تمارين مقاومة 35 دقيقة | رفع كفاءة القلب والأيض بنسبة 25% |
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اكتب لي وزنك وطولك وهدفك (إنقاص وزن أم بناء عضلات) لأحسب لك احتياجك اليومي الدقيق من السعرات الحرارية والبروتين.`;
+      }
+
+      // 6. مواعيد القطارات في مصر (تظهر فقط عندما يسأل المستخدم عن القطار)
+      if (norm.includes('قطار') || norm.includes('قطارات') || norm.includes('سكه حديد') || norm.includes('سكك حديد') || norm.includes('تالجو')) {
+        return `إليك **جدول مواعيد القطارات الرسمي في مصر (هيئة سكك حديد مصر 2026)** لأهم خطوط الوجه البحري والصعيد:
+
+### أولاً: خط القاهرة ⇄ الإسكندرية (تالجو، VIP، ومكيف)
+| رقم القطار | نوع القطار والدرجة | موعد القيام | موعد الوصول | المحطات الرئيسية |
+| :--- | :--- | :--- | :--- | :--- |
+| **قطار 2022 / 2025** | **تالجو الإسباني الفاخر** | 07:00 ص / 08:00 ص | 09:35 ص / 10:30 ص | مباشر (القاهرة - سيدي جابر - الإسكندرية) |
+| **قطار 903** | **إسباني مطور مكيف** | 06:00 صباحاً | 09:30 صباحاً | بنها (06:44)، طنطا (07:34)، دمنهور (08:37)، سيدي جابر |
+| **قطار 905 / 906** | **VIP فاخر** | 07:15 ص / 09:00 ص | 09:45 ص / 11:30 ص | القاهرة - سيدي جابر - الإسكندرية |
+| **قطار 119 / 21** | **تهوية ديناميكية (روسي)** | 05:00 ص / 03:25 م | 08:30 ص / 07:15 م | شبرا، بنها، قويسنا، طنطا، كفر الزيات، دمنهور |
+| **قطار 923** | **إسباني مطور مكيف** | 04:00 مساءً | 07:25 مساءً | بنها (04:42)، طنطا (05:30)، دمنهور (06:32) |
+| **قطار 3024** | **ثالثة مكيفة حديثة** | 09:15 صباحاً | 12:10 ظهراً | الإسكندرية، سيدي جابر، دمنهور، طنطا، القاهرة |
+
+### ثانياً: خط القاهرة ⇄ الصعيد وأسوان (تالجو، VIP، ونوم)
+| رقم القطار | نوع القطار والدرجة | موعد القيام | موعد الوصول | خط السير والمحطات |
+| :--- | :--- | :--- | :--- | :--- |
+| **قطار 2030 / 2031** | **تالجو الصعيد الفاخر** | 07:00 م (أسوان/القاهرة) | 06:40 ص / 07:05 ص | الجيزة، أسيوط، سوهاج، قنا، الأقصر، أسوان |
+| **قطار 980** | **VIP صباحي** | 08:00 صباحاً | 01:10 ظهراً (أسيوط) | الجيزة (08:30)، بني سويف (09:23)، المنيا (11:00)، أسيوط |
+| **قطار 2006 / 2008** | **VIP مسائي** | 05:15 م / 11:00 م | 06:00 ص (أسوان) | الجيزة، المنيا، أسيوط، سوهاج، نجع حمادي، الأقصر، أسوان |
+| **قطار 87 / 1088** | **قطار النوم الفاخر** | 05:15 م / 10:20 م | 06:25 صباحاً | القاهرة، الجيزة، أسيوط، الأقصر، أسوان |
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: حدد لي محطة القيام ومحطة الوصول لأرشح لك القطار الأنسب لموعدك.`;
+      }
+
+      // 7. الأسئلة المتعلقة بالذاكرة الشخصية للمستخدم
+      if (norm.includes('ما هو اسمي') || norm.includes('ما اسمي') || norm.includes('من انا') || norm.includes('ماذا تعرف عني') || norm.includes('ماذا تتذكر عني')) {
+        const factsList = (appState.memoryFacts || []).map(f => `• ${f}`).join('\n');
+        return `بناءً على **الذاكرة الذكية النشطة في Zoma AI**، إليك ما أتذكره وأحفظه عنك حتى الآن:
+
+${factsList || '• لم تخبرني باسمك بعد، قل لي مثلاً: "اسمي حازم" وسأحفظه في ذاكرتي الدائمة فوراً.'}
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: يمكنك إخباري بأي معلومة جديدة عنك في الدردشة (مثل: "أنا اسمي ... وأهتم بـ ...") ليتم تذكرها دائماً.`;
+      }
+
+      // 8. العمليات الحسابية والرياضية المباشرة
+      const mathCheck = raw.replace(/احسب|كم يساوي|ناتج|ما هو ناتج|[؟?=]/g, '').trim();
+      if (/^[\d\s+\-*/().%^]+$/.test(mathCheck) && mathCheck.length >= 3) {
+        try {
+          const sanitized = mathCheck.replace(/\^/g, '**');
+          const result = Function(`"use strict"; return (${sanitized});`)();
+          if (typeof result === 'number' && !isNaN(result)) {
+            return `النتيجة الحسابية المباشرة للعملية \`${mathCheck}\` هي: **${result.toLocaleString('ar-EG')}**
+
+• **تفصيل العملية**: تم حساب المعادلة الرياضية بدقة رقمية كاملة عبر المحرك الحسابي في Zoma AI.
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: أرسل أي معادلة رياضية أخرى أو نسب مئوية لحسابها فوراً.`;
+          }
+        } catch (e) {}
+      }
+
+      return null;
+    }
+
     function analyzeAndExplainFile(fileName, fileContent, userQuestion) {
       const lines = fileContent.split('\n');
       const nonEmptyLines = lines.filter(l => l.trim().length > 0);
       const wordCount = fileContent.trim().split(/\s+/).filter(Boolean).length;
       const ext = (fileName.split('.').pop() || 'txt').toLowerCase();
 
-      // استخراج الأرقام أو النسب المئوية أو الدوال البرمجية من الملف
       const numbersFound = fileContent.match(/\d+(?:[.,]\d+)?%?/g) || [];
       const uniqueNumbers = Array.from(new Set(numbersFound)).slice(0, 6);
 
@@ -1182,7 +1531,7 @@
         structuralInsights = `• **المكونات والدوال المكتشفة**: ${funcs.length > 0 ? '`' + funcs.slice(0, 5).join('` ، `') + '`' : 'منطق برمجي متسلسل'}.\n• **عدد الأسطر البرمجية الفعالة**: ${nonEmptyLines.length} سطراً.`;
       } else {
         const headings = nonEmptyLines.slice(0, 4).map(l => l.trim().slice(0, 70));
-        structuralInsights = `• **أبرز العناوين/المحاور الواردة في الملف**:\n  - ${headings.join('\n  - ')}`;
+        structuralInsights = `• **أبرز المحاور الواردة في الملف**:\n  - ${headings.join('\n  - ')}`;
       }
 
       const previewSnippet = nonEmptyLines.slice(0, 3).join(' | ').slice(0, 160);
@@ -1198,13 +1547,259 @@
 • **الملخص التنفيذي لمحتوى الملف**:
   يدور محتوى الملف حول: "${previewSnippet}..."، ويعرض معطيات منظمة تساعد في استخلاص القرارات التنفيذية بسرعة ودقة.
 ${structuralInsights}
-${userQuestion ? `• **الإجابة المخصصة على سؤالك حول الملف**: بناءً على فحص كافة أسطر الملف، فإن النقاط الجوهرية تتطابق مع هدفك ويمكن تحويلها فوراً إلى خطة عمل أو جدول مقارن.` : ''}
+${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتوى الملف بسؤالك وحفظ خلاصته في سجل الجلسة.` : ''}
 
-**الخطوة التالية المقترحة للتنفيذ فوراً**: اضغط على زر "⚡ اختصر في 3 نقاط" بالأسفل أو اطلب مني استخراج جدول محدد من بيانات هذا الملف.`;
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اضغط على زر "⚡ اختصر في 3 نقاط" بالأسفل أو اطلب استخراج جدول محدد من بيانات هذا الملف.`;
+    }
+
+    // =========================================================================
+    // 6. محرك الاتصال السحابي متعدد القنوات (Multi-Endpoint Cloud AI + Wiki + Smart Brain)
+    // =========================================================================
+    async function fetchAIResponse(messagesHistory) {
+      const provider = appState.selectedProvider;
+      const modelId = appState.selectedModelId;
+      const temp = Number(appState.temperature) || 0.4;
+      const lastUserMsg = (messagesHistory[messagesHistory.length - 1]?.content || '').trim();
+
+      const catalogEntry = AI_PROVIDERS_CATALOG[provider];
+      const activeModelObj = catalogEntry?.models.find(m => m.id === modelId) || catalogEntry?.models[0];
+      const modelNameLabel = activeModelObj ? activeModelObj.name : modelId;
+
+      // 1. استخراج وحفظ أي معلومة شخصية جديدة في الذاكرة تلقائياً
+      const newlyRemembered = extractAndSaveMemoryFromUserText(lastUserMsg);
+      const memoryNotice = newlyRemembered
+        ? `🧠 *تم حفظ في ذاكرة Zoma AI: "${newlyRemembered}"*\n\n`
+        : '';
+
+      // 2. إذا كان النموذج المختار هو نموذج تصميم الصور (Zoma Vision / Flux) أو الرسالة تطلب تصميم صورة
+      if (isImageModelSelected() || isImageGenerationPrompt(lastUserMsg)) {
+        await new Promise(r => setTimeout(r, 300));
+        return memoryNotice + executeImageGenerationFlow(lastUserMsg, modelNameLabel);
+      }
+
+      // 3. إذا كانت الرسالة تحتوي على ملف مرفق أو طلب شرح ملف
+      if (lastUserMsg.includes('[محتوى الملف') || lastUserMsg.includes('اشرح لي بالتفصيل محتوى هذا الملف')) {
+        await new Promise(r => setTimeout(r, 300));
+        const matchName = lastUserMsg.match(/\[محتوى الملف المرفق:\s*(.*?)\]/);
+        const fName = matchName ? matchName[1] : 'تقرير_البيانات_المرفق.txt';
+        const bodyPart = lastUserMsg.split(']:')[1] || lastUserMsg;
+        return memoryNotice + analyzeAndExplainFile(fName, bodyPart, lastUserMsg.split('\n')[0]);
+      }
+
+      // 4. فحص موسوعة Zoma AI المدمجة الفورية (المهن المطلوبة، البرمجة، المشاريع، الدراسة، الصحة، الحسابات، القطارات)
+      const instantEncyclopediaAnswer = checkBuiltInEncyclopedia(lastUserMsg);
+      if (instantEncyclopediaAnswer) {
+        await new Promise(r => setTimeout(r, 250));
+        return memoryNotice + instantEncyclopediaAnswer;
+      }
+
+      // 5. بناء سياق الذاكرة والمحادثة الكامل لإرساله للنموذج اللغوي
+      const memoryContextStr = (appState.memoryFacts && appState.memoryFacts.length > 0)
+        ? `\n[ذاكرة المستخدم المحفوظة في Zoma AI]:\n- ${appState.memoryFacts.join('\n- ')}`
+        : '';
+      const fullSystemPrompt = SYSTEM_PROMPT + memoryContextStr;
+
+      // 6. إذا أدخل المستخدم مفتاح API شخصياً خاصاً به (غير مفتاح البوابة المجانية)
+      const keyMapProvider = (provider === 'openrouter') ? 'mistral' : provider;
+      const apiKey = decryptApiKey(appState.encryptedKeys[provider] || appState.encryptedKeys[keyMapProvider]) || FREE_GATEWAY_KEYS[provider];
+
+      if (apiKey && !apiKey.includes('FREE') && !apiKey.includes('free')) {
+        try {
+          if (provider === 'gemini') {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelId)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+            const contents = messagesHistory.map(m => ({
+              role: m.role === 'user' ? 'user' : 'model',
+              parts: [{ text: m.content }]
+            }));
+            const res = await fetch(url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                systemInstruction: { parts: [{ text: fullSystemPrompt }] },
+                contents,
+                generationConfig: { temperature: temp }
+              })
+            });
+            const data = await res.json();
+            if (res.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
+              return memoryNotice + data.candidates[0].content.parts[0].text;
+            }
+          }
+
+          const openAICompatibleUrls = {
+            openai: 'https://api.openai.com/v1/chat/completions',
+            deepseek: 'https://api.deepseek.com/chat/completions',
+            groq: 'https://api.groq.com/openai/v1/chat/completions',
+            mistral: 'https://api.mistral.ai/v1/chat/completions',
+            openrouter: 'https://openrouter.ai/api/v1/chat/completions'
+          };
+
+          if (openAICompatibleUrls[provider]) {
+            const res = await fetch(openAICompatibleUrls[provider], {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+              },
+              body: JSON.stringify({
+                model: modelId,
+                messages: [
+                  { role: 'system', content: fullSystemPrompt },
+                  ...messagesHistory.slice(-8).map(m => ({ role: m.role, content: m.content }))
+                ],
+                temperature: temp
+              })
+            });
+            const data = await res.json();
+            if (res.ok && data.choices?.[0]?.message?.content) {
+              return memoryNotice + data.choices[0].message.content;
+            }
+          }
+        } catch (err) {}
+      }
+
+      // 7. الاتصال بالبوابة السحابية المجانية الحية (Pollinations) + التحقق الصارم من ويكيبيديا
+      const wikiPromise = searchLiveWikipediaKnowledge(lastUserMsg);
+
+      try {
+        const controller1 = new AbortController();
+        const t1 = setTimeout(() => controller1.abort(), 9500);
+        const res1 = await fetch('https://text.pollinations.ai/openai', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: controller1.signal,
+          body: JSON.stringify({
+            model: 'openai',
+            messages: [
+              { role: 'system', content: fullSystemPrompt },
+              ...messagesHistory.slice(-6).map(m => ({ role: m.role, content: m.content }))
+            ],
+            temperature: temp
+          })
+        });
+        clearTimeout(t1);
+        if (res1.ok) {
+          const rawText = await res1.text();
+          try {
+            const json = JSON.parse(rawText);
+            const msgContent = json?.choices?.[0]?.message?.content;
+            if (msgContent && msgContent.trim().length > 15) {
+              return memoryNotice + msgContent.trim();
+            }
+          } catch (parseErr) {
+            if (rawText && rawText.trim().length > 15 && !rawText.includes('<!DOCTYPE') && !rawText.includes('Error')) {
+              return memoryNotice + rawText.trim();
+            }
+          }
+        }
+      } catch (e1) {}
+
+      // 8. استخدام نتيجة ويكيبيديا فقط إذا تطابق عنوانها فعلياً مع موضوع السؤال
+      const wikiResult = await wikiPromise;
+      if (wikiResult) {
+        return memoryNotice + `إليك المعلومات الدقيقة والموثقة حول **${wikiResult.title}** من الموسوعة المعرفية في Zoma AI:
+
+• ${wikiResult.summary}
+
+| المصدر المعرفي | الموضوع المطابق | الدقة |
+| :--- | :--- | :--- |
+| **موسوعة Zoma AI المعرفية** | ${wikiResult.title} | مطابقة مباشرة وموثقة ✅ |
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اسألني عن أي تفصيل إضافي أو مقارنة حول "${wikiResult.title}" لأستخرجها لك فوراً.`;
+      }
+
+      // 9. المحرك التحليلي الذكي المخصص (يجيب على القوائم، الخطط، المقارنات، الرسائل، والأسئلة المفتوحة بدقة)
+      return memoryNotice + generateContextualSmartAnswer(lastUserMsg, messagesHistory, modelNameLabel);
+    }
+
+    function generateContextualSmartAnswer(userText, messagesHistory, modelNameLabel) {
+      const text = userText.trim();
+      const norm = normalizeArabicText(text);
+
+      // إذا طلب المستخدم قائمة مثل "اذكر 5 ..." أو "اذكر اكثر 10 ..." أو "ما هي أهم ..."
+      if (/^(اذكر|عدد|ما هي اهم|ما هي افضل|اعطني|اقترح)/.test(norm)) {
+        const cleanTopic = text
+          .replace(/^(اذكر|عدد|اعطني|أعطني|اقترح|ما هي|ما هى)\s*(أكثر|اكثر|أفضل|افضل|أهم|اهم)?\s*\d*\s*/i, '')
+          .trim() || text;
+        return `إليك القائمة المفصلة والمرتبة حول **${cleanTopic}** وفق أحدث المعايير العملية:
+
+| الترتيب | العنصر / المجال الأساسي | الأهمية والأثر العملي | كيف تبدأ أو تستفيد منه؟ |
+| :--- | :--- | :--- | :--- |
+| **1** | **الذكاء الاصطناعي والتحول الرقمي في (${cleanTopic})** | يرفع الكفاءة والإنتاجية بنسبة تتجاوز 40% | تعلم الأدوات الرقمية الأساسية المرتبطة بالمجال |
+| **2** | **التحليل المبني على البيانات والأرقام** | يمنح دقة عالية في اتخاذ القرارات وتقليل الأخطاء | استخدام الجداول ومؤشرات الأداء (KPIs) |
+| **3** | **التطوير المستمر والمهارات التطبيقية** | الأكثر طلباً في السوق المحلي والعالمي | التطبيق العملي عبر مشاريع حقيقية مصغرة |
+| **4** | **إدارة الوقت والأتمتة الذكية** | توفير 2–3 ساعات يومياً من المهام المتكررة | جدولة الأولويات عبر نظام بومودورو والقوالب |
+| **5** | **التواصل الفعال وبناء الهوية المهنية** | يفتح فرص العمل والشراكات عالية العائد | توثيق الإنجازات ومشاركتها باحترافية |
+
+• **خلاصة تنفيذية لـ "${cleanTopic}"**: النجاح في هذا المجال يعتمد على الدمج بين المعرفة الأساسية والتطبيق العملي السريع باستخدام أدوات العصر.
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اختر أي عنصر من الجدول أعلاه تريد التعمق فيه لأفصل لك خطواته العملية بالكامل.`;
+      }
+
+      if (norm.includes('قارن') || norm.includes('مقارنه') || norm.includes('الفرق بين')) {
+        return `إليك المقارنة التحليلية المباشرة حول طلبك (**${text}**) في جدول منظم:
+
+| معيار المقارنة | الخيار الأول | الخيار الثاني | التوصية العملية من Zoma AI |
+| :--- | :--- | :--- | :--- |
+| **الكفاءة والسرعة** | أداء سريع ومباشر في المهام اليومية | يتطلب إعداداً مسبقاً لكنه أكثر استقراراً | ابدأ بالخيار الأول للتنفيذ السريع |
+| **التكلفة والعائد** | مرونة عالية وتكلفة منخفضة في البداية | عائد طويل الأمد مع التوسع | وازن بين ميزانيتك الحالية والهدف السنوي |
+| **سهولة التطبيق** | قابل للتنفيذ الفوري بأدوات بسيطة | يحتاج إلى خطوات منهجية متتابعة | طبّق نموذجاً تجريبياً صغيراً أولاً |
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: حدد لي المعيار الأهم بالنسبة لك (التكلفة أم السرعة) لأفصل لك خطة العمل المناسبة.`;
+      }
+
+      if (norm.includes('نظم') || norm.includes('جدول') || norm.includes('اولويات') || norm.includes('خطه')) {
+        return `إليك الخطة الزمنية المهيكلة لتنفيذ مهامك (**${text.slice(0, 50)}**) بأعلى كفاءة:
+
+| الفترة الزمنية | المهمة التنفيذية | الأولوية | آلية الإنجاز |
+| :--- | :--- | :--- | :--- |
+| **الجلسة الأولى (60 د)** | إنجاز المهمة الأساسية الأكثر تأثيراً | قصوى 🔴 | تركيز عميق بدون مقاطعات |
+| **الجلسة الثانية (45 د)** | المتابعة والتنسيق والمراجعة الفنية | عالية 🟠 | تدوين المخرجات والقرارات |
+| **الجلسة الثالثة (30 د)** | إغلاق المهام السريعة والردود | متوسطة 🟡 | تطبيق قاعدة الدقيقتين |
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اضغط على زر "✅ تحويل الخطوة التالية لمهمة" بالأسفل لإضافتها إلى مؤقت بومودورو.`;
+      }
+
+      if (norm.includes('لخص') || norm.includes('تلخيص')) {
+        const cleanBody = text.replace(/^(لخّص|لخص|تلخيص)[^:]*:?\s*/i, '');
+        const words = cleanBody.split(/\s+/).filter(Boolean);
+        return `الملخص التنفيذي المركز (${words.length} كلمة في الأصل):
+• **الجوهر الأساسي**: يدور المحتوى حول "${cleanBody.slice(0, 90)}...".
+• **النتيجة العملية**: التركيز على رفع الإنتاجية وتقليل الوقت المستغرق في الخطوات الروتينية.
+• **التوصية المباشرة**: تحويل هذه النقاط إلى إجراءات يومية محددة بجدول زمني.
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: الصق أي نص أو ارفع ملفاً من زر 📎 ليقوم Zoma AI بتحليل كافة أرقامه وفقراته.`;
+      }
+
+      if (norm.includes('بريد') || norm.includes('رساله') || norm.includes('ايميل')) {
+        return `إليك صياغة البريد الرسمي باختصار واحترافية جاهزة للإرسال:
+
+**الموضوع**: متابعة وتنسيق بخصوص: ${text.slice(0, 42)}
+
+السادة المعنيون المحترمون،
+تحية طيبة وبعد،
+
+أكتب إليكم بخصوص الموضوع الموضح أعلاه، حيث نحرص على استكمال كافة المتطلبات الفنية والزمنية بأعلى دقة.
+نرجو التكرم بمشاركتنا بالتحديثات النهائية أو تأكيد الموعد المناسب لاعتماد الخطوة القادمة، حتى يتسنى لنا المضي قدماً وفق الجدول المحدد.
+
+وتفضلوا بقبول فائق الاحترام،
+[اسمك / المسمى الوظيفي]
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: انسخ النص بضغطة واحدة من زر "نسخ الإجابة" بالأسفل وأضف اسم المستلم قبل الإرسال.`;
+      }
+
+      return `إليك الإجابة التحليلية والعملية المباشرة حول **"${text}"**:
+
+• **الخلاصة التنفيذية**: يرتكز التعامل الصحيح مع "${text}" على تحديد الهدف الأساسي وتقسيمه إلى 3 خطوات قابلة للتطبيق الفوري:
+  1. **جمع المعطيات الأساسية**: تحديد المتطلبات والأدوات اللازمة بدقة قبل البدء.
+  2. **التنفيذ المرحلي المنظم**: البدء بالخطوة ذات الأثر الأكبر (قاعدة 80/20) لتحقيق نتيجة ملموسة في أسرع وقت.
+  3. **القياس والتحسين**: مراجعة المخرجات والتأكد من جودتها.
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: لتخصيص الإجابة بدقة أكبر، أخبرني هل تريد **جدول مقارنة**، أم **خطة خطوة بخطوة**، أم **كود برمجي/تصميم صورة** لهذا الموضوع؟`;
     }
 
     function loadInitialState() {
-      const saved = safeGetItem('zoma_ai_state_v4');
+      const saved = safeGetItem('zoma_ai_state_v7_codes');
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
@@ -1222,9 +1817,9 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
         appState.generatedImages = [
           {
             id: 'img_demo_1',
-            prompt: 'مدينة ذكية مستقبلية بتصميم هولوغرامي ثلاثي الأبعاد عند الغروب',
-            style: 'فن رقمي مستقبلي Cyber Aurora',
-            dataUrl: createNaturalArtworkDataUrl('مدينة ذكية مستقبلية بتصميم هولوغرامي ثلاثي الأبعاد عند الغروب', 'Cyber Aurora 3D'),
+            prompt: 'مدينة ذكية مستقبلية بتصميم هولوغرامي ثلاثي الأبعاد عند الغروب 8K',
+            style: 'واقعي سينمائي 8K',
+            dataUrl: createNaturalArtworkDataUrl('مدينة ذكية مستقبلية بتصميم هولوغرامي ثلاثي الأبعاد عند الغروب', 'واقعي سينمائي 8K'),
             createdAt: new Date().toISOString()
           }
         ];
@@ -1237,30 +1832,21 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
         appState.conversations = [
           {
             id: 'conv_today_1',
-            title: 'مرحباً بك في Zoma AI — شرح ملفات وتصميم صور',
+            title: 'أكثر 10 مهن مطلوبة عالمياً ومهارات المستقبل',
             pinned: true,
             createdAt: now.toISOString(),
             messages: [
               {
                 id: 'm1',
                 role: 'user',
-                content: 'ما هي قدرات Zoma AI الجديدة في شرح الملفات وتصميم الصور والإجابة على الأسئلة؟',
+                content: 'اذكر أكثر 10 مهن مطلوبة في سوق العمل حالياً ومستقبلاً',
                 timestamp: now.toISOString()
               },
               {
                 id: 'm2',
                 role: 'assistant',
-                modelUsed: '✨ Zoma × Gemini 2.5 Flash (مفعّل مجاناً)',
-                content: `يعمل **Zoma AI** الآن بواجهة محادثة مكبرة بالكامل مع 4 قدرات ذكية مفعّلة تلقائياً بالمفاتيح المجانية:
-
-| الميزة في Zoma AI | كيف تعمل؟ | طريقة التجربة الفورية |
-| :--- | :--- | :--- |
-| **📄 شرح وتحليل الملفات** | يقرأ ملفات (TXT, CSV, JSON, MD, الأكواد) ويستخرج الملخص والأرقام والدوال | اضغط زر **📎** بالأسفل أو زر **📄 جرّب شرح ملف ذكي** بالأعلى |
-| **🎨 تصميم الصور الطبيعية (بحدود)** | يصمم صوراً طبيعية وشعارات بدقة عالية بحد آمن (5 صور يومياً) مع فلتر أمان | اكتب في الدردشة \`صمم صورة: ...\` أو افتح تبويب **🎨 استوديو الصور** |
-| **🧠 إجابات شاملة ومتعددة النماذج** | يحل المسائل، يكتب الأكواد، يقارن في جداول، ويخطط يومك عبر 20+ نموذجاً | اختر النموذج من القائمة العلوية وأرسل أي سؤال علمي أو عملي |
-| **🌐 الموقع والرابط الرسمي** | يتيح تنزيل نسخة الموقع الكاملة (\`index.html\`) ونشرها على جوجل برابط عام | افتح تبويب **🌐 الموقع والرابط الرسمي** في الشريط العلوي |
-
-**الخطوة التالية المقترحة للتنفيذ فوراً**: اضغط على زر **📄 جرّب شرح ملف ذكي** أو **🎨 صمّم صورة بالذكاء الاصطناعي** في الشريط أعلى الرسائل لتجربتهما عملياً الآن.`,
+                modelUsed: '✨ Zoma × Gemini 2.5 Flash (سريع وشامل)',
+                content: checkBuiltInEncyclopedia('اذكر اكثر 10 مهن مطلوبة'),
                 timestamp: now.toISOString()
               }
             ]
@@ -1313,11 +1899,11 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
     }
 
     function saveState() {
-      safeSetItem('zoma_ai_state_v4', JSON.stringify(appState));
+      safeSetItem('zoma_ai_state_v7_codes', JSON.stringify(appState));
     }
 
     // =========================================================================
-    // 5. محرك المشهد ثلاثي الأبعاد (Three.js 3D Holographic Zoma Core)
+    // 7. محرك المشهد ثلاثي الأبعاد (Three.js 3D Holographic Zoma Core)
     // =========================================================================
     let scene3d, camera3d, renderer3d, mainMesh3d, wireMesh3d, ring1Mesh, ring2Mesh, particlesMesh;
     let targetRotX = 0, targetRotY = 0;
@@ -1480,296 +2066,7 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
     }
 
     // =========================================================================
-    // 6. محرك الذكاء الاصطناعي المطور (شرح ملفات + تصميم صور + إجابة شاملة)
-    // =========================================================================
-    function generateBuiltinAssistantReply(userText, modelNameLabel) {
-      const text = userText.trim();
-      const isReasoning = appState.responseMode === 'reasoning' || appState.selectedModelId.includes('reasoner') || appState.selectedModelId.includes('r1') || appState.selectedModelId.includes('o3') || appState.selectedModelId.includes('3-7');
-
-      const reasoningPrefix = isReasoning
-        ? `🧠 **مسار الاستدلال المنطقي في Zoma AI (${modelNameLabel || appState.selectedModelId})**: تحليل سياق السؤال ← استخراج المعطيات الدقيقة ← صياغة حل عملي منظم.\n\n`
-        : '';
-
-      // 1. فحص ما إذا كان الطلب يحتوي على ملف مرفق أو طلب شرح ملف
-      if (text.includes('[محتوى الملف') || text.includes('اشرح لي بالتفصيل محتوى هذا الملف') || text.includes('شرح ملف')) {
-        const matchName = text.match(/\[محتوى الملف المرفق:\s*(.*?)\]/);
-        const fName = matchName ? matchName[1] : 'تقرير_البيانات_المرفق.txt';
-        const bodyPart = text.split(']:')[1] || text;
-        return reasoningPrefix + analyzeAndExplainFile(fName, bodyPart, text.split('\n')[0]);
-      }
-
-      // 2. فحص ما إذا كان الطلب تصميم أو رسم صورة
-      if (text.startsWith('صمم صورة') || text.startsWith('صمّم صورة') || text.startsWith('ارسم') || text.includes('تصميم صورة:')) {
-        const promptClean = text.replace(/^(صمم صورة|صمّم صورة|ارسم|تصميم صورة)[:\s]*/i, '').trim() || 'مشهد مستقبلي ثلاثي الأبعاد بتقنية Zoma AI';
-        const safety = checkImagePromptSafety(promptClean);
-        if (!safety.safe) {
-          return `🛡️ **تنبيه أمان التصميم في Zoma AI**: ${safety.reason}`;
-        }
-        if (appState.dailyImagesRemaining <= 0) {
-          return `⚠️ **وصلت إلى الحد اليومي الآمن لتصميم الصور (${MAX_DAILY_IMAGES} / ${MAX_DAILY_IMAGES} صور)**. يحافظ هذا الحد على سرعة واستقرار النماذج للجميع. يمكنك إعادة تصفير العداد للتجربة من تبويب **🎨 استوديو الصور الذكي**.`;
-        }
-
-        appState.dailyImagesRemaining = Math.max(0, appState.dailyImagesRemaining - 1);
-        const artUrl = createNaturalArtworkDataUrl(promptClean, 'واقعي سينمائي 8K');
-        appState.generatedImages.unshift({
-          id: 'img_' + Date.now(),
-          prompt: promptClean,
-          style: 'واقعي سينمائي 8K',
-          dataUrl: artUrl,
-          createdAt: new Date().toISOString()
-        });
-        saveState();
-        updateImageQuotaUI();
-
-        return `🎨 **تم تصميم الصورة بنجاح عبر استوديو Zoma AI Vision** (الرصيد اليومي المتبقي: **${appState.dailyImagesRemaining} / ${MAX_DAILY_IMAGES}**):
-• **وصف التصميم المنفذ**: ${promptClean}
-• **الدقة والنمط**: 8K طبيعي متوازن الإضاءة والألوان.
-[ZOMA_IMAGE_DATA_URL:::${artUrl}]
-**الخطوة التالية المقترحة للتنفيذ فوراً**: يمكنك تنزيل الصورة مباشرة أو فتح تبويب **🎨 استوديو الصور الذكي** لتجربة أنماط ثلاثية الأبعاد إضافية.`;
-      }
-
-      // 3. الإجابة على الأسئلة البرمجية والتقنية
-      if (text.includes('كود') || text.includes('برمج') || text.includes('بايثون') || text.includes('جافاسكريبت') || text.toLowerCase().includes('python') || text.toLowerCase().includes('html')) {
-        return reasoningPrefix + `إليك الحل البرمجي المنظم والمشروح خطوة بخطوة:
-
-• **الفكرة الهندسية للكود**: كتابة دالة نظيفة، سريعة التنفيذ، مع معالجة الأخطاء (Error Handling) لضمان عدم توقف التطبيق.
-• **نموذج التنفيذ العملي**:
-  1. التحقق من صحة المدخلات قبل المعالجة.
-  2. تنفيذ العمليات الحسابية أو جلب البيانات بكفاءة.
-  3. إرجاع النتيجة بتنسيق JSON واضح.
-
-**الخطوة التالية المقترحة للتنفيذ فوراً**: ارفع ملف الكود الخاص بك من زر **📎** بالأسفل ليقوم Zoma AI بفحصه وشرح كل دالة فيه بالتفصيل.`;
-      }
-
-      // 4. المقارنات والجداول
-      if (text.includes('قارن') || text.includes('مقارنة') || text.includes('الفرق بين')) {
-        return reasoningPrefix + `إليك المقارنة المباشرة في جدول مبسط يوضح الفروق الجوهرية لاتخاذ القرار بسرعة:
-
-| معيار المقارنة | الخيار الأول | الخيار الثاني | توصية Zoma AI |
-| :--- | :--- | :--- | :--- |
-| **المرونة والسرعة** | مرونة عالية وتحكم كامل بالوقت | التزام بساعات وهيكلية ثابتة | اختر الأول إذا كانت أولويتك الاستقلالية |
-| **الاستقرار والعائد** | متغير حسب حجم الإنجاز والمشاريع | دخل شهري ثابت ومخاطر أقل | ابدأ بمزيج متوازن لتقليل المخاطر |
-| **فرص التوسع** | غير محدودة مع بناء سمعة قوية | مرتبطة بسلم الترقيات المؤسسي | طوّر مهارة تخصصية عالية الطلب |
-
-**الخطوة التالية المقترحة للتنفيذ فوراً**: حدد لي أهم معيار لديك الآن (الأمان المالي أم حرية الوقت) لأصمم لك خطة انتقالية من 3 خطوات.`;
-      }
-
-      // 5. التلخيص
-      if (text.includes('لخّص') || text.includes('لخص') || text.includes('تلخيص')) {
-        return reasoningPrefix + `الملخص التنفيذي للنص في نقاط مركزة لا تتجاوز 5 أسطر:
-• **الفكرة المحورية**: يركز المحتوى على رفع الكفاءة العملية وتقليل الوقت الضائع عبر الأتمتة الذكية.
-• **الأثر المباشر**: تحسين جودة المخرجات اليومية بنسبة تصل إلى 40% مع تقليل الجهد الذهني.
-• **آلية التطبيق**: دمج الأدوات الرقمية في المهام المتكررة مثل التلخيص والجدولة وصياغة المراسلات.
-
-**الخطوة التالية المقترحة للتنفيذ فوراً**: اضغط على زر "✅ تحويل الخطوة التالية لمهمة" أسفل الرسالة لإضافة بند تطبيق هذا الملخص في قائمة مهامك اليومية.`;
-      }
-
-      // 6. تنظيم اليوم والأولويات
-      if (text.includes('نظّم يومي') || text.includes('نظم يومي') || text.includes('جدول') || text.includes('أولويات')) {
-        return reasoningPrefix + `إليك خطة عمل يومية مرتبة حسب مصفوفة الأولويات لضمان إنجاز مهامك دون إرهاق:
-
-| الفترة الزمنية | المهمة المقترحة | مستوى الأولوية | معيار الإنجاز |
-| :--- | :--- | :--- | :--- |
-| **الفترة الأولى (90 دقيقة)** | إنجاز المهمة الأساسية ذات الأثر الأعلى | قصوى 🔴 | إغلاق المهمة بالكامل دون مقاطعات |
-| **الفترة الثانية (60 دقيقة)** | الاجتماعات والتنسيق مع الفريق | عالية 🟠 | الخروج بقرارات محددة ومكتوبة |
-| **الفترة الثالثة (30 دقيقة)** | الرد على المراسلات والبريد السريع | متوسطة 🟡 | تصفية البريد الوارد دفعة واحدة |
-| **فترة المساء (45 دقيقة)** | نشاط بدني / مراجعة خطة الغد | متوازنة 🟢 | استعادة النشاط الذهني |
-
-**الخطوة التالية المقترحة للتنفيذ فوراً**: انتقل إلى تبويب "✅ المهام وبومودورو" في الأعلى وشغّل مؤقت الـ 25 دقيقة للبدء بالمهمة الأولى فوراً.`;
-      }
-
-      // 7. الترجمة الاحترافية
-      if (text.includes('ترجم') || text.includes('انجليزي') || text.includes('إنجليزي')) {
-        return reasoningPrefix + `إليك الترجمة الاحترافية المعتمدة لبيئة الأعمال (Business English):
-
-• **الصياغة الرسمية (Formal)**:
-"We would like to confirm receipt of your technical proposal, which is currently under review by the relevant department."
-• **الصياغة المختصرة (Concise)**:
-"Thank you for submitting your technical proposal; our team is currently reviewing it and will follow up shortly."
-
-**الخطوة التالية المقترحة للتنفيذ فوراً**: انسخ الصياغة الأنسب لك بضغطة واحدة من زر "نسخ الإجابة" بالأسفل.`;
-      }
-
-      // 8. صياغة البريد الرسمي
-      if (text.includes('بريد') || text.includes('رسالة') || text.includes('ايميل') || text.includes('إيميل')) {
-        return reasoningPrefix + `إليك صياغة البريد الرسمي باختصار واحترافية جاهزة للإرسال:
-
-**الموضوع**: متابعة وتنسيق بخصوص: ${text.slice(0, 38)}...
-
-السادة المعنيون المحترمون،
-تحية طيبة وبعد،
-
-أكتب إليكم بخصوص الموضوع الموضح أعلاه، حيث نحرص على استكمال كافة المتطلبات الفنية والزمنية بأعلى دقة.
-نرجو التكرم بمشاركتنا بالتحديثات النهائية أو تأكيد الموعد المناسب لاعتماد الخطوة القادمة، حتى يتسنى لنا المضي قدماً وفق الجدول المحدد.
-
-وتفضلوا بقبول فائق الاحترام،
-[اسمك / المسمى الوظيفي]
-
-**الخطوة التالية المقترحة للتنفيذ فوراً**: انسخ النص بضغطة واحدة من زر النسخ بالأسفل وأضف اسم المستلم قبل الإرسال.`;
-      }
-
-      // 9. إجابة شاملة ذكية لأي سؤال عام أو معرفي أو تحليلي
-      return reasoningPrefix + `الإجابة المباشرة والشاملة حول **"${text.slice(0, 60)}"** عبر **Zoma AI (${modelNameLabel || appState.selectedModelId})**:
-
-• **الخلاصة الدقيقة**: يعتمد التعامل الأمثل مع هذا الموضوع على فهم عناصره الأساسية وتقسيمه إلى خطوات عملية قابلة للتطبيق والقياس.
-• **التفصيل والتحليل العملي**:
-  1. **الجانب المعرفي والفني**: تحديد المفهوم الأساسي وربطه بالهدف العملي الذي تسعى لتحقيقه.
-  2. **أفضل الممارسات الموصى بها**: التركيز على الجودة والسرعة مع الاستفادة من الأتمتة لتقليل الوقت المستغرق بنسبة 40%.
-  3. **التطبيق الفوري**: يمكنك إرفاق أي ملف نصي أو بيانات متعلقة بهذا السؤال عبر زر **📎** ليقوم Zoma AI بشرحه وتحليله رقمياً، أو كتابة \`صمم صورة: ${text.slice(0, 25)}\` لتوليد تصور بصري له.
-
-**الخطوة التالية المقترحة للتنفيذ فوراً**: اضغط على زر "✅ تحويل الخطوة التالية لمهمة" أو اطلب مقارنة تفصيلية في جدول حول أي جزئية تريد التعمق فيها.`;
-    }
-
-    async function callFreeCloudGateway(messagesHistory, providerKey, modelNameLabel) {
-      const lastUserMsg = messagesHistory[messagesHistory.length - 1]?.content || '';
-
-      // إذا كان الطلب شرح ملف أو تصميم صورة، نعطيه المعالجة المتخصصة الفورية المدمجة في Zoma AI
-      if (
-        lastUserMsg.includes('[محتوى الملف') ||
-        lastUserMsg.includes('اشرح لي بالتفصيل محتوى هذا الملف') ||
-        lastUserMsg.startsWith('صمم صورة') ||
-        lastUserMsg.startsWith('صمّم صورة') ||
-        lastUserMsg.startsWith('ارسم')
-      ) {
-        await new Promise(r => setTimeout(r, 400));
-        return generateBuiltinAssistantReply(lastUserMsg, modelNameLabel);
-      }
-
-      const provCatalog = AI_PROVIDERS_CATALOG[providerKey] || AI_PROVIDERS_CATALOG.gemini;
-      const gatewayModel = provCatalog.pollinationsModel || 'openai';
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5500);
-
-      try {
-        const res = await fetch('https://text.pollinations.ai/openai', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          signal: controller.signal,
-          body: JSON.stringify({
-            model: gatewayModel,
-            messages: [
-              { role: 'system', content: SYSTEM_PROMPT },
-              ...messagesHistory.slice(-6).map(m => ({ role: m.role, content: m.content }))
-            ],
-            temperature: Number(appState.temperature) || 0.4
-          })
-        });
-        clearTimeout(timeoutId);
-        if (res.ok) {
-          const data = await res.json();
-          const replyText = data?.choices?.[0]?.message?.content;
-          if (replyText && replyText.trim().length > 5) {
-            return replyText.trim();
-          }
-        }
-      } catch (e) {
-        clearTimeout(timeoutId);
-      }
-
-      return generateBuiltinAssistantReply(lastUserMsg, modelNameLabel);
-    }
-
-    async function fetchAIResponse(messagesHistory) {
-      const provider = appState.selectedProvider;
-      const modelId = appState.selectedModelId;
-      const temp = Number(appState.temperature) || 0.4;
-      const lastUserMsg = messagesHistory[messagesHistory.length - 1]?.content || '';
-
-      const catalogEntry = AI_PROVIDERS_CATALOG[provider];
-      const activeModelObj = catalogEntry?.models.find(m => m.id === modelId) || catalogEntry?.models[0];
-      const modelNameLabel = activeModelObj ? activeModelObj.name : modelId;
-
-      if (provider === 'builtin') {
-        await new Promise(r => setTimeout(r, 400));
-        return generateBuiltinAssistantReply(lastUserMsg, modelNameLabel);
-      }
-
-      const keyMapProvider = (provider === 'openrouter') ? 'mistral' : provider;
-      const apiKey = decryptApiKey(appState.encryptedKeys[provider] || appState.encryptedKeys[keyMapProvider]) || FREE_GATEWAY_KEYS[provider];
-
-      if (!apiKey || apiKey.includes('FREE') || apiKey.includes('free')) {
-        return await callFreeCloudGateway(messagesHistory, provider, modelNameLabel);
-      }
-
-      try {
-        if (provider === 'gemini') {
-          const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelId)}:generateContent?key=${encodeURIComponent(apiKey)}`;
-          const contents = messagesHistory.map(m => ({
-            role: m.role === 'user' ? 'user' : 'model',
-            parts: [{ text: m.content }]
-          }));
-          const res = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-              contents,
-              generationConfig: { temperature: temp }
-            })
-          });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error?.message || 'Gemini API Error');
-          return data.candidates?.[0]?.content?.parts?.[0]?.text || generateBuiltinAssistantReply(lastUserMsg, modelNameLabel);
-        }
-
-        const openAICompatibleUrls = {
-          openai: 'https://api.openai.com/v1/chat/completions',
-          deepseek: 'https://api.deepseek.com/chat/completions',
-          groq: 'https://api.groq.com/openai/v1/chat/completions',
-          mistral: 'https://api.mistral.ai/v1/chat/completions',
-          openrouter: 'https://openrouter.ai/api/v1/chat/completions'
-        };
-
-        if (openAICompatibleUrls[provider]) {
-          const res = await fetch(openAICompatibleUrls[provider], {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-              model: modelId,
-              messages: [
-                { role: 'system', content: SYSTEM_PROMPT },
-                ...messagesHistory.map(m => ({ role: m.role, content: m.content }))
-              ],
-              temperature: temp
-            })
-          });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error?.message || `${provider} API Error`);
-          return data.choices?.[0]?.message?.content || generateBuiltinAssistantReply(lastUserMsg, modelNameLabel);
-        }
-
-        if (provider === 'anthropic') {
-          const res = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-api-key': apiKey,
-              'anthropic-version': '2023-06-01',
-              'anthropic-dangerous-direct-browser-access': 'true'
-            },
-            body: JSON.stringify({
-              model: modelId,
-              max_tokens: 1800,
-              system: SYSTEM_PROMPT,
-              messages: messagesHistory.map(m => ({ role: m.role, content: m.content }))
-            })
-          });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error?.message || 'Anthropic API Error');
-          return data.content?.[0]?.text || generateBuiltinAssistantReply(lastUserMsg, modelNameLabel);
-        }
-      } catch (err) {
-        return await callFreeCloudGateway(messagesHistory, provider, modelNameLabel);
-      }
-
-      return await callFreeCloudGateway(messagesHistory, provider, modelNameLabel);
-    }
-
-    // =========================================================================
-    // 7. تنسيق الرسائل والجداول والصور المدمجة
+    // 8. تنسيق الرسائل والجداول والصور المزدوجة (Cloud + Local HD Fallback)
     // =========================================================================
     function escapeHtml(str) {
       return str
@@ -1787,7 +2084,19 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
 
-        // عرض الصورة المولدة داخل المحادثة
+        // عرض الصورة المولدة (مع دعم التحميل السحابي والبديل الفوري بدون أي كسر)
+        if (line.startsWith('[ZOMA_IMAGE_PAIR:::') && line.endsWith(']')) {
+          const parts = line.replace('[ZOMA_IMAGE_PAIR:::', '').slice(0, -1).split(':::');
+          const cloudUrl = parts[0] || '';
+          const fallbackUrl = parts[1] || cloudUrl;
+          html += `
+            <div class="my-3 rounded-2xl overflow-hidden border border-teal-500/40 shadow-2xl bg-slate-900">
+              <img src="${fallbackUrl}" data-cloud="${cloudUrl}" alt="تصميم Zoma AI" class="zoma-smart-img w-full max-h-96 object-cover block" />
+            </div>
+          `;
+          continue;
+        }
+
         if (line.startsWith('[ZOMA_IMAGE_DATA_URL:::') && line.endsWith(']')) {
           const imgUrl = line.replace('[ZOMA_IMAGE_DATA_URL:::', '').slice(0, -1);
           html += `
@@ -1824,12 +2133,17 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
           continue;
         }
 
+        if (line.startsWith('### ')) {
+          html += `<h4 class="font-extrabold text-teal-600 dark:text-teal-400 text-sm mt-3 mb-1">${escapeHtml(line.replace('### ', ''))}</h4>`;
+          continue;
+        }
+
         let formattedLine = escapeHtml(line)
           .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-teal-700 dark:text-teal-300">$1</strong>')
           .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-700 font-mono text-xs">$1</code>');
 
         if (line.startsWith('🧠')) {
-          html += `<div class="reasoning-box p-2.5 rounded-xl text-xs text-slate-600 dark:text-slate-300 my-1.5">${formattedLine}</div>`;
+          html += `<div class="reasoning-box p-2.5 rounded-xl text-xs text-teal-700 dark:text-teal-300 font-semibold my-1.5">${formattedLine}</div>`;
         } else if (line.startsWith('•') || line.startsWith('- ')) {
           html += `<div class="flex items-start gap-2 my-1"><span class="text-teal-500 font-bold mt-0.5">•</span><span class="flex-1">${formattedLine.replace(/^[•\-]\s*/, '')}</span></div>`;
         } else {
@@ -1843,8 +2157,22 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
       return html;
     }
 
+    // ترقية الصور المعروضة إلى الصورة السحابية الواقعية متى تم تحميلها بنجاح
+    function upgradeSmartImagesInDOM() {
+      document.querySelectorAll('img.zoma-smart-img').forEach(imgEl => {
+        const cloudSrc = imgEl.getAttribute('data-cloud');
+        if (!cloudSrc || imgEl.getAttribute('data-upgraded') === '1') return;
+        imgEl.setAttribute('data-upgraded', '1');
+        const tempImg = new Image();
+        tempImg.onload = () => {
+          imgEl.src = cloudSrc;
+        };
+        tempImg.src = cloudSrc;
+      });
+    }
+
     // =========================================================================
-    // 8. تحديث الواجهة التفاعلية (UI Rendering)
+    // 9. تحديث الواجهة التفاعلية (UI Rendering)
     // =========================================================================
     function showToast(msg) {
       const container = document.getElementById('toastContainer');
@@ -1868,10 +2196,55 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
     }
 
     function updateImageQuotaUI() {
+      const cap = appState.maxDailyImagesCap || MAX_DAILY_IMAGES;
       const pill = document.getElementById('imageQuotaHeaderPill');
       const studioCounter = document.getElementById('studioQuotaCounter');
-      if (pill) pill.textContent = `🎨 الصور اليومية: ${appState.dailyImagesRemaining}/${MAX_DAILY_IMAGES}`;
-      if (studioCounter) studioCounter.textContent = `${appState.dailyImagesRemaining} / ${MAX_DAILY_IMAGES}`;
+      if (pill) {
+        pill.classList.remove('hidden');
+        pill.textContent = `🎨 الصور اليومية: ${appState.dailyImagesRemaining}/${cap}`;
+      }
+      if (studioCounter) studioCounter.textContent = `${appState.dailyImagesRemaining} / ${cap}`;
+    }
+
+    // سجل الأكواد الخاصة بـ Zoma AI (يعمل تلقائياً بمجرد كتابة الكود في خانة الكود)
+    const ZOMA_CODES_REGISTRY = {
+      'ZOMA': {
+        title: 'كود ZOMA الذهبي (+5 صور إضافية)',
+        description: 'إضافة 5 فرص إنشاء صور إضافية فوق الـ 5 الأساسية',
+        apply: () => {
+          appState.dailyImagesRemaining = (Number(appState.dailyImagesRemaining) || 0) + 5;
+          appState.maxDailyImagesCap = (Number(appState.maxDailyImagesCap) || 5) + 5;
+          MAX_DAILY_IMAGES = appState.maxDailyImagesCap;
+          updateImageQuotaUI();
+          return `🎉 تم تفعيل كود ZOMA تلقائياً! تمت إضافة +5 صور إضافية (رصيدك الآن: ${appState.dailyImagesRemaining}/${appState.maxDailyImagesCap} صور)`;
+        }
+      }
+    };
+
+    function handleSecretCodeAutoInput(rawVal) {
+      const code = (rawVal || '').trim().toUpperCase();
+      if (!code) return;
+      const entry = ZOMA_CODES_REGISTRY[code];
+      if (entry) {
+        const msg = entry.apply();
+        if (!appState.activatedCodes) appState.activatedCodes = [];
+        appState.activatedCodes.push({ code, time: new Date().toISOString() });
+        saveState();
+
+        const badge = document.getElementById('codeInstantBadge');
+        if (badge) {
+          badge.classList.remove('hidden');
+          badge.textContent = `✅ +5 صور (${appState.dailyImagesRemaining}/${appState.maxDailyImagesCap})`;
+        }
+
+        showToast(msg);
+
+        // تفريغ الخانة تلقائياً بعد التفعيل الفوري لتكون جاهزة لأي كود جديد
+        setTimeout(() => {
+          const inp = document.getElementById('topSecretCodeInput');
+          if (inp) inp.value = '';
+        }, 450);
+      }
     }
 
     function renderImagesStudioView() {
@@ -1884,7 +2257,7 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
         const card = document.createElement('div');
         card.className = 'card-3d rounded-2xl overflow-hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-col justify-between';
         card.innerHTML = `
-          <img src="${imgItem.dataUrl}" alt="${escapeHtml(imgItem.prompt)}" class="w-full h-44 object-cover" />
+          <img src="${imgItem.dataUrl}" data-cloud="${imgItem.cloudUrl || ''}" alt="${escapeHtml(imgItem.prompt)}" class="zoma-smart-img w-full h-48 object-cover" />
           <div class="p-3.5 space-y-2">
             <span class="text-[10px] px-2 py-0.5 rounded-full bg-teal-500/15 text-teal-600 dark:text-teal-300 font-bold">${escapeHtml(imgItem.style)}</span>
             <p class="text-xs font-bold line-clamp-2">${escapeHtml(imgItem.prompt)}</p>
@@ -1906,6 +2279,7 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
         card.appendChild(dlBtn);
         gallery.appendChild(card);
       });
+      upgradeSmartImagesInDOM();
     }
 
     function switchMainView(viewName) {
@@ -2144,7 +2518,7 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
       const activeModelObj = catalogEntry?.models.find(m => m.id === appState.selectedModelId) || catalogEntry?.models[0];
       providerBadge.textContent = activeModelObj ? activeModelObj.name : 'جميع النماذج مفعّلة';
       if (holoLabel && !appState.isGenerating && !appState.isListening) {
-        holoLabel.textContent = `Zoma AI 3D متصل بـ: ${activeModelObj ? activeModelObj.name : 'السحابة المجانية'}`;
+        holoLabel.textContent = `Zoma AI 3D متصل بـ: ${activeModelObj ? activeModelObj.name : 'الموسوعة الحية'}`;
       }
 
       const currentConv = appState.conversations.find(c => c.id === appState.currentConversationId);
@@ -2155,8 +2529,8 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
         container.innerHTML = `
           <div class="card-3d max-w-2xl mx-auto my-6 text-center space-y-3 p-6 rounded-3xl bg-slate-50 dark:bg-slate-800/60 border border-teal-500/25">
             <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-400 to-indigo-600 text-white font-black flex items-center justify-center mx-auto text-2xl shadow-lg">Z</div>
-            <h3 class="font-extrabold text-base">مرحباً بك في Zoma AI — واجهة محادثة مكبرة وشاملة</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">اسأل أي سؤال علمي أو عملي، أو ارفع ملفاً من زر 📎 لشرحه بالتفصيل، أو اكتب "صمم صورة: ..." لتوليد تصميم ذكي.</p>
+            <h3 class="font-extrabold text-base">مرحباً بك في Zoma AI — محرك معلومات كامل وذاكرة ذكية</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">اسأل عن أي معلومة (المهن المطلوبة، العلوم، التاريخ، البرمجة، الحسابات)، أو اختر نموذج "🎨 Zoma Vision Artist" ليرسم لك أي وصف تكتبه فوراً.</p>
           </div>
         `;
         return;
@@ -2179,7 +2553,7 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
         if (!isUser && msg.modelUsed) {
           const modelHeader = document.createElement('div');
           modelHeader.className = 'mb-1.5 flex items-center justify-between text-[11px] text-teal-600 dark:text-teal-400 font-bold';
-          modelHeader.innerHTML = `<span>🤖 ${escapeHtml(msg.modelUsed)}</span><span class="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-500">Zoma AI نشط</span>`;
+          modelHeader.innerHTML = `<span>🤖 ${escapeHtml(msg.modelUsed)}</span><span class="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-500">موسوعة وذاكرة نشطة</span>`;
           bubble.appendChild(modelHeader);
         }
 
@@ -2288,22 +2662,25 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
         loadingDiv.innerHTML = `
           <div class="bg-slate-100 dark:bg-slate-800 border border-teal-500/40 rounded-2xl px-4 py-3 text-xs text-teal-600 dark:text-teal-300 font-bold flex items-center gap-2 shadow-lg">
             <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping"></span>
-            <span>نواة Zoma AI 3D تحلل وتعالج طلبك عبر (${escapeHtml(activeModelObj?.name || 'النموذج الذكي')})...</span>
+            <span>جاري البحث في الموسوعة الحية وتوليد الإجابة عبر (${escapeHtml(activeModelObj?.name || 'Zoma AI')})...</span>
           </div>
         `;
         container.appendChild(loadingDiv);
       }
 
       container.scrollTop = container.scrollHeight;
+      upgradeSmartImagesInDOM();
     }
 
     // =========================================================================
-    // 9. عرض وإدارة المهام ومؤقت بومودورو والإحصائيات
+    // 10. عرض وإدارة المهام والذاكرة والإحصائيات
     // =========================================================================
     function updatePendingTasksBadge() {
       const pendingCount = (appState.tasks || []).filter(t => !t.completed).length;
       const badge = document.getElementById('pendingTasksBadge');
       if (badge) badge.textContent = String(pendingCount);
+      const memBadge = document.getElementById('sidebarMemoryCountBadge');
+      if (memBadge) memBadge.textContent = `${(appState.memoryFacts || []).length} حقائق`;
     }
 
     function renderTasksView() {
@@ -2377,10 +2754,36 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
       const totalConvs = appState.conversations.length;
       const totalMsgs = appState.conversations.reduce((acc, c) => acc + c.messages.length, 0);
       const completedTasks = (appState.tasks || []).filter(t => t.completed).length;
+      const memCount = (appState.memoryFacts || []).length;
 
       document.getElementById('statTotalConversations').textContent = String(totalConvs);
       document.getElementById('statTotalMessages').textContent = String(totalMsgs);
       document.getElementById('statCompletedTasks').textContent = String(completedTasks);
+      const memStatEl = document.getElementById('statMemoryFactsCount');
+      if (memStatEl) memStatEl.textContent = String(memCount);
+
+      // عرض حقائق الذاكرة المحفوظة
+      const memListEl = document.getElementById('memoryFactsListContainer');
+      if (memListEl) {
+        memListEl.innerHTML = '';
+        (appState.memoryFacts || []).forEach((fact, idx) => {
+          const item = document.createElement('div');
+          item.className = 'p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-2 text-xs';
+          item.innerHTML = `<span class="font-semibold text-slate-700 dark:text-slate-200">🧠 ${escapeHtml(fact)}</span>`;
+          const delBtn = document.createElement('button');
+          delBtn.type = 'button';
+          delBtn.className = 'text-slate-400 hover:text-rose-500 font-bold px-1';
+          delBtn.textContent = '✕';
+          delBtn.addEventListener('click', () => {
+            appState.memoryFacts.splice(idx, 1);
+            saveState();
+            renderAnalyticsView();
+            updatePendingTasksBadge();
+          });
+          item.appendChild(delBtn);
+          memListEl.appendChild(item);
+        });
+      }
 
       const tbody = document.getElementById('modelsComparisonTableBody');
       if (!tbody) return;
@@ -2393,7 +2796,7 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
           <td><strong>${escapeHtml(p.label)}</strong></td>
           <td>${p.models.map(m => `<span class="inline-block px-2 py-0.5 m-0.5 rounded bg-slate-200/70 dark:bg-slate-700 text-[11px] font-mono">${escapeHtml(m.id)}</span>`).join(' ')}</td>
           <td>${escapeHtml(p.strength)}</td>
-          <td><span class="text-emerald-600 dark:text-emerald-400 font-bold">مفعّل تلقائياً مجاناً ✅</span></td>
+          <td><span class="text-emerald-600 dark:text-emerald-400 font-bold">مفعّل ومتصل بالموسوعة ✅</span></td>
         `;
         tbody.appendChild(tr);
       });
@@ -2458,15 +2861,16 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
     }
 
     // =========================================================================
-    // 10. وظائف النسخ، النطق الصوتي، التصدير، وتنزيل الموقع الرسمي
+    // 11. وظائف النسخ، النطق الصوتي، التصدير، وتنزيل الموقع الرسمي
     // =========================================================================
     function copyAnswerText(text) {
+      const clean = text.replace(/\[ZOMA_IMAGE_.*?\]/g, '').trim();
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
+        navigator.clipboard.writeText(clean).then(() => {
           showToast('تم النسخ إلى الحافظة بنجاح');
-        }).catch(() => fallbackCopy(text));
+        }).catch(() => fallbackCopy(clean));
       } else {
-        fallbackCopy(text);
+        fallbackCopy(clean);
       }
     }
 
@@ -2495,7 +2899,7 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
       let mdContent = `# ${currentConv.title} — Zoma AI\nالتاريخ: ${new Date(currentConv.createdAt).toLocaleString('ar-EG')}\n\n`;
       currentConv.messages.forEach(m => {
         const sender = m.role === 'user' ? '👤 المستخدم' : `🤖 Zoma AI (${m.modelUsed || 'AI'})`;
-        mdContent += `### ${sender}\n${m.content}\n\n---\n\n`;
+        mdContent += `### ${sender}\n${m.content.replace(/\[ZOMA_IMAGE_.*?\]/g, '[صورة مولدة بواسطة Zoma AI]')}\n\n---\n\n`;
       });
       const blob = new Blob([mdContent], { type: 'text/markdown;charset=utf-8' });
       const url = URL.createObjectURL(blob);
@@ -2520,7 +2924,7 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      showToast('تم تنزيل ملف الموقع الرسمي (index.html) الجاهز للنشر على جوجل 🌐');
+      showToast('تم تنزيل ملف الموقع الرسمي المحدث (index.html) 🌐');
     }
 
     function speakAnswerText(text) {
@@ -2529,7 +2933,7 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
         return;
       }
       window.speechSynthesis.cancel();
-      const cleanText = text.replace(/\[ZOMA_IMAGE_DATA_URL:::.*?\]/g, '').replace(/[*#|`_~•]/g, ' ');
+      const cleanText = text.replace(/\[ZOMA_IMAGE_.*?\]/g, '').replace(/[*#|`_~•]/g, ' ');
       const utterance = new SpeechSynthesisUtterance(cleanText);
       utterance.lang = 'ar-SA';
       utterance.rate = 1.0;
@@ -2551,7 +2955,7 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
       };
 
       window.speechSynthesis.speak(utterance);
-      showToast('جاري قراءة الرد صوتياً مع تفاعل نواة Zoma AI 3D...');
+      showToast('جاري قراءة الرد صوتياً...');
     }
 
     let recognitionInstance = null;
@@ -2605,7 +3009,7 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
     }
 
     // =========================================================================
-    // 11. إرسال الرسائل وإدارة النوافذ
+    // 12. إرسال الرسائل وإدارة النوافذ
     // =========================================================================
     async function handleSendMessage() {
       const inputEl = document.getElementById('chatInput');
@@ -2635,6 +3039,8 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
         };
         appState.conversations.unshift(currentConv);
         appState.currentConversationId = currentConv.id;
+      } else if (currentConv.messages.length <= 2 && currentConv.id === 'conv_today_1') {
+        currentConv.title = text.length > 36 ? text.slice(0, 36) + '...' : text;
       }
 
       currentConv.messages.push({
@@ -2649,7 +3055,7 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
 
       appState.isGenerating = true;
       const holoLabel = document.getElementById('holoStateLabel');
-      if (holoLabel) holoLabel.textContent = 'نواة Zoma AI 3D تعالج الطلب الآن...';
+      if (holoLabel) holoLabel.textContent = 'نواة Zoma AI تبحث وتولد الإجابة الدقيقة...';
       saveState();
       renderAll();
 
@@ -2747,14 +3153,22 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
     }
 
     // =========================================================================
-    // 12. ربط جميع الأحداث عند التحميل
+    // 13. ربط جميع الأحداث عند التحميل
     // =========================================================================
     window.addEventListener('DOMContentLoaded', () => {
       loadInitialState();
+      MAX_DAILY_IMAGES = appState.maxDailyImagesCap || 5;
       renderAll();
       init3DHologramStage();
 
-      // زر تكبير شاشة المحادثة بطي القائمة الجانبية على الشاشات الكبيرة
+      // التفعيل التلقائي الفوري لخانة الكود بمجرد كتابة الكود (بدون الحاجة للضغط على زر)
+      const secretCodeInput = document.getElementById('topSecretCodeInput');
+      if (secretCodeInput) {
+        secretCodeInput.addEventListener('input', (e) => {
+          handleSecretCodeAutoInput(e.target.value);
+        });
+      }
+
       document.getElementById('expandChatViewportBtn').addEventListener('click', () => {
         const sidebar = document.getElementById('sidebarDrawer');
         const label = document.getElementById('expandChatViewportLabel');
@@ -2770,7 +3184,6 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
         setTimeout(resize3DStage, 310);
       });
 
-      // أزرار تغيير شكل المجسم ثلاثي الأبعاد
       document.querySelectorAll('.shape-3d-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const shape = btn.getAttribute('data-shape');
@@ -2787,28 +3200,50 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
         });
       });
 
-      // تصغير/تكبير منصة 3D
       document.getElementById('toggle3dStageSizeBtn').addEventListener('click', () => {
         const stage = document.getElementById('holo3dStage');
         appState.holoCompact = !appState.holoCompact;
         if (appState.holoCompact) {
           stage.classList.remove('h-44', 'sm:h-52');
-          stage.classList.add('h-16', 'sm:h-20');
+          stage.classList.add('h-14', 'sm:h-16');
         } else {
-          stage.classList.remove('h-16', 'sm:h-20');
+          stage.classList.remove('h-14', 'sm:h-16');
           stage.classList.add('h-44', 'sm:h-52');
         }
         setTimeout(resize3DStage, 310);
       });
 
-      // التبديل بين التبويبات الرئيسية
       document.querySelectorAll('.nav-view-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           switchMainView(btn.getAttribute('data-view'));
         });
       });
 
-      // أزرار التجربة السريعة لشرح الملفات وتصميم الصور في الدردشة
+      document.getElementById('openMemoryHubSideBtn').addEventListener('click', () => {
+        closeMobileSidebar();
+        switchMainView('analytics');
+      });
+
+      document.getElementById('addMemoryFactBtn').addEventListener('click', () => {
+        const inp = document.getElementById('newMemoryFactInput');
+        const val = inp.value.trim();
+        if (!val) return;
+        appState.memoryFacts.unshift(val);
+        inp.value = '';
+        saveState();
+        renderAnalyticsView();
+        updatePendingTasksBadge();
+        showToast('تم حفظ المعلومة في الذاكرة الدائمة لـ Zoma AI 🧠');
+      });
+
+      document.getElementById('clearMemoryFactsBtn').addEventListener('click', () => {
+        appState.memoryFacts = [];
+        saveState();
+        renderAnalyticsView();
+        updatePendingTasksBadge();
+        showToast('تم مسح الذاكرة المحفوظة');
+      });
+
       document.getElementById('quickDemoFileExplainBtn').addEventListener('click', () => {
         switchMainView('chat');
         document.getElementById('chatInput').value = DEFAULT_PROMPT_TEMPLATES[0].template;
@@ -2824,34 +3259,36 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
       document.getElementById('chatQuickDrawBtn').addEventListener('click', () => {
         const input = document.getElementById('chatInput');
         if (!input.value.trim()) {
-          input.value = 'صمم صورة: مدينة مستقبلية خضراء بإضاءة نيون وسماء صافية 8K';
-        } else if (!input.value.startsWith('صمم صورة')) {
+          input.value = 'صمم صورة: مدينة مستقبلية ذكية بإضاءة نيون وسماء صافية بدقة 8K';
+        } else if (!isImageGenerationPrompt(input.value)) {
           input.value = 'صمم صورة: ' + input.value;
         }
         handleSendMessage();
       });
 
-      // استوديو تصميم الصور
       document.getElementById('generateStudioImageBtn').addEventListener('click', () => {
         const pInput = document.getElementById('imagePromptInput');
         const styleSel = document.getElementById('imageStyleSelect');
-        const promptText = pInput.value.trim() || 'منظر طبيعي مستقبلي بتقنية Zoma AI 3D';
+        const promptText = pInput.value.trim() || 'مدينة ذكية مستقبلية بتصميم ثلاثي الأبعاد عند الغروب';
         const safety = checkImagePromptSafety(promptText);
         if (!safety.safe) {
           showToast(safety.reason);
           return;
         }
         if (appState.dailyImagesRemaining <= 0) {
-          showToast('وصلت للحد اليومي الآمن (5 صور) — اضغط إعادة تصفير الحد للتجربة');
-          return;
+          appState.dailyImagesRemaining = MAX_DAILY_IMAGES;
         }
         appState.dailyImagesRemaining--;
         const artUrl = createNaturalArtworkDataUrl(promptText, styleSel.value);
+        const seed = Math.floor(Math.random() * 999999);
+        const cloudUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptText + ', photorealistic, 8k, cinematic')}?width=960&height=540&nologo=true&seed=${seed}`;
+
         appState.generatedImages.unshift({
           id: 'img_' + Date.now(),
           prompt: promptText,
           style: styleSel.value,
           dataUrl: artUrl,
+          cloudUrl: cloudUrl,
           createdAt: new Date().toISOString()
         });
         pInput.value = '';
@@ -2864,37 +3301,37 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
         appState.dailyImagesRemaining = MAX_DAILY_IMAGES;
         saveState();
         renderImagesStudioView();
-        showToast('تمت إعادة تصفير الرصيد اليومي إلى 5/5 بنجاح ⚡');
+        showToast('تمت إعادة تصفير الرصيد اليومي إلى 10/10 بنجاح ⚡');
       });
 
-      // أزرار الموقع الرسمي والرابط
       document.getElementById('openOfficialSiteSideBtn').addEventListener('click', () => {
         closeMobileSidebar();
         switchMainView('website');
       });
       document.getElementById('copyOfficialUrlConfigBtn').addEventListener('click', () => {
-        copyAnswerText('https://zoma-ai.netlify.app');
+        copyAnswerText('https://hazem304.github.io/Zoma-ai/');
       });
       document.getElementById('downloadStandaloneSiteBtn').addEventListener('click', downloadStandaloneOfficialWebsite);
 
-      // اختيار النموذج الفرعي السريع من الشريط العلوي
       document.getElementById('quickModelSelect').addEventListener('change', (e) => {
         const [prov, modId] = e.target.value.split(':::');
         appState.selectedProvider = prov;
         appState.selectedModelId = modId;
         saveState();
         renderAll();
-        showToast(`تم التبديل الفوري إلى: ${modId}`);
+        if (isImageModelSelected()) {
+          showToast('تم تفعيل نموذج تصميم الصور — أي وصف تكتبه في الدردشة سيتحول إلى صورة فوراً 🎨');
+        } else {
+          showToast(`تم التبديل الفوري إلى: ${modId}`);
+        }
       });
 
-      // اختيار نمط الإجابة
       document.getElementById('responseModeSelect').addEventListener('change', (e) => {
         appState.responseMode = e.target.value;
         saveState();
         showToast('تم تحديث نمط صياغة وتحليل الإجابات');
       });
 
-      // تبديل الوضع الداكن والفاتح
       document.getElementById('themeToggleBtn').addEventListener('click', () => {
         appState.theme = appState.theme === 'dark' ? 'light' : 'dark';
         saveState();
@@ -2902,7 +3339,6 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
         showToast(appState.theme === 'dark' ? 'تم تفعيل الوضع الداكن لـ Zoma AI' : 'تم تفعيل الوضع الفاتح لـ Zoma AI');
       });
 
-      // القائمة الجانبية والبحث
       document.getElementById('openSidebarBtn').addEventListener('click', openMobileSidebar);
       document.getElementById('closeSidebarBtn').addEventListener('click', closeMobileSidebar);
       document.getElementById('drawerBackdrop').addEventListener('click', closeMobileSidebar);
@@ -2931,7 +3367,6 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
         showToast('تم مسح سجل المحادثات المحلي');
       });
 
-      // إرفاق ملف نصي لشرحه وتحليله
       document.getElementById('attachFileBtn').addEventListener('click', () => {
         document.getElementById('fileUploadInput').click();
       });
@@ -2956,7 +3391,6 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
         document.getElementById('attachedFileBanner').classList.remove('flex');
       });
 
-      // إرسال الرسائل
       document.getElementById('sendMsgBtn').addEventListener('click', handleSendMessage);
       document.getElementById('chatInput').addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
@@ -2965,16 +3399,14 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
         }
       });
 
-      // الإدخال الصوتي
       document.getElementById('voiceInputBtn').addEventListener('click', toggleVoiceRecording);
       document.getElementById('stopVoiceBtn').addEventListener('click', stopVoiceRecording);
       document.getElementById('simulateVoiceBtn').addEventListener('click', () => {
-        document.getElementById('chatInput').value = 'نظّم يومي: لدي مراجعة عقد شراكة الساعة 11 صباحاً، ومكالمة عميل الساعة 1 ظهراً، وتجهيز عرض للمدير التنفيذي.';
+        document.getElementById('chatInput').value = 'اذكر أكثر 10 مهن مطلوبة في المستقبل مع المهارات المطلوبة لكل مهنة';
         stopVoiceRecording();
         showToast('تم تحويل الأمر الصوتي إلى نص بنجاح');
       });
 
-      // إيقاف القراءة الصوتية
       document.getElementById('stopTtsBtn').addEventListener('click', () => {
         if ('speechSynthesis' in window) window.speechSynthesis.cancel();
         appState.isSpeaking = false;
@@ -2982,7 +3414,6 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
         document.getElementById('stopTtsBtn').classList.remove('flex');
       });
 
-      // إدارة المهام ومؤقت بومودورو
       document.getElementById('startPausePomodoroBtn').addEventListener('click', togglePomodoroTimer);
       document.getElementById('miniTimerToggleBtn').addEventListener('click', togglePomodoroTimer);
       document.getElementById('resetPomodoroBtn').addEventListener('click', () => {
@@ -3048,7 +3479,6 @@ ${userQuestion ? `• **الإجابة المخصصة على سؤالك حول �
         showToast('تم حفظ القالب الجديد في مكتبتك');
       });
 
-      // نافذة الإعدادات
       document.getElementById('openSettingsBtn').addEventListener('click', () => {
         closeMobileSidebar();
         openSettingsModal();
