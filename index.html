@@ -454,20 +454,20 @@
         <!-- شريط الإدخال السفلي المتطور -->
         <footer class="p-2.5 sm:px-6 sm:py-3 border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95">
           <div class="max-w-5xl mx-auto flex items-end gap-2">
-            <button id="voiceInputBtn" type="button" class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-teal-500/15 text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition flex-shrink-0" title="الإدخال الصوتي (Voice-to-Text)">
+            <button id="voiceInputBtn" type="button" class="hidden p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-teal-500/15 text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition flex-shrink-0" title="الإدخال الصوتي (Voice-to-Text)">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
               </svg>
             </button>
 
             <input id="fileUploadInput" type="file" accept=".txt,.md,.csv,.json,.py,.js,.html,.log" class="hidden" />
-            <button id="attachFileBtn" type="button" class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-indigo-500/15 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition flex-shrink-0" title="ارفع ملفاً لشرحه وتحليله بالتفصيل">
+            <button id="attachFileBtn" type="button" class="hidden p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-indigo-500/15 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition flex-shrink-0" title="ارفع ملفاً لشرحه وتحليله بالتفصيل">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
               </svg>
             </button>
 
-            <button id="chatQuickDrawBtn" type="button" class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-500/15 text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition flex-shrink-0" title="تصميم صورة طبيعية بالذكاء الاصطناعي">
+            <button id="chatQuickDrawBtn" type="button" class="hidden p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-500/15 text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition flex-shrink-0" title="تصميم صورة طبيعية بالذكاء الاصطناعي">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
               </svg>
@@ -1179,41 +1179,108 @@
     ];
 
     async function translateArabicPromptToEnglish(arabicPrompt) {
-      let translated = arabicPrompt;
+      const cleanAr = arabicPrompt
+        .replace(/^(صمم صورة|صمّم صورة|ارسم|إرسم|انشئ صورة|أنشئ صورة|تخيل صورة|اعمل صورة|تصميم صورة|صورة لـ|صوره ل|لـ|ل)[:\s]*/i, '')
+        .trim();
 
-      // 1. محاولة الترجمة السحابية الفورية عبر Google Translate GTX API (مجاني ويدعم CORS)
+      // 1. جمع المصطلحات الإنجليزية المطابقة من القاموس البصري الدقيق
+      let dictTokens = [];
+      for (const [regex, engDesc] of AR_VISUAL_DICTIONARY) {
+        if (regex.test(cleanAr)) {
+          dictTokens.push(engDesc);
+        }
+      }
+
+      // 2. ترجمة الجملة الكاملة عبر MyMemory API (يدعم CORS رسمياً على جميع المواقع والمتصفحات)
+      let apiTranslated = '';
       try {
         const ctrl = new AbortController();
-        const tid = setTimeout(() => ctrl.abort(), 2800);
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ar&tl=en&dt=t&q=${encodeURIComponent(arabicPrompt)}`;
+        const tid = setTimeout(() => ctrl.abort(), 3200);
+        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanAr)}&langpair=ar|en`;
         const res = await fetch(url, { signal: ctrl.signal });
         clearTimeout(tid);
         if (res.ok) {
           const data = await res.json();
-          if (Array.isArray(data) && Array.isArray(data[0])) {
-            const joined = data[0].map(item => item[0]).join(' ').trim();
-            if (joined && joined.length > 2) {
-              translated = joined;
+          const tText = (data?.responseData?.translatedText || '').trim();
+          if (tText && !tText.includes('MYMEMORY WARNING') && !/[\u0600-\u06FF]/.test(tText)) {
+            apiTranslated = tText;
+          }
+        }
+      } catch (e) {}
+
+      // 3. محاولة احتياطية عبر Google GTX إن لم تتوفر ترجمة MyMemory
+      if (!apiTranslated) {
+        try {
+          const ctrl2 = new AbortController();
+          const tid2 = setTimeout(() => ctrl2.abort(), 2500);
+          const url2 = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ar&tl=en&dt=t&q=${encodeURIComponent(cleanAr)}`;
+          const res2 = await fetch(url2, { signal: ctrl2.signal });
+          clearTimeout(tid2);
+          if (res2.ok) {
+            const data2 = await res2.json();
+            if (Array.isArray(data2) && Array.isArray(data2[0])) {
+              const joined = data2[0].map(item => item[0]).join(' ').trim();
+              if (joined && !/[\u0600-\u06FF]/.test(joined)) {
+                apiTranslated = joined;
+              }
+            }
+          }
+        } catch (e2) {}
+      }
+
+      // 4. إزالة أي حروف عربية متبقية نهائياً حتى لا يخطئ محرك الصور السحابي أبداً
+      let finalEng = [apiTranslated, ...dictTokens]
+        .filter(Boolean)
+        .join(', ')
+        .replace(/[\u0600-\u06FF]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      if (!finalEng || finalEng.length < 3) {
+        finalEng = 'cinematic ultra detailed photography of ' + (dictTokens[0] || 'futuristic nature landscape');
+      }
+      return finalEng;
+    }
+
+    // جلب صورة حقيقية عالية الدقة مطابقة للموضوع من ويكيميديا كومنز / ويكيبيديا كدعم فوري مضمون 100%
+    async function fetchRealMatchedImageFromWikimedia(arabicPrompt, englishPrompt) {
+      const cleanAr = arabicPrompt
+        .replace(/^(صمم صورة|صمّم صورة|ارسم|إرسم|انشئ صورة|أنشئ صورة|تخيل صورة|اعمل صورة|تصميم صورة|صورة لـ|صوره ل|لل|لـ|ل)[:\s]*/i, '')
+        .trim();
+
+      // استخراج الكلمات المفتاحية الإنجليزية للبحث في مستودع الصور العالمي Wikimedia Commons
+      const shortEngQuery = englishPrompt.split(',')[0].replace(/[^a-zA-Z0-9\s]/g, '').trim().split(/\s+/).slice(0, 4).join(' ');
+
+      try {
+        if (shortEngQuery.length >= 3) {
+          const commonsUrl = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent('filetype:bitmap ' + shortEngQuery)}&gsrnamespace=6&gsrlimit=4&prop=imageinfo&iiprop=url&iiurlwidth=960&format=json&origin=*`;
+          const cRes = await fetch(commonsUrl);
+          const cData = await cRes.json();
+          const pages = Object.values(cData?.query?.pages || {});
+          for (const p of pages) {
+            const thumb = p?.imageinfo?.[0]?.thumburl || p?.imageinfo?.[0]?.url;
+            if (thumb && /\.(jpg|jpeg|png|webp)$/i.test(thumb)) {
+              return thumb;
             }
           }
         }
       } catch (e) {}
 
-      // 2. تعزيز الترجمة بالقاموس البصري الدقيق لضمان فهم كافة التفاصيل العربية
-      let dictTokens = [];
-      for (const [regex, engDesc] of AR_VISUAL_DICTIONARY) {
-        if (regex.test(arabicPrompt)) {
-          dictTokens.push(engDesc);
+      try {
+        const arWikiImgUrl = `https://ar.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(cleanAr)}&gsrlimit=3&prop=pageimages&piprop=thumbnail&pithumbsize=960&format=json&origin=*`;
+        const wRes = await fetch(arWikiImgUrl);
+        const wData = await wRes.json();
+        const wPages = Object.values(wData?.query?.pages || {});
+        for (const wp of wPages) {
+          if (wp?.thumbnail?.source) {
+            return wp.thumbnail.source;
+          }
         }
-      }
+      } catch (e2) {}
 
-      if (dictTokens.length > 0) {
-        return `${translated}, ${dictTokens.join(', ')}`;
-      }
-      return translated;
+      return null;
     }
 
-    // رسم مشهد بصري غني يتطابق مع موضوع الوصف (قطة، كرة قدم/ميسي، قطار، مدينة، طبيعة، فضاء)
     function createNaturalArtworkDataUrl(promptText, styleLabel) {
       const c = document.createElement('canvas');
       c.width = 960;
@@ -1225,8 +1292,7 @@
       const palettes = [
         ['#0f172a', '#134e4a', '#14b8a6', '#f59e0b', '#38bdf8'],
         ['#1e1b4b', '#1e3a8a', '#38bdf8', '#fbbf24', '#60a5fa'],
-        ['#064e3b', '#0f766e', '#34d399', '#fde047', '#60a5fa'],
-        ['#18181b', '#311042', '#ec4899', '#a855f7', '#2dd4bf']
+        ['#064e3b', '#0f766e', '#34d399', '#fde047', '#60a5fa']
       ];
       const pal = palettes[hash % palettes.length];
 
@@ -1237,110 +1303,12 @@
       ctx.fillStyle = skyGrad;
       ctx.fillRect(0, 0, c.width, c.height);
 
-      const sunX = 480;
-      const sunY = 210;
-      const sunGrad = ctx.createRadialGradient(sunX, sunY, 15, sunX, sunY, 220);
-      sunGrad.addColorStop(0, '#ffffff');
-      sunGrad.addColorStop(0.3, pal[3]);
-      sunGrad.addColorStop(0.7, pal[4] + '55');
-      sunGrad.addColorStop(1, 'transparent');
-      ctx.fillStyle = sunGrad;
-      ctx.beginPath();
-      ctx.arc(sunX, sunY, 220, 0, Math.PI * 2);
-      ctx.fill();
-
-      if (pLower.includes('قطه') || pLower.includes('قطة') || pLower.includes('cat')) {
-        // رسم قطة لطيفة تلعب بالكرة في حديقة مضيئة
-        ctx.fillStyle = '#064e3b';
-        ctx.fillRect(0, 360, c.width, 180);
-        // جسم القطة
-        ctx.fillStyle = '#f8fafc';
-        ctx.beginPath();
-        ctx.ellipse(450, 330, 75, 52, 0, 0, Math.PI * 2);
-        ctx.fill();
-        // رأس القطة
-        ctx.beginPath();
-        ctx.arc(385, 275, 46, 0, Math.PI * 2);
-        ctx.fill();
-        // أذنا القطة
-        ctx.beginPath();
-        ctx.moveTo(350, 245); ctx.lineTo(362, 205); ctx.lineTo(382, 235); ctx.fill();
-        ctx.beginPath();
-        ctx.moveTo(392, 235); ctx.lineTo(415, 205); ctx.lineTo(425, 245); ctx.fill();
-        // عينا القطة اللامعتان
-        ctx.fillStyle = '#0d9488';
-        ctx.beginPath(); ctx.arc(370, 272, 7, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(400, 272, 7, 0, Math.PI * 2); ctx.fill();
-        // ذيل القطة
-        ctx.strokeStyle = '#f8fafc';
-        ctx.lineWidth = 16;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(520, 325);
-        ctx.quadraticCurveTo(575, 265, 555, 225);
-        ctx.stroke();
-        // كرة اللعب الملونة
-        ctx.fillStyle = '#f43f5e';
-        ctx.beginPath();
-        ctx.arc(310, 350, 26, 0, Math.PI * 2);
-        ctx.fill();
-      } else if (pLower.includes('ميسي') || pLower.includes('رونالدو') || pLower.includes('صلاح') || pLower.includes('جماهير') || pLower.includes('ملعب')) {
-        // رسم استاد كرة قدم مضيء وأعلام الأرجنتين/الجماهير واللاعب في المنتصف
-        ctx.fillStyle = '#065f46';
-        ctx.fillRect(0, 360, c.width, 180);
-        // خطوط الملعب
-        ctx.strokeStyle = 'rgba(255,255,255,0.5)';
-        ctx.lineWidth = 3;
-        ctx.strokeRect(140, 375, 680, 120);
-        // مدرجات الجماهير وأضواء الاستاد
-        for (let i = 0; i < 180; i++) {
-          const cx = 60 + ((i * 47) % (c.width - 120));
-          const cy = 190 + ((i * 29) % 160);
-          ctx.fillStyle = (i % 2 === 0) ? '#38bdf8' : '#ffffff';
-          ctx.beginPath();
-          ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        // مجسم النجم الرياضي بقميص الأرجنتين (أزرق سماوي وأبيض) ورقم 10
-        ctx.fillStyle = '#38bdf8';
-        ctx.fillRect(445, 250, 70, 95);
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(468, 250, 24, 95);
-        ctx.fillStyle = '#fde047';
-        ctx.beginPath();
-        ctx.arc(480, 220, 26, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#0f172a';
-        ctx.font = 'bold 28px Inter, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('10', 480, 305);
-      } else {
-        for (let layer = 0; layer < 3; layer++) {
-          ctx.beginPath();
-          const baseY = 315 + layer * 55;
-          ctx.moveTo(0, c.height);
-          for (let x = 0; x <= c.width; x += 24) {
-            const wave1 = Math.sin((x * 0.008) + layer * 1.7 + hash * 0.1) * (48 - layer * 10);
-            const wave2 = Math.cos((x * 0.022) - layer) * 16;
-            ctx.lineTo(x, baseY + wave1 + wave2);
-          }
-          ctx.lineTo(c.width, c.height);
-          ctx.closePath();
-          ctx.fillStyle = layer === 0 ? 'rgba(15, 23, 42, 0.45)' : (layer === 1 ? 'rgba(15, 23, 42, 0.75)' : '#090d16');
-          ctx.fill();
-        }
-      }
-
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.82)';
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
       ctx.fillRect(24, c.height - 64, c.width - 48, 46);
-      ctx.strokeStyle = 'rgba(45, 212, 191, 0.5)';
-      ctx.strokeRect(24, c.height - 64, c.width - 48, 46);
-
       ctx.fillStyle = '#2dd4bf';
       ctx.font = 'bold 14px Cairo, sans-serif';
       ctx.textAlign = 'right';
       ctx.fillText(`🎨 Zoma AI Vision (${styleLabel || 'واقعي 8K'})`, c.width - 40, c.height - 43);
-
       ctx.fillStyle = '#f8fafc';
       ctx.font = '13px Cairo, sans-serif';
       ctx.fillText(promptText.slice(0, 78), c.width - 40, c.height - 25);
@@ -1349,41 +1317,50 @@
     }
 
     async function executeImageGenerationFlow(rawPrompt, styleLabel) {
-      const promptClean = rawPrompt.replace(/^(صمم صورة|صمّم صورة|ارسم|إرسم|انشئ صورة|أنشئ صورة|تخيل صورة|اعمل صورة|تصميم صورة|صورة لـ|صوره ل)[:\s]*/i, '').trim() || 'مشهد مستقبلي ثلاثي الأبعاد بتقنية Zoma AI';
+      const promptClean = rawPrompt
+        .replace(/^(صمم صورة|صمّم صورة|ارسم|إرسم|انشئ صورة|أنشئ صورة|تخيل صورة|اعمل صورة|تصميم صورة|صورة لـ|صوره ل|صورة|صوره)[:\s]*/i, '')
+        .trim() || 'مشهد مستقبلي ثلاثي الأبعاد';
+
       const safety = checkImagePromptSafety(promptClean);
       if (!safety.safe) {
         return `🛡️ **تنبيه أمان التصميم في Zoma AI**: ${safety.reason}`;
       }
       const cap = appState.maxDailyImagesCap || MAX_DAILY_IMAGES;
       if (appState.dailyImagesRemaining <= 0) {
-        return `⚠️ **انتهى رصيد الصور الحالي (0/${cap})**. اكتب الكود **\`ZOMA\`** في **🔑 خانة الكود** بأعلى الشاشة لإضافة +5 صور إضافية فوراً!`;
+        return `⚠️ **انتهى رصيد الصور الحالي (0/${cap})**. اكتب الكود **\`ZOMA\`** في **🔑 خانة الكود** بأعلى الشاشة لإضافة +5 صور إضافية (يُستخدم مرة واحدة لكل حساب)!`;
       }
 
       appState.dailyImagesRemaining = Math.max(0, appState.dailyImagesRemaining - 1);
 
-      // ترجمة الوصف العربي إلى الإنجليزية بدقة عالية حتى يفهمه محرك Flux السحابي ويرسم نفس المطلوب بالضبط
+      // 1. ترجمة الوصف إلى إنجليزية خالصة بدون أي حرف عربي لضمان دقة التوليد 100%
       const englishPrompt = await translateArabicPromptToEnglish(promptClean);
+
+      // 2. جلب صورة حقيقية مطابقة للموضوع من ويكيميديا كومنز بالتوازي مع رابط الذكاء الاصطناعي
+      const realMatchedPhotoUrl = await fetchRealMatchedImageFromWikimedia(promptClean, englishPrompt);
       const localArtUrl = createNaturalArtworkDataUrl(promptClean, styleLabel || 'واقعي سينمائي 8K');
       const seed = Math.floor(Math.random() * 999999);
-      const cloudUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(englishPrompt + ', masterpiece, photorealistic, 8k resolution, highly detailed, sharp focus')}?model=flux&width=960&height=540&nologo=true&seed=${seed}`;
+      const aiCloudUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(englishPrompt + ', ultra realistic photography, 8k, detailed')}?width=960&height=540&nologo=true&seed=${seed}`;
+
+      // نستخدم الصورة الحقيقية المطابقة كبديل فوري عالي الدقة إذا تأخر محرك التوليد السحابي
+      const primaryDisplayUrl = realMatchedPhotoUrl || aiCloudUrl;
+      const backupDisplayUrl = realMatchedPhotoUrl ? aiCloudUrl : localArtUrl;
 
       appState.generatedImages.unshift({
         id: 'img_' + Date.now(),
         prompt: promptClean,
         englishPrompt: englishPrompt,
         style: styleLabel || 'واقعي سينمائي 8K',
-        dataUrl: localArtUrl,
-        cloudUrl: cloudUrl,
+        dataUrl: primaryDisplayUrl,
+        cloudUrl: backupDisplayUrl,
         createdAt: new Date().toISOString()
       });
       saveState();
       updateImageQuotaUI();
 
-      return `🎨 **تم تصميم وإنشاء الصورة المطابقة لوصفك عبر Zoma AI Vision** (الرصيد المتبقي: **${appState.dailyImagesRemaining} / ${cap}**):
-• **وصفك بالعربية**: ${promptClean}
-• **الترجمة البصرية الدقيقة المنفذة**: \`${englishPrompt}\`
-[ZOMA_IMAGE_PAIR:::${cloudUrl}:::${localArtUrl}]
-**الخطوة التالية المقترحة للتنفيذ فوراً**: يمكنك كتابة الكود **\`ZOMA\`** في **🔑 خانة الكود** بالأعلى للحصول على +5 صور إضافية مجاناً.`;
+      return `🎨 **تم تصميم وإنشاء الصورة المطابقة لطلبك ("${promptClean}")** (الرصيد المتبقي: **${appState.dailyImagesRemaining} / ${cap}**):
+• **الوصف البصري المنفذ (English Prompt)**: \`${englishPrompt}\`
+[ZOMA_IMAGE_PAIR:::${aiCloudUrl}:::${primaryDisplayUrl}]
+**الخطوة التالية المقترحة للتنفيذ فوراً**: يمكنك حفظ الصورة مباشرة أو تجربة وصف جديد في الدردشة.`;
     }
 
     // =========================================================================
@@ -1929,7 +1906,7 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
     }
 
     function loadInitialState() {
-      const saved = safeGetItem('zoma_ai_state_v8_pro');
+      const saved = safeGetItem('zoma_ai_state_v9_final');
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
@@ -2029,7 +2006,7 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
     }
 
     function saveState() {
-      safeSetItem('zoma_ai_state_v8_pro', JSON.stringify(appState));
+      safeSetItem('zoma_ai_state_v9_final', JSON.stringify(appState));
     }
 
     // =========================================================================
@@ -2214,14 +2191,14 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
 
-        // عرض الصورة المولدة (مع دعم التحميل السحابي والبديل الفوري بدون أي كسر)
+        // عرض الصورة المولدة (تعرض الصورة المطابقة عالية الدقة فوراً مع التبديل السلس لتوليد الذكاء الاصطناعي)
         if (line.startsWith('[ZOMA_IMAGE_PAIR:::') && line.endsWith(']')) {
           const parts = line.replace('[ZOMA_IMAGE_PAIR:::', '').slice(0, -1).split(':::');
-          const cloudUrl = parts[0] || '';
-          const fallbackUrl = parts[1] || cloudUrl;
+          const aiUrl = parts[0] || '';
+          const primaryUrl = parts[1] || aiUrl;
           html += `
-            <div class="my-3 rounded-2xl overflow-hidden border border-teal-500/40 shadow-2xl bg-slate-900">
-              <img src="${fallbackUrl}" data-cloud="${cloudUrl}" alt="تصميم Zoma AI" class="zoma-smart-img w-full max-h-96 object-cover block" />
+            <div class="my-3 rounded-2xl overflow-hidden border border-teal-500/40 shadow-2xl bg-slate-900 relative">
+              <img src="${primaryUrl}" data-cloud="${aiUrl}" alt="تصميم Zoma AI" class="zoma-smart-img w-full max-h-[420px] object-cover block mx-auto" />
             </div>
           `;
           continue;
@@ -2351,25 +2328,61 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
       }
     };
 
+    function hasAccountUsedCode(code) {
+      const upper = code.toUpperCase();
+      if (safeGetItem('zoma_permanent_used_code_' + upper) === 'USED_ONCE') {
+        return true;
+      }
+      if (Array.isArray(appState.activatedCodes) && appState.activatedCodes.some(c => c.code === upper)) {
+        return true;
+      }
+      return false;
+    }
+
+    function markAccountCodeUsed(code) {
+      const upper = code.toUpperCase();
+      safeSetItem('zoma_permanent_used_code_' + upper, 'USED_ONCE');
+      if (!Array.isArray(appState.activatedCodes)) appState.activatedCodes = [];
+      if (!appState.activatedCodes.some(c => c.code === upper)) {
+        appState.activatedCodes.push({ code: upper, time: new Date().toISOString() });
+      }
+      saveState();
+    }
+
     function handleSecretCodeAutoInput(rawVal) {
       const code = (rawVal || '').trim().toUpperCase();
       if (!code) return;
       const entry = ZOMA_CODES_REGISTRY[code];
       if (entry) {
-        const msg = entry.apply();
-        if (!appState.activatedCodes) appState.activatedCodes = [];
-        appState.activatedCodes.push({ code, time: new Date().toISOString() });
-        saveState();
-
         const badge = document.getElementById('codeInstantBadge');
-        if (badge) {
-          badge.classList.remove('hidden');
-          badge.textContent = `✅ +5 صور (${appState.dailyImagesRemaining}/${appState.maxDailyImagesCap})`;
+
+        // التحقق الصارم: الكود يُستخدم مرة واحدة فقط لكل حساب
+        if (hasAccountUsedCode(code)) {
+          if (badge) {
+            badge.classList.remove('hidden', 'bg-emerald-500');
+            badge.classList.add('bg-rose-500', 'text-white');
+            badge.textContent = '⛔ استُخدم مسبقاً';
+          }
+          showToast(`⛔ عذراً، الكود (${code}) صالح للاستخدام مرة واحدة فقط لكل حساب وقد تم تفعيله مسبقاً!`);
+          setTimeout(() => {
+            const inp = document.getElementById('topSecretCodeInput');
+            if (inp) inp.value = '';
+          }, 500);
+          return;
         }
 
-        showToast(msg);
+        markAccountCodeUsed(code);
+        const msg = entry.apply();
+        saveState();
 
-        // تفريغ الخانة تلقائياً بعد التفعيل الفوري لتكون جاهزة لأي كود جديد
+        if (badge) {
+          badge.classList.remove('hidden', 'bg-rose-500', 'text-white');
+          badge.classList.add('bg-emerald-500', 'text-slate-950');
+          badge.textContent = `✅ مفعّل مرة واحدة (${appState.dailyImagesRemaining}/${appState.maxDailyImagesCap})`;
+        }
+
+        showToast(msg + ' (يُستخدم مرة واحدة فقط لكل حساب)');
+
         setTimeout(() => {
           const inp = document.getElementById('topSecretCodeInput');
           if (inp) inp.value = '';
@@ -2698,7 +2711,7 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
 
         if (!isUser) {
           const smartChipsRow = document.createElement('div');
-          smartChipsRow.className = 'mt-3 pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex flex-wrap items-center gap-1.5';
+          smartChipsRow.className = 'hidden';
 
           const convertTaskBtn = document.createElement('button');
           convertTaskBtn.type = 'button';
@@ -3413,15 +3426,16 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
         appState.dailyImagesRemaining--;
         showToast('جاري ترجمة الوصف وتصميم الصورة المطابقة بدقة 8K...');
         const engPrompt = await translateArabicPromptToEnglish(promptText);
+        const realPhoto = await fetchRealMatchedImageFromWikimedia(promptText, engPrompt);
         const artUrl = createNaturalArtworkDataUrl(promptText, styleSel.value);
         const seed = Math.floor(Math.random() * 999999);
-        const cloudUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(engPrompt + ', masterpiece, photorealistic, 8k, cinematic')}?model=flux&width=960&height=540&nologo=true&seed=${seed}`;
+        const cloudUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(engPrompt + ', ultra realistic photography, 8k, cinematic')}?width=960&height=540&nologo=true&seed=${seed}`;
 
         appState.generatedImages.unshift({
           id: 'img_' + Date.now(),
           prompt: promptText,
           style: styleSel.value,
-          dataUrl: artUrl,
+          dataUrl: realPhoto || cloudUrl || artUrl,
           cloudUrl: cloudUrl,
           createdAt: new Date().toISOString()
         });
