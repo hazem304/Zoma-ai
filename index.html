@@ -141,6 +141,41 @@
       border-right: 3px solid #14b8a6;
       background: rgba(20, 184, 166, 0.08);
     }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @media (max-width: 767px) {
+      header {
+        padding: 0.35rem 0.5rem !important;
+        gap: 0.35rem !important;
+      }
+      #holo3dStage {
+        height: 2.6rem !important;
+        padding: 0 0.6rem !important;
+      }
+      #holo3dStage.expanded-mobile-3d {
+        height: 10.5rem !important;
+      }
+      nav {
+        padding: 0.25rem 0.5rem !important;
+      }
+      #messagesContainer {
+        padding: 0.65rem 0.5rem !important;
+      }
+      footer {
+        padding: 0.4rem 0.5rem !important;
+      }
+      .msg-table {
+        font-size: 0.75rem;
+      }
+      .msg-table th, .msg-table td {
+        padding: 0.35rem 0.45rem;
+      }
+    }
   </style>
 </head>
 <body class="zoma-bg bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 h-[100dvh] w-full overflow-hidden flex flex-col transition-colors duration-200">
@@ -1104,7 +1139,81 @@
       );
     }
 
-    // رسم مشهد بصري غني يتطابق مع موضوع الوصف (قطار، مدينة، بحر، فضاء، سيارة، قطة/طبيعة، شعار)
+    // قاموس بصري شامل + مترجم فوري لتحويل وصف الصور العربي إلى الإنجليزية بدقة عالية جداً
+    const AR_VISUAL_DICTIONARY = [
+      [/ميسي|ليونيل ميسي/g, 'Lionel Messi wearing Argentina national team blue and white striped jersey #10'],
+      [/رونالدو|كريستيانو/g, 'Cristiano Ronaldo in football jersey'],
+      [/محمد صلاح|مو صلاح|صلاح/g, 'Mohamed Salah Egyptian football star'],
+      [/جماهير|مشجعين|جمهور/g, 'cheering stadium crowd with flags and stadium lights'],
+      [/الارجنتين|أرجنتين|ارجنتين/g, 'Argentina national team colors and flags in stadium'],
+      [/ملعب|استاد|كره قدم|كرة قدم/g, 'packed football stadium arena at night with dramatic lighting'],
+      [/قطه|قطة|هر|قطط/g, 'cute fluffy cat with detailed fur and expressive eyes'],
+      [/تلعب|يلعب/g, 'playing joyfully in dynamic action pose'],
+      [/كلب|جرو/g, 'friendly loyal dog outdoors'],
+      [/اسد|أسد/g, 'majestic lion with golden mane'],
+      [/نمر/g, 'powerful tiger in nature'],
+      [/حصان|خيل|فرس/g, 'majestic Arabian horse galloping'],
+      [/صقر|نسر/g, 'majestic falcon flying in the sky'],
+      [/سياره|سيارة|عربيه/g, 'sleek modern luxury sports car'],
+      [/طائره|طائرة/g, 'modern airplane flying above clouds'],
+      [/قطار|تالجو/g, 'modern high-speed train on railway tracks'],
+      [/مدينه|مدينة/g, 'futuristic smart metropolis city with glowing architecture'],
+      [/فضاء|مجره|مجرة|كواكب|نجوم/g, 'deep outer space galaxy nebula with glowing planets and stars'],
+      [/بحر|محيط|شاطئ/g, 'crystal clear turquoise ocean waves on a sunny beach'],
+      [/غروب|شروق/g, 'golden hour dramatic sunset sky'],
+      [/جبل|جبال/g, 'majestic snow-capped mountains'],
+      [/غابه|غابة|اشجار|أشجار|طبيعه|طبيعة/g, 'lush green enchanted forest nature with sunbeams'],
+      [/مصر|اهرامات|أهرامات|القاهره|القاهرة/g, 'majestic Egyptian Pyramids of Giza and Nile river at sunset'],
+      [/نيل|نهر النيل/g, 'scenic Nile river in Egypt with boats'],
+      [/مسجد|جامع/g, 'grand illuminated Islamic mosque architecture with minarets'],
+      [/قلعه|قلعة|قصر/g, 'grand royal palace castle architecture'],
+      [/روبوت|ذكاء اصطناعي|آلي/g, 'futuristic humanoid AI robot with glowing cyan circuits'],
+      [/شعار|لوجو/g, 'clean professional modern vector logo design emblem'],
+      [/قهوه|قهوة|فنجان/g, 'steaming cup of Arabic coffee on rustic wooden table'],
+      [/ورد|زهور|ازهار/g, 'vibrant blooming roses and flowers with morning dew'],
+      [/مطر|شتاء/g, 'cinematic rain drops and glowing street reflections'],
+      [/طفل|ولد/g, 'happy child portrait'],
+      [/فتاه|فتاة|بنت/g, 'portrait'],
+      [/رجل|شاب/g, 'cinematic portrait'],
+      [/محارب|فارس/g, 'epic armored knight warrior']
+    ];
+
+    async function translateArabicPromptToEnglish(arabicPrompt) {
+      let translated = arabicPrompt;
+
+      // 1. محاولة الترجمة السحابية الفورية عبر Google Translate GTX API (مجاني ويدعم CORS)
+      try {
+        const ctrl = new AbortController();
+        const tid = setTimeout(() => ctrl.abort(), 2800);
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ar&tl=en&dt=t&q=${encodeURIComponent(arabicPrompt)}`;
+        const res = await fetch(url, { signal: ctrl.signal });
+        clearTimeout(tid);
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && Array.isArray(data[0])) {
+            const joined = data[0].map(item => item[0]).join(' ').trim();
+            if (joined && joined.length > 2) {
+              translated = joined;
+            }
+          }
+        }
+      } catch (e) {}
+
+      // 2. تعزيز الترجمة بالقاموس البصري الدقيق لضمان فهم كافة التفاصيل العربية
+      let dictTokens = [];
+      for (const [regex, engDesc] of AR_VISUAL_DICTIONARY) {
+        if (regex.test(arabicPrompt)) {
+          dictTokens.push(engDesc);
+        }
+      }
+
+      if (dictTokens.length > 0) {
+        return `${translated}, ${dictTokens.join(', ')}`;
+      }
+      return translated;
+    }
+
+    // رسم مشهد بصري غني يتطابق مع موضوع الوصف (قطة، كرة قدم/ميسي، قطار، مدينة، طبيعة، فضاء)
     function createNaturalArtworkDataUrl(promptText, styleLabel) {
       const c = document.createElement('canvas');
       c.width = 960;
@@ -1115,13 +1224,12 @@
       const hash = Array.from(promptText).reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
       const palettes = [
         ['#0f172a', '#134e4a', '#14b8a6', '#f59e0b', '#38bdf8'],
-        ['#1e1b4b', '#311042', '#ec4899', '#8b5cf6', '#2dd4bf'],
+        ['#1e1b4b', '#1e3a8a', '#38bdf8', '#fbbf24', '#60a5fa'],
         ['#064e3b', '#0f766e', '#34d399', '#fde047', '#60a5fa'],
-        ['#090d16', '#1e3a8a', '#3b82f6', '#22d3ee', '#f97316']
+        ['#18181b', '#311042', '#ec4899', '#a855f7', '#2dd4bf']
       ];
       const pal = palettes[hash % palettes.length];
 
-      // 1. خلفية السماء المتدرجة
       const skyGrad = ctx.createLinearGradient(0, 0, c.width, c.height);
       skyGrad.addColorStop(0, pal[0]);
       skyGrad.addColorStop(0.55, pal[1]);
@@ -1129,81 +1237,84 @@
       ctx.fillStyle = skyGrad;
       ctx.fillRect(0, 0, c.width, c.height);
 
-      // 2. الشمس / القمر المتوهج
-      const sunX = 260 + (hash % 420);
-      const sunY = 160 + (hash % 70);
-      const sunGrad = ctx.createRadialGradient(sunX, sunY, 12, sunX, sunY, 190);
+      const sunX = 480;
+      const sunY = 210;
+      const sunGrad = ctx.createRadialGradient(sunX, sunY, 15, sunX, sunY, 220);
       sunGrad.addColorStop(0, '#ffffff');
       sunGrad.addColorStop(0.3, pal[3]);
       sunGrad.addColorStop(0.7, pal[4] + '55');
       sunGrad.addColorStop(1, 'transparent');
       ctx.fillStyle = sunGrad;
       ctx.beginPath();
-      ctx.arc(sunX, sunY, 190, 0, Math.PI * 2);
+      ctx.arc(sunX, sunY, 220, 0, Math.PI * 2);
       ctx.fill();
 
-      // 3. النجوم والجزيئات المضيئة
-      for (let i = 0; i < 90; i++) {
-        const sx = ((i * 137 + hash * 13) % c.width);
-        const sy = ((i * 89 + hash * 7) % (c.height * 0.6));
-        const r = (i % 3 === 0) ? 2.0 : 1.1;
-        ctx.fillStyle = `rgba(255,255,255,${0.3 + (i % 5) * 0.14})`;
+      if (pLower.includes('قطه') || pLower.includes('قطة') || pLower.includes('cat')) {
+        // رسم قطة لطيفة تلعب بالكرة في حديقة مضيئة
+        ctx.fillStyle = '#064e3b';
+        ctx.fillRect(0, 360, c.width, 180);
+        // جسم القطة
+        ctx.fillStyle = '#f8fafc';
         ctx.beginPath();
-        ctx.arc(sx, sy, r, 0, Math.PI * 2);
+        ctx.ellipse(450, 330, 75, 52, 0, 0, Math.PI * 2);
         ctx.fill();
-      }
-
-      // 4. رسم عناصر المشهد الخاصة حسب الموضوع
-      if (pLower.includes('قطار') || pLower.includes('سكة') || pLower.includes('تالجو') || pLower.includes('train')) {
-        // جسر ومجسم قطار حديث فائق السرعة مع انعكاس النيل
-        ctx.fillStyle = '#0f172a';
-        ctx.fillRect(0, 360, c.width, 22);
-        // نوافذ القطار المضيئة والهيكل الانسيابي
-        const trainGrad = ctx.createLinearGradient(120, 310, 840, 360);
-        trainGrad.addColorStop(0, '#f8fafc');
-        trainGrad.addColorStop(0.5, '#e2e8f0');
-        trainGrad.addColorStop(1, '#38bdf8');
-        ctx.fillStyle = trainGrad;
+        // رأس القطة
         ctx.beginPath();
-        ctx.moveTo(100, 358);
-        ctx.quadraticCurveTo(155, 305, 240, 305);
-        ctx.lineTo(860, 305);
-        ctx.lineTo(860, 358);
-        ctx.closePath();
+        ctx.arc(385, 275, 46, 0, Math.PI * 2);
         ctx.fill();
-        // شريط نيون فيروزي على القطار
-        ctx.fillStyle = '#14b8a6';
-        ctx.fillRect(160, 336, 700, 7);
-        // النوافذ المضيئة
-        ctx.fillStyle = '#fde047';
-        for (let wx = 220; wx < 820; wx += 48) {
-          ctx.fillRect(wx, 315, 32, 14);
-        }
-      } else if (pLower.includes('مصر') || pLower.includes('أهرام') || pLower.includes('اهرام') || pLower.includes('قاهرة') || pLower.includes('pyramid')) {
-        // أهرامات الجيزة مع أفق مستقبلي ونهر النيل
-        ctx.fillStyle = 'rgba(245, 158, 11, 0.85)';
-        [[260, 380, 140], [450, 380, 175], [640, 380, 120]].forEach(([px, py, h]) => {
+        // أذنا القطة
+        ctx.beginPath();
+        ctx.moveTo(350, 245); ctx.lineTo(362, 205); ctx.lineTo(382, 235); ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(392, 235); ctx.lineTo(415, 205); ctx.lineTo(425, 245); ctx.fill();
+        // عينا القطة اللامعتان
+        ctx.fillStyle = '#0d9488';
+        ctx.beginPath(); ctx.arc(370, 272, 7, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(400, 272, 7, 0, Math.PI * 2); ctx.fill();
+        // ذيل القطة
+        ctx.strokeStyle = '#f8fafc';
+        ctx.lineWidth = 16;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(520, 325);
+        ctx.quadraticCurveTo(575, 265, 555, 225);
+        ctx.stroke();
+        // كرة اللعب الملونة
+        ctx.fillStyle = '#f43f5e';
+        ctx.beginPath();
+        ctx.arc(310, 350, 26, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (pLower.includes('ميسي') || pLower.includes('رونالدو') || pLower.includes('صلاح') || pLower.includes('جماهير') || pLower.includes('ملعب')) {
+        // رسم استاد كرة قدم مضيء وأعلام الأرجنتين/الجماهير واللاعب في المنتصف
+        ctx.fillStyle = '#065f46';
+        ctx.fillRect(0, 360, c.width, 180);
+        // خطوط الملعب
+        ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(140, 375, 680, 120);
+        // مدرجات الجماهير وأضواء الاستاد
+        for (let i = 0; i < 180; i++) {
+          const cx = 60 + ((i * 47) % (c.width - 120));
+          const cy = 190 + ((i * 29) % 160);
+          ctx.fillStyle = (i % 2 === 0) ? '#38bdf8' : '#ffffff';
           ctx.beginPath();
-          ctx.moveTo(px - h, py);
-          ctx.lineTo(px, py - h);
-          ctx.lineTo(px + h, py);
-          ctx.closePath();
+          ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
           ctx.fill();
-        });
-      } else if (pLower.includes('مدينة') || pLower.includes('ابراج') || pLower.includes('أبراج') || pLower.includes('city')) {
-        // أبراج مدينة ذكية مستقبلية مضيئة
-        for (let bx = 60; bx < c.width - 60; bx += 55) {
-          const bh = 90 + ((bx * 17 + hash) % 160);
-          ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
-          ctx.fillRect(bx, 380 - bh, 42, bh);
-          ctx.fillStyle = '#2dd4bf88';
-          for (let wy = 380 - bh + 12; wy < 365; wy += 16) {
-            ctx.fillRect(bx + 8, wy, 10, 6);
-            ctx.fillRect(bx + 24, wy, 10, 6);
-          }
         }
+        // مجسم النجم الرياضي بقميص الأرجنتين (أزرق سماوي وأبيض) ورقم 10
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillRect(445, 250, 70, 95);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(468, 250, 24, 95);
+        ctx.fillStyle = '#fde047';
+        ctx.beginPath();
+        ctx.arc(480, 220, 26, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 28px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('10', 480, 305);
       } else {
-        // جبال وتضاريس طبيعية ثلاثية الأبعاد
         for (let layer = 0; layer < 3; layer++) {
           ctx.beginPath();
           const baseY = 315 + layer * 55;
@@ -1220,25 +1331,7 @@
         }
       }
 
-      // 5. انعكاس الماء / الشبكة الهولوغرامية في الأسفل
-      const waterGrad = ctx.createLinearGradient(0, 380, 0, c.height);
-      waterGrad.addColorStop(0, 'rgba(15, 23, 42, 0.82)');
-      waterGrad.addColorStop(1, '#020617');
-      ctx.fillStyle = waterGrad;
-      ctx.fillRect(0, 380, c.width, c.height - 380);
-
-      ctx.strokeStyle = pal[2] + '55';
-      ctx.lineWidth = 1.2;
-      for (let i = 0; i < 10; i++) {
-        const y = 390 + i * 14;
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(c.width, y);
-        ctx.stroke();
-      }
-
-      // 6. شارة Zoma AI Vision المائية الأنيقة
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.78)';
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.82)';
       ctx.fillRect(24, c.height - 64, c.width - 48, 46);
       ctx.strokeStyle = 'rgba(45, 212, 191, 0.5)';
       ctx.strokeRect(24, c.height - 64, c.width - 48, 46);
@@ -1255,24 +1348,29 @@
       return c.toDataURL('image/png');
     }
 
-    function executeImageGenerationFlow(rawPrompt, styleLabel) {
-      const promptClean = rawPrompt.replace(/^(صمم صورة|صمّم صورة|ارسم|إرسم|انشئ صورة|أنشئ صورة|تخيل صورة|اعمل صورة|تصميم صورة)[:\s]*/i, '').trim() || 'مشهد مستقبلي ثلاثي الأبعاد بتقنية Zoma AI';
+    async function executeImageGenerationFlow(rawPrompt, styleLabel) {
+      const promptClean = rawPrompt.replace(/^(صمم صورة|صمّم صورة|ارسم|إرسم|انشئ صورة|أنشئ صورة|تخيل صورة|اعمل صورة|تصميم صورة|صورة لـ|صوره ل)[:\s]*/i, '').trim() || 'مشهد مستقبلي ثلاثي الأبعاد بتقنية Zoma AI';
       const safety = checkImagePromptSafety(promptClean);
       if (!safety.safe) {
         return `🛡️ **تنبيه أمان التصميم في Zoma AI**: ${safety.reason}`;
       }
+      const cap = appState.maxDailyImagesCap || MAX_DAILY_IMAGES;
       if (appState.dailyImagesRemaining <= 0) {
-        appState.dailyImagesRemaining = MAX_DAILY_IMAGES; // إعادة شحن تلقائية لعدم تعطيل المستخدم
+        return `⚠️ **انتهى رصيد الصور الحالي (0/${cap})**. اكتب الكود **\`ZOMA\`** في **🔑 خانة الكود** بأعلى الشاشة لإضافة +5 صور إضافية فوراً!`;
       }
 
       appState.dailyImagesRemaining = Math.max(0, appState.dailyImagesRemaining - 1);
+
+      // ترجمة الوصف العربي إلى الإنجليزية بدقة عالية حتى يفهمه محرك Flux السحابي ويرسم نفس المطلوب بالضبط
+      const englishPrompt = await translateArabicPromptToEnglish(promptClean);
       const localArtUrl = createNaturalArtworkDataUrl(promptClean, styleLabel || 'واقعي سينمائي 8K');
       const seed = Math.floor(Math.random() * 999999);
-      const cloudUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptClean + ', photorealistic, 8k, cinematic lighting, high detail')}?width=960&height=540&nologo=true&seed=${seed}`;
+      const cloudUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(englishPrompt + ', masterpiece, photorealistic, 8k resolution, highly detailed, sharp focus')}?model=flux&width=960&height=540&nologo=true&seed=${seed}`;
 
       appState.generatedImages.unshift({
         id: 'img_' + Date.now(),
         prompt: promptClean,
+        englishPrompt: englishPrompt,
         style: styleLabel || 'واقعي سينمائي 8K',
         dataUrl: localArtUrl,
         cloudUrl: cloudUrl,
@@ -1281,11 +1379,11 @@
       saveState();
       updateImageQuotaUI();
 
-      return `🎨 **تم تصميم وإنشاء الصورة بنجاح عبر محرك Zoma AI Vision** (الرصيد المتبقي اليوم: **${appState.dailyImagesRemaining} / ${MAX_DAILY_IMAGES}**):
-• **وصف التصميم المنفذ**: ${promptClean}
-• **النموذج والنمط**: ${styleLabel || 'Zoma Vision 8K — واقعي سينمائي'}
+      return `🎨 **تم تصميم وإنشاء الصورة المطابقة لوصفك عبر Zoma AI Vision** (الرصيد المتبقي: **${appState.dailyImagesRemaining} / ${cap}**):
+• **وصفك بالعربية**: ${promptClean}
+• **الترجمة البصرية الدقيقة المنفذة**: \`${englishPrompt}\`
 [ZOMA_IMAGE_PAIR:::${cloudUrl}:::${localArtUrl}]
-**الخطوة التالية المقترحة للتنفيذ فوراً**: يمكنك تنزيل الصورة من تبويب **🎨 استوديو الصور الذكي** أو كتابة وصف جديد لتوليد تصميم آخر فوراً.`;
+**الخطوة التالية المقترحة للتنفيذ فوراً**: يمكنك كتابة الكود **\`ZOMA\`** في **🔑 خانة الكود** بالأعلى للحصول على +5 صور إضافية مجاناً.`;
     }
 
     // =========================================================================
@@ -1342,7 +1440,7 @@
         const extract = (firstPage?.extract || '').trim();
         if (!extract || extract.length < 40) return null;
 
-        const sentences = extract.split(/(?<=[.!\n])\s+/).filter(Boolean).slice(0, 5);
+        const sentences = extract.split(/(?<=[.!\n])\s+/).filter(Boolean).slice(0, 9);
         return {
           title: pageTitle,
           summary: sentences.join('\n• '),
@@ -1450,6 +1548,38 @@
 | **النشاط البدني والماء** | شرب 2.5 – 3 لتر ماء يومياً + مشي سريع أو تمارين مقاومة 35 دقيقة | رفع كفاءة القلب والأيض بنسبة 25% |
 
 **الخطوة التالية المقترحة للتنفيذ فوراً**: اكتب لي وزنك وطولك وهدفك (إنقاص وزن أم بناء عضلات) لأحسب لك احتياجك اليومي الدقيق من السعرات الحرارية والبروتين.`;
+      }
+
+      // 5-ب. موسوعة الرياضة وكرة القدم العالمية والعربية (ميسي، رونالدو، محمد صلاح، كأس العالم، دوري الأبطال)
+      if (norm.includes('ميسي') || norm.includes('رونالدو') || norm.includes('محمد صلاح') || norm.includes('كاس العالم') || norm.includes('دوري ابطال اوروبا') || norm.includes('الاهلي') || norm.includes('الزمالك')) {
+        return `إليك **الموسوعة الرياضية الشاملة والمحدثة من Zoma AI** حول سؤالك:
+
+| النجم / البطولة | أبرز الإنجازات والأرقام القياسية | المحطات الرئيسية |
+| :--- | :--- | :--- |
+| **ليونيل ميسي (Lionel Messi)** | **8 كرات ذهبية (Ballon d'Or)**، بطل كأس العالم 2022 مع الأرجنتين، وبطل كوبا أمريكا مرتين | برشلونة، باريس سان جيرمان، إنتر ميامي، والمنتخب الأرجنتيني |
+| **كريستيانو رونالدو (Cristiano Ronaldo)** | **الهداف التاريخي لكرة القدم (900+ هدف رسمي)**، 5 كرات ذهبية، و5 ألقاب دوري أبطال أوروبا | مانشستر يونايتد، ريال مدريد، يوفنتوس، النصر السعودي، والبرتغال |
+| **محمد صلاح (Mohamed Salah)** | الهداف التاريخي لليفربول في الدوري الإنجليزي الممتاز، بطل دوري الأبطال 2019 والدوري الإنجليزي | المقاولون، بازل، روما، ليفربول، ومنتخب مصر |
+| **الأندية والبطولات الكبرى** | ريال مدريد (الأكثر تتويجاً بدوري أبطال أوروبا)، والأهلي المصري (الأكثر تتويجاً بدوري أبطال أفريقيا) | منافسات قارية وعالمية في كأس العالم للأندية |
+
+• **تحليل تفصيلي**: تمثل هذه الأرقام الذروة التاريخية في كرة القدم الحديثة من حيث الاستمرارية، الحسم في البطولات الكبرى، والتأثير الجماهيري العالمي.
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: يمكنك طلب مقارنة رقمية تفصيلية بين أي لاعبين أو فريقين، أو كتابة \`صمم صورة: ميسي بين جماهير الأرجنتين\` لرسم المشهد بدقة 8K.`;
+      }
+
+      // 5-ج. موسوعة العلوم والفضاء والفيزياء والتاريخ
+      if (norm.includes('الفضاء') || norm.includes('المجموعه الشمسيه') || norm.includes('الكواكب') || norm.includes('الثقب الاسود') || norm.includes('سرعه الضوء') || norm.includes('الذره') || norm.includes('الفيزياء')) {
+        return `إليك **الشرح العلمي الموسوعي المفصل من Zoma AI**:
+
+| المفهوم العلمي | الحقيقة العلمية والأرقام الدقيقة | التفسير الفيزيائي المبسط |
+| :--- | :--- | :--- |
+| **سرعة الضوء (c)** | **299,792 كيلومتراً في الثانية** (حوالي 300 ألف كم/ث) | أقصى سرعة لنقل الطاقة والمعلومات في الكون، ويستغرق ضوء الشمس 8 دقائق و20 ثانية للوصول للأرض |
+| **المجموعة الشمسية** | تضم **8 كواكب رئيسية** تدور حول الشمس بفعل الجاذبية | كواكب صخرية داخلية (عطارد، الزهرة، الأرض، المريخ) وعملاقة غازية/جليدية (المشتري، زحل، أورانوس، نبتون) |
+| **الثقوب السوداء (Black Holes)** | مناطق ذات جاذبية فائقة لا يفلت منها حتى الضوء | تتكون بعد انهيار النجوم العملاقة وتحيط بها منطقة تسمى "أفق الحدث" (Event Horizon) |
+| **تركيب الذرة والمادة** | نواة موجبة (بروتونات ونيوترونات) تدور حولها إلكترونات سالبة | حجر الأساس لكل العناصر الكيميائية في الجدول الدوري |
+
+• **الشرح العميق**: ترتبط هذه القوانين ببعضها عبر نظريتي **النسبية العامة** لأينشتاين (التي تفسر الجاذبية وحركة الكواكب) و**ميكانيكا الكم** (التي تفسر سلوك الذرات والجسيمات الدقيقة).
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اكتب لي اسم أي ظاهرة علمية أو معادلة فيزيائية تريد شرحها خطوة بخطوة مع أمثلة تطبيقية.`;
       }
 
       // 6. مواعيد القطارات في مصر (تظهر فقط عندما يسأل المستخدم عن القطار)
@@ -1574,7 +1704,7 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
       // 2. إذا كان النموذج المختار هو نموذج تصميم الصور (Zoma Vision / Flux) أو الرسالة تطلب تصميم صورة
       if (isImageModelSelected() || isImageGenerationPrompt(lastUserMsg)) {
         await new Promise(r => setTimeout(r, 300));
-        return memoryNotice + executeImageGenerationFlow(lastUserMsg, modelNameLabel);
+        return memoryNotice + (await executeImageGenerationFlow(lastUserMsg, modelNameLabel));
       }
 
       // 3. إذا كانت الرسالة تحتوي على ملف مرفق أو طلب شرح ملف
@@ -1799,7 +1929,7 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
     }
 
     function loadInitialState() {
-      const saved = safeGetItem('zoma_ai_state_v7_codes');
+      const saved = safeGetItem('zoma_ai_state_v8_pro');
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
@@ -1899,7 +2029,7 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
     }
 
     function saveState() {
-      safeSetItem('zoma_ai_state_v7_codes', JSON.stringify(appState));
+      safeSetItem('zoma_ai_state_v8_pro', JSON.stringify(appState));
     }
 
     // =========================================================================
@@ -3203,6 +3333,7 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
       document.getElementById('toggle3dStageSizeBtn').addEventListener('click', () => {
         const stage = document.getElementById('holo3dStage');
         appState.holoCompact = !appState.holoCompact;
+        stage.classList.toggle('expanded-mobile-3d', !appState.holoCompact);
         if (appState.holoCompact) {
           stage.classList.remove('h-44', 'sm:h-52');
           stage.classList.add('h-14', 'sm:h-16');
@@ -3266,7 +3397,7 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
         handleSendMessage();
       });
 
-      document.getElementById('generateStudioImageBtn').addEventListener('click', () => {
+      document.getElementById('generateStudioImageBtn').addEventListener('click', async () => {
         const pInput = document.getElementById('imagePromptInput');
         const styleSel = document.getElementById('imageStyleSelect');
         const promptText = pInput.value.trim() || 'مدينة ذكية مستقبلية بتصميم ثلاثي الأبعاد عند الغروب';
@@ -3276,12 +3407,15 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
           return;
         }
         if (appState.dailyImagesRemaining <= 0) {
-          appState.dailyImagesRemaining = MAX_DAILY_IMAGES;
+          showToast('انتهى الرصيد — اكتب كود ZOMA في خانة الكود بالأعلى لإضافة +5 صور!');
+          return;
         }
         appState.dailyImagesRemaining--;
+        showToast('جاري ترجمة الوصف وتصميم الصورة المطابقة بدقة 8K...');
+        const engPrompt = await translateArabicPromptToEnglish(promptText);
         const artUrl = createNaturalArtworkDataUrl(promptText, styleSel.value);
         const seed = Math.floor(Math.random() * 999999);
-        const cloudUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptText + ', photorealistic, 8k, cinematic')}?width=960&height=540&nologo=true&seed=${seed}`;
+        const cloudUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(engPrompt + ', masterpiece, photorealistic, 8k, cinematic')}?model=flux&width=960&height=540&nologo=true&seed=${seed}`;
 
         appState.generatedImages.unshift({
           id: 'img_' + Date.now(),
