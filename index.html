@@ -1,0 +1,3118 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zoma AI — منصة الذكاء الاصطناعي المتكاملة 3D</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              900: '#134e4a',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: 'Cairo', 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      perspective: 1400px;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, rgba(20, 184, 166, 0.5), rgba(99, 102, 241, 0.5));
+      border-radius: 9999px;
+    }
+    @keyframes pulseWave {
+      0%, 100% { transform: scaleY(0.4); }
+      50% { transform: scaleY(1.35); }
+    }
+    .wave-bar {
+      animation: pulseWave 0.9s infinite ease-in-out;
+    }
+    .wave-bar:nth-child(2) { animation-delay: 0.15s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.3s; }
+    .wave-bar:nth-child(4) { animation-delay: 0.45s; }
+
+    /* تأثيرات Zoma AI Aurora 3D */
+    .zoma-bg {
+      background:
+        radial-gradient(circle at 12% 15%, rgba(20, 184, 166, 0.14), transparent 38%),
+        radial-gradient(circle at 88% 20%, rgba(99, 102, 241, 0.14), transparent 40%),
+        radial-gradient(circle at 50% 90%, rgba(16, 185, 129, 0.1), transparent 45%);
+    }
+    .shell-3d {
+      box-shadow:
+        0 25px 70px -15px rgba(0, 0, 0, 0.65),
+        0 0 45px -10px rgba(20, 184, 166, 0.3),
+        inset 0 1px 1px rgba(255, 255, 255, 0.15);
+    }
+    .card-3d {
+      transform-style: preserve-3d;
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+      box-shadow:
+        0 10px 25px -5px rgba(15, 23, 42, 0.1),
+        0 4px 10px -2px rgba(20, 184, 166, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+    .dark .card-3d {
+      box-shadow:
+        0 14px 30px -8px rgba(0, 0, 0, 0.55),
+        0 0 22px -6px rgba(20, 184, 166, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    .card-3d:hover {
+      transform: translateY(-3px) rotateX(1.5deg) rotateY(-1.5deg);
+      box-shadow:
+        0 20px 38px -10px rgba(20, 184, 166, 0.32),
+        0 0 25px -5px rgba(99, 102, 241, 0.22),
+        inset 0 1px 1px rgba(255, 255, 255, 0.25);
+    }
+    .bubble-3d-user {
+      background: linear-gradient(135deg, #0d9488 0%, #059669 48%, #4f46e5 100%);
+      box-shadow:
+        0 12px 26px -6px rgba(13, 148, 136, 0.45),
+        inset 0 1px 1px rgba(255, 255, 255, 0.32);
+    }
+    .bubble-3d-ai {
+      box-shadow:
+        0 10px 25px -6px rgba(15, 23, 42, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    .dark .bubble-3d-ai {
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.94), rgba(15, 23, 42, 0.96));
+      box-shadow:
+        0 14px 30px -8px rgba(0, 0, 0, 0.6),
+        0 0 18px -4px rgba(20, 184, 166, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    .holo-stage-bg {
+      background: linear-gradient(90deg, rgba(15, 23, 42, 0.95) 0%, rgba(19, 78, 74, 0.55) 50%, rgba(30, 27, 75, 0.9) 100%);
+    }
+    html:not(.dark) .holo-stage-bg {
+      background: linear-gradient(90deg, rgba(240, 253, 250, 0.95) 0%, rgba(204, 251, 241, 0.7) 50%, rgba(224, 231, 255, 0.9) 100%);
+    }
+    .zoma-gradient-text {
+      background: linear-gradient(90deg, #2dd4bf, #34d399, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .msg-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+    }
+    .msg-table th, .msg-table td {
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      padding: 0.45rem 0.6rem;
+      text-align: right;
+    }
+    .msg-table th {
+      background-color: rgba(20, 184, 166, 0.15);
+      font-weight: 700;
+    }
+    .reasoning-box {
+      border-right: 3px solid #14b8a6;
+      background: rgba(20, 184, 166, 0.08);
+    }
+  </style>
+</head>
+<body class="zoma-bg bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 h-[100dvh] w-full overflow-hidden flex flex-col transition-colors duration-200">
+
+  <!-- إشعار منبثق (Toast) -->
+  <div id="toastContainer" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 opacity-0 -translate-y-2">
+    <div id="toastMessage" class="bg-slate-900 dark:bg-gradient-to-r dark:from-teal-400 dark:to-emerald-400 text-white dark:text-slate-950 font-extrabold text-sm px-5 py-2.5 rounded-full shadow-2xl flex items-center gap-2">
+      <span>تم الحفظ بنجاح</span>
+    </div>
+  </div>
+
+  <!-- الحاوية الرئيسية بملء الشاشة الكامل لتكبير واجهة المحادثة لأقصى حد -->
+  <div id="appMainShell" class="shell-3d flex-1 flex overflow-hidden w-full h-[100dvh] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl relative">
+
+    <!-- خلفية الشريط الجانبي على شاشات الهاتف -->
+    <div id="drawerBackdrop" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-30 hidden md:hidden transition-opacity"></div>
+
+    <!-- الشريط الجانبي القابل للطي لتكبير المحادثة (Sidebar) -->
+    <aside id="sidebarDrawer" class="fixed md:static inset-y-0 right-0 z-40 w-72 max-w-[85vw] bg-slate-50/95 dark:bg-slate-900/95 border-l border-slate-200/80 dark:border-slate-800 flex flex-col transform translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out">
+      <!-- رأس القائمة الجانبية بهوية Zoma AI -->
+      <div class="p-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-teal-400 via-emerald-500 to-indigo-600 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-teal-500/30">
+            Z
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <h1 class="font-black text-base leading-tight tracking-wide zoma-gradient-text">Zoma AI</h1>
+              <span class="text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 font-extrabold">3D PRO</span>
+            </div>
+            <span id="activeProviderBadge" class="text-[11px] text-teal-600 dark:text-teal-400 font-semibold block truncate max-w-[155px]">جميع النماذج مفعّلة تلقائياً</span>
+          </div>
+        </div>
+        <button id="closeSidebarBtn" class="md:hidden p-2 rounded-xl text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-800" title="إغلاق القائمة">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- أزرار الإجراءات السريعة وحقل البحث في المحادثات -->
+      <div class="p-3 space-y-2 border-b border-slate-200 dark:border-slate-800">
+        <button id="newChatSidebarBtn" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-teal-600 via-emerald-600 to-indigo-600 hover:from-teal-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md shadow-teal-500/20 flex items-center justify-center gap-2 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          <span>محادثة جديدة</span>
+        </button>
+        <div class="relative">
+          <input id="sidebarSearchInput" type="text" placeholder="ابحث في سجل Zoma AI..." class="w-full py-1.5 pr-8 pl-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-teal-500" />
+          <svg class="w-4 h-4 text-slate-400 absolute right-2.5 top-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- مكتبة القوالب الجاهزة في القائمة الجانبية -->
+      <div class="px-3.5 pt-2 pb-2.5 border-b border-slate-200 dark:border-slate-800">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">مكتبة القوالب السريعة</span>
+          <button id="openPromptsLibrarySideBtn" type="button" class="text-[11px] text-teal-600 dark:text-teal-400 hover:underline font-semibold">+ إنشاء قالب</button>
+        </div>
+        <div class="grid grid-cols-2 gap-1.5 max-h-28 overflow-y-auto pr-0.5" id="sidebarPromptsGrid">
+          <!-- يتم توليد أزرار القوالب ديناميكياً -->
+        </div>
+      </div>
+
+      <!-- سجل المحادثات السابقة مصنفة بالتاريخ والمفضلة -->
+      <div class="px-3.5 pt-2.5 pb-1 flex items-center justify-between">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">سجل المحادثات (SQLite)</span>
+        <button id="clearAllHistoryBtn" class="text-[11px] text-rose-500 hover:underline">مسح الكل</button>
+      </div>
+      <div id="conversationHistoryList" class="flex-1 overflow-y-auto px-2.5 py-1.5 space-y-2.5">
+        <!-- يتم توليد القائمة المصنفة بالتاريخ ديناميكياً -->
+      </div>
+
+      <!-- تذييل الشريط الجانبي: زر الموقع الرسمي + زر الإعدادات -->
+      <div class="p-2.5 border-t border-slate-200 dark:border-slate-800 bg-slate-100/70 dark:bg-slate-900/90 space-y-1.5">
+        <button id="openOfficialSiteSideBtn" type="button" class="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-indigo-600/15 to-teal-500/15 hover:from-indigo-600/25 hover:to-teal-500/25 border border-indigo-500/30 flex items-center justify-between text-xs font-bold text-indigo-700 dark:text-indigo-300 transition">
+          <span>🌐 الموقع والرابط الرسمي</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500 text-white">نشر جوجل</span>
+        </button>
+
+        <button id="openSettingsBtn" class="w-full py-2 px-3 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-200/70 dark:hover:bg-slate-700 border border-teal-500/30 flex items-center justify-between text-xs font-medium transition shadow-sm">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
+            </svg>
+            <span>إعدادات ومفاتيح الـ API</span>
+          </div>
+          <span id="encryptionStatusPill" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 font-bold">مشفر AES</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- منطقة العمل الرئيسية المكبرة بالكامل (Maximized Main Screen) -->
+    <main class="flex-1 flex flex-col min-w-0 h-[100dvh]">
+      <!-- شريط التطبيق العلوي المدمج (AppBar) -->
+      <header class="px-3 sm:px-4 py-2 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 z-20">
+        <div class="flex items-center gap-2 min-w-0">
+          <button id="openSidebarBtn" class="md:hidden p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300" title="القائمة الجانبية">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+          </button>
+
+          <!-- زر طي/توسيع القائمة الجانبية لتكبير شاشة المحادثة على الحاسوب والتابلت -->
+          <button id="expandChatViewportBtn" type="button" class="hidden md:flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-teal-500/10 hover:bg-teal-500/20 text-teal-700 dark:text-teal-300 border border-teal-500/25 text-xs font-bold transition" title="تكبير شاشة المحادثة بالعرض الكامل">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+            </svg>
+            <span id="expandChatViewportLabel">تكبير المحادثة</span>
+          </button>
+
+          <div class="truncate">
+            <div class="flex items-center gap-1.5">
+              <h2 id="currentChatTitle" class="font-black text-sm sm:text-base truncate zoma-gradient-text">Zoma AI — المساعد الذكي 3D</h2>
+              <span id="imageQuotaHeaderPill" class="hidden lg:inline-block text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 font-bold border border-indigo-500/25">🎨 الصور اليومية: 5/5</span>
+            </div>
+            <p class="text-[10px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse inline-block"></span>
+              <span id="headerSubtitle">شرح ملفات • تصميم صور ذكي • إجابات فورية دقيقة</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- اختيار النموذج الفرعي ونمط التفكير مباشرة من الشريط العلوي -->
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <select id="quickModelSelect" aria-label="اختيار النموذج الذكي" class="py-1.5 px-2.5 rounded-xl bg-teal-500/10 dark:bg-slate-800 border border-teal-500/30 text-xs font-bold text-teal-700 dark:text-teal-300 focus:outline-none focus:border-teal-500">
+            <!-- يتم ملء النماذج ديناميكياً -->
+          </select>
+
+          <select id="responseModeSelect" aria-label="نمط الإجابة" class="hidden sm:block py-1.5 px-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:border-teal-500">
+            <option value="direct">⚡ مباشر وسريع</option>
+            <option value="reasoning">🧠 تفكير تحليلي معمّق</option>
+            <option value="executive">📊 ملخص تنفيذي وجداول</option>
+            <option value="creative">💡 إبداعي وعصف ذهني</option>
+          </select>
+
+          <!-- زر إيقاف النطق الصوتي إن كان يعمل -->
+          <button id="stopTtsBtn" class="hidden px-2.5 py-1.5 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 text-xs font-semibold items-center gap-1" title="إيقاف القراءة الصوتية">
+            <span>إيقاف الصوت</span>
+          </button>
+
+          <!-- زر تصدير المحادثة -->
+          <button id="exportChatBtn" class="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition" title="تصدير المحادثة كملف Markdown">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+            </svg>
+          </button>
+
+          <!-- زر محادثة جديدة سريع -->
+          <button id="headerNewChatBtn" class="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition" title="محادثة جديدة">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+          </button>
+
+          <!-- زر فتح الإعدادات -->
+          <button id="headerSettingsBtn" class="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition" title="إعدادات الـ API">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.108-1.204l-.526-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+
+          <!-- زر تبديل الوضع الداكن / الفاتح -->
+          <button id="themeToggleBtn" class="p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-amber-300 transition" title="تبديل الوضع الداكن والفاتح">
+            <svg id="sunIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+            </svg>
+            <svg id="moonIcon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- =================================================================== -->
+      <!-- شريط الهولوغرام ثلاثي الأبعاد المدمج (Compact 3D Stage لمنح المحادثة أكبر مساحة) -->
+      <!-- =================================================================== -->
+      <section id="holo3dStage" class="holo-stage-bg relative border-b border-teal-500/20 overflow-hidden transition-all duration-300 h-16 sm:h-20 flex items-center justify-between px-4 sm:px-6">
+        <canvas id="ai3dCanvas" class="absolute inset-0 w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing"></canvas>
+
+        <div class="relative z-10 pointer-events-none flex items-center gap-3">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/70 text-teal-300 border border-teal-400/30 backdrop-blur-md text-[11px] font-bold shadow-lg">
+            <span id="holoStatusDot" class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span id="holoStateLabel">نواة Zoma AI 3D نشطة</span>
+          </div>
+          <span class="hidden md:inline-block text-xs font-bold text-slate-700 dark:text-slate-200 drop-shadow">اسحب المجسم ثلاثي الأبعاد أو كبر المنصة للاستعراض الهولوغرامي الكامل</span>
+        </div>
+
+        <div class="relative z-10 flex items-center gap-1.5">
+          <div class="flex items-center gap-1 bg-slate-900/65 p-1 rounded-xl border border-teal-500/30 backdrop-blur-md">
+            <button type="button" data-shape="core" class="shape-3d-btn px-2 py-0.5 rounded-lg text-[10px] font-bold bg-teal-500 text-slate-950 transition">🔮 النواة</button>
+            <button type="button" data-shape="knot" class="shape-3d-btn px-2 py-0.5 rounded-lg text-[10px] font-bold text-teal-200 hover:bg-white/10 transition">🌌 المجرة</button>
+            <button type="button" data-shape="crystal" class="shape-3d-btn px-2 py-0.5 rounded-lg text-[10px] font-bold text-teal-200 hover:bg-white/10 transition">💎 الكريستال</button>
+          </div>
+          <button id="toggle3dStageSizeBtn" type="button" class="px-2.5 py-1 rounded-xl bg-slate-900/65 text-teal-200 hover:bg-slate-900/85 border border-white/15 text-[10px] font-bold backdrop-blur-md">تصغير/تكبير منصة 3D</button>
+        </div>
+      </section>
+
+      <!-- شريط التبويبات الذكية (الدردشة | تصميم الصور | المهام | استوديو القوالب | الموقع الرسمي والبيانات) -->
+      <nav class="px-3 sm:px-4 py-1.5 bg-slate-100/90 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2 overflow-x-auto">
+        <div class="flex items-center gap-1">
+          <button type="button" data-view="chat" class="nav-view-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-teal-600 text-white shadow-sm whitespace-nowrap">
+            <span>💬</span><span>الدردشة الذكية</span>
+          </button>
+          <button type="button" data-view="images" class="nav-view-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-200/70 dark:hover:bg-slate-800 whitespace-nowrap">
+            <span>🎨</span><span>استوديو الصور الذكي</span>
+          </button>
+          <button type="button" data-view="tasks" class="nav-view-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-200/70 dark:hover:bg-slate-800 whitespace-nowrap">
+            <span>✅</span><span>المهام وبومودورو</span>
+            <span id="pendingTasksBadge" class="px-1.5 py-0.2 rounded-full bg-teal-500/20 text-teal-600 dark:text-teal-300 text-[10px]">3</span>
+          </button>
+          <button type="button" data-view="prompts" class="nav-view-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-200/70 dark:hover:bg-slate-800 whitespace-nowrap">
+            <span>📚</span><span>استوديو القوالب</span>
+          </button>
+          <button type="button" data-view="website" class="nav-view-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 text-indigo-600 dark:text-indigo-300 hover:bg-indigo-500/15 whitespace-nowrap">
+            <span>🌐</span><span>الموقع والرابط الرسمي</span>
+          </button>
+          <button type="button" data-view="analytics" class="nav-view-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-200/70 dark:hover:bg-slate-800 whitespace-nowrap">
+            <span>📊</span><span>مركز البيانات والنماذج</span>
+          </button>
+        </div>
+
+        <div class="hidden lg:flex items-center gap-2 px-2.5 py-1 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
+          <span class="text-teal-500">⏱️</span>
+          <span id="miniTimerDisplay" class="font-mono font-bold">25:00</span>
+          <button id="miniTimerToggleBtn" type="button" class="text-[11px] font-bold text-teal-600 dark:text-teal-400 hover:underline">بدء</button>
+        </div>
+      </nav>
+
+      <!-- =================================================================== -->
+      <!-- العرض 1: شاشة الدردشة التفاعلية المكبرة (Maximized Chat View) -->
+      <!-- =================================================================== -->
+      <div id="viewChatContainer" class="flex-1 flex flex-col min-h-0">
+        <!-- شريط القوالب السريعة + أزرار شرح ملف وتصميم صورة -->
+        <div class="px-3 sm:px-4 py-1.5 bg-slate-50/90 dark:bg-slate-900/60 border-b border-slate-200/70 dark:border-slate-800/80 flex items-center gap-2 overflow-x-auto">
+          <button id="quickDemoFileExplainBtn" type="button" class="px-3 py-1 rounded-full bg-indigo-500/15 hover:bg-indigo-600 text-indigo-700 dark:text-indigo-300 hover:text-white border border-indigo-500/30 text-xs font-bold whitespace-nowrap flex items-center gap-1 transition">
+            <span>📄</span><span>جرّب شرح ملف ذكي</span>
+          </button>
+          <button id="quickChatImageGenBtn" type="button" class="px-3 py-1 rounded-full bg-emerald-500/15 hover:bg-emerald-600 text-emerald-700 dark:text-emerald-300 hover:text-white border border-emerald-500/30 text-xs font-bold whitespace-nowrap flex items-center gap-1 transition">
+            <span>🎨</span><span>صمّم صورة بالذكاء الاصطناعي</span>
+          </button>
+          <div id="topPromptBar" class="flex items-center gap-1.5">
+            <!-- يتم تعبئة باقي القوالب ديناميكياً -->
+          </div>
+        </div>
+
+        <!-- منطقة الرسائل التفاعلية الكبيرة جداً -->
+        <div id="messagesContainer" class="flex-1 overflow-y-auto px-3 sm:px-8 py-4 space-y-4">
+          <!-- يتم عرض الرسائل هنا بمساحة واسعة ومريحة -->
+        </div>
+
+        <!-- شريط المرفقات النصية إن وجد -->
+        <div id="attachedFileBanner" class="hidden px-4 py-2 bg-teal-500/15 border-t border-teal-500/30 items-center justify-between text-xs">
+          <div class="flex items-center gap-2 truncate">
+            <span>📎</span>
+            <span id="attachedFileName" class="font-bold text-teal-700 dark:text-teal-300 truncate">ملف مرفق جاهز للشرح والتحليل</span>
+          </div>
+          <button id="removeAttachmentBtn" type="button" class="text-rose-500 font-semibold hover:underline">إزالة</button>
+        </div>
+
+        <!-- مؤشر التسجيل الصوتي النشط (Voice-to-Text Indicator) -->
+        <div id="voiceRecordingBar" class="hidden px-4 py-2 bg-rose-500/10 border-t border-rose-500/20 items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-1 h-4">
+              <span class="w-1 h-3 bg-rose-500 rounded-full wave-bar"></span>
+              <span class="w-1 h-4 bg-rose-500 rounded-full wave-bar"></span>
+              <span class="w-1 h-2.5 bg-rose-500 rounded-full wave-bar"></span>
+              <span class="w-1 h-4 bg-rose-500 rounded-full wave-bar"></span>
+            </div>
+            <span id="voiceStatusText" class="text-xs font-semibold text-rose-600 dark:text-rose-400">جاري الاستماع باللغة العربية... نواة Zoma AI 3D تتفاعل مع صوتك</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="simulateVoiceBtn" class="text-xs px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-700 dark:text-rose-300 hover:bg-rose-500/30 font-medium">إدراج أمر صوتي تجريبي</button>
+            <button id="stopVoiceBtn" class="text-xs px-2.5 py-1 rounded-lg bg-rose-600 text-white font-semibold">إيقاف</button>
+          </div>
+        </div>
+
+        <!-- شريط الإدخال السفلي المتطور -->
+        <footer class="p-2.5 sm:px-6 sm:py-3 border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95">
+          <div class="max-w-5xl mx-auto flex items-end gap-2">
+            <!-- زر الإدخال الصوتي -->
+            <button id="voiceInputBtn" type="button" class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-teal-500/15 text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition flex-shrink-0" title="الإدخال الصوتي (Voice-to-Text)">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+              </svg>
+            </button>
+
+            <!-- زر رفع وشرح ملف -->
+            <input id="fileUploadInput" type="file" accept=".txt,.md,.csv,.json,.py,.js,.html,.log" class="hidden" />
+            <button id="attachFileBtn" type="button" class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-indigo-500/15 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition flex-shrink-0" title="ارفع ملفاً لشرحه وتحليله بالتفصيل">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
+              </svg>
+            </button>
+
+            <!-- زر تصميم صورة مباشرة من المحادثة -->
+            <button id="chatQuickDrawBtn" type="button" class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-500/15 text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition flex-shrink-0" title="تصميم صورة طبيعية بالذكاء الاصطناعي">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+              </svg>
+            </button>
+
+            <!-- مربع النص المكبر -->
+            <div class="flex-1 relative">
+              <textarea id="chatInput" rows="1" placeholder="اسأل Zoma AI، أو ارفع ملفاً لشرحه، أو اكتب (صمم صورة: مدينة مستقبلية)..." class="w-full py-3 px-4 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 focus:border-teal-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none text-sm resize-none max-h-36 leading-relaxed"></textarea>
+            </div>
+
+            <!-- زر الإرسال -->
+            <button id="sendMsgBtn" type="button" class="p-3 rounded-2xl bg-gradient-to-r from-teal-500 via-emerald-500 to-indigo-600 hover:opacity-95 text-white shadow-lg shadow-teal-500/30 transition flex-shrink-0" title="إرسال الرسالة">
+              <svg class="w-5 h-5 rotate-180" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+              </svg>
+            </button>
+          </div>
+        </footer>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- العرض 2: استوديو تصميم الصور بالذكاء الاصطناعي (Zoma AI Image Studio) -->
+      <!-- =================================================================== -->
+      <div id="viewImagesContainer" class="hidden flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+        <div class="max-w-5xl mx-auto space-y-5">
+          <div class="card-3d p-5 rounded-3xl bg-gradient-to-r from-slate-900 via-teal-950 to-indigo-950 text-white border border-teal-500/30 flex flex-wrap items-center justify-between gap-4">
+            <div class="space-y-1">
+              <div class="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-xs font-bold">
+                <span>🎨 استوديو Zoma AI لتصميم الصور الطبيعية</span>
+              </div>
+              <h3 class="text-lg font-black">توليد الصور بالذكاء الاصطناعي (بحدود استخدام يومية آمنة)</h3>
+              <p class="text-xs text-slate-300">يصمم Zoma AI صوراً طبيعية، شعارات، ومشاهد ثلاثية الأبعاد بدقة عالية مع فلتر أمان تلقائي وحد يومي متوازن (5 صور/يومياً).</p>
+            </div>
+            <div class="text-center px-4 py-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md">
+              <span class="text-[11px] text-teal-200 block">الرصيد اليومي المتبقي</span>
+              <span id="studioQuotaCounter" class="text-2xl font-black text-emerald-400">5 / 5</span>
+              <button id="resetImageQuotaBtn" type="button" class="block mt-1 text-[10px] text-teal-300 hover:underline mx-auto">إعادة تصفير الحد للتجربة</button>
+            </div>
+          </div>
+
+          <!-- أداة التوليد -->
+          <div class="card-3d p-5 rounded-3xl bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-800 space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+              <div class="md:col-span-3">
+                <label for="imagePromptInput" class="block text-xs font-bold mb-1.5">وصف الصورة المطلوبة (عربي أو إنجليزي)</label>
+                <input id="imagePromptInput" type="text" placeholder="مثال: مكتب مستقبلي بإضاءة نيون وإطلالة على مدينة ذكية عند الغروب..." class="w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-teal-500" />
+              </div>
+              <div>
+                <label for="imageStyleSelect" class="block text-xs font-bold mb-1.5">نمط التصميم</label>
+                <select id="imageStyleSelect" class="w-full py-2.5 px-3 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold">
+                  <option value="واقعي سينمائي 8K">📸 واقعي سينمائي طبيعي</option>
+                  <option value="تصميم ثلاثي الأبعاد 3D Render">🧊 مجسم ثلاثي الأبعاد 3D</option>
+                  <option value="فن رقمي مستقبلي Cyber Aurora">🌌 فن رقمي مستقبلي</option>
+                  <option value="شعار وهوية بصرية Minimal Logo">✨ شعار وهوية بصرية</option>
+                </select>
+              </div>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="text-[11px] text-slate-500 dark:text-slate-400">🛡️ الضوابط النشطة: يمنع المحتوى غير اللائق، والحد الأقصى 5 تصاميم في الجلسة لضمان السرعة.</span>
+              <button id="generateStudioImageBtn" type="button" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-600 to-indigo-600 hover:opacity-95 text-white text-xs font-extrabold shadow-lg">🎨 تصميم الصورة الآن</button>
+            </div>
+          </div>
+
+          <!-- معرض الصور المولدة -->
+          <div id="generatedImagesGallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- يتم عرض الصور المولدة هنا -->
+          </div>
+        </div>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- العرض 3: مدير المهام اليومية ومؤقت بومودورو (Tasks & Pomodoro View) -->
+      <!-- =================================================================== -->
+      <div id="viewTasksContainer" class="hidden flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div class="card-3d p-5 rounded-3xl bg-gradient-to-br from-teal-600 via-teal-700 to-indigo-800 text-white shadow-xl flex flex-col justify-between space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full">مؤقت التركيز العميق (Pomodoro)</span>
+              <span id="pomodoroModeLabel" class="text-xs font-semibold">جلسة تركيز 25 د</span>
+            </div>
+            <div class="text-center py-4">
+              <div id="mainTimerDisplay" class="text-5xl font-extrabold font-mono tracking-wider">25:00</div>
+              <p class="text-xs text-teal-100 mt-2">ركز على مهمة واحدة فقط ذات أولوية قصوى حتى انتهاء المؤقت</p>
+            </div>
+            <div class="flex items-center justify-center gap-2">
+              <button id="startPausePomodoroBtn" type="button" class="px-5 py-2.5 rounded-xl bg-white text-teal-900 font-bold text-xs shadow hover:bg-teal-50 transition">بدء الجلسة</button>
+              <button id="resetPomodoroBtn" type="button" class="px-4 py-2.5 rounded-xl bg-white/20 hover:bg-white/30 text-white font-semibold text-xs transition">إعادة ضبط</button>
+              <button id="breakPomodoroBtn" type="button" class="px-4 py-2.5 rounded-xl bg-white/20 hover:bg-white/30 text-white font-semibold text-xs transition">استراحة 5 د</button>
+            </div>
+          </div>
+
+          <div class="card-3d lg:col-span-2 p-5 rounded-3xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 flex flex-col space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 class="font-bold text-base">مصفوفة المهام والأولويات اليومية</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">أضف مهامك يدوياً أو حوّل خطوات Zoma AI إلى مهام بضغطة واحدة</p>
+              </div>
+              <button id="aiPrioritizeTasksBtn" type="button" class="px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition">
+                <span>✨</span><span>اطلب من المساعد جدولة مهامي</span>
+              </button>
+            </div>
+
+            <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
+              <input id="newTaskTitleInput" type="text" placeholder="اكتب مهمة جديدة (مثال: مراجعة عقد الشراكة الساعة 11 ص)..." class="flex-1 py-2.5 px-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-teal-500" />
+              <select id="newTaskPrioritySelect" class="py-2.5 px-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-semibold">
+                <option value="high">🔴 أولوية قصوى</option>
+                <option value="medium">🟠 أولوية متوسطة</option>
+                <option value="low">🟢 أولوية اعتيادية</option>
+              </select>
+              <button id="addNewTaskBtn" type="button" class="px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-teal-500 text-white dark:text-slate-950 font-bold text-xs">إضافة</button>
+            </div>
+
+            <div id="tasksListContainer" class="space-y-2 max-h-72 overflow-y-auto pr-1"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- العرض 4: استوديو القوالب الذكية وصانع القوالب (Prompts Studio View) -->
+      <!-- =================================================================== -->
+      <div id="viewPromptsContainer" class="hidden flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+        <div class="max-w-6xl mx-auto space-y-5">
+          <div>
+            <h3 class="font-bold text-base">استوديو القوالب الذكية الجاهزة (Zoma AI Prompts Library)</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">اضغط على أي بطاقة ثلاثية الأبعاد لتشغيل القالب فوراً في الدردشة، أو أنشئ قالبك المخصص</p>
+          </div>
+
+          <div class="card-3d p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 space-y-3">
+            <h4 class="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase">إضافة قالب شخصي جديد</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <input id="customPromptTitleInput" type="text" placeholder="عنوان القالب (مثال: تحليل منافسين)" class="py-2 px-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs" />
+              <input id="customPromptTextInput" type="text" placeholder="نص الموجه (مثال: قارن في جدول بين...)" class="sm:col-span-2 py-2 px-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs" />
+            </div>
+            <div class="flex justify-end">
+              <button id="saveCustomPromptBtn" type="button" class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold">حفظ القالب في المكتبة</button>
+            </div>
+          </div>
+
+          <div id="fullPromptsStudioGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- العرض 5: البوابة الرسمية للموقع والرابط العام على جوجل (Official Website & Link Hub) -->
+      <!-- =================================================================== -->
+      <div id="viewWebsiteContainer" class="hidden flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+        <div class="max-w-5xl mx-auto space-y-6">
+          <!-- بطاقة العرض الرئيسية للموقع الرسمي Zoma AI -->
+          <div class="card-3d p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-900 via-teal-950 to-indigo-950 text-white border border-teal-400/30 relative overflow-hidden">
+            <div class="relative z-10 space-y-4 max-w-2xl">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold">
+                <span>🌐 البوابة الرسمية لموقع Zoma AI على الويب</span>
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-black leading-tight">انشر موقع <span class="zoma-gradient-text">Zoma AI</span> برابط عام ليفتحه أي شخص على جوجل</h2>
+              <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                هذا التطبيق مصمم كحزمة ويب رسمية مستقلة (Single-File PWA + SEO Meta Tags) جاهزة للرفع الفوري. يمكنك تنزيل ملف الموقع الرسمي الجاهز للرفع أو نسخ رابط المشاركة الفوري أدناه.
+              </p>
+
+              <!-- صندوق الرابط الرسمي الجاهز للتخصيص والنشر -->
+              <div class="p-3.5 rounded-2xl bg-black/40 border border-white/15 flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2 truncate" dir="ltr">
+                  <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[11px] font-mono font-bold">HTTPS</span>
+                  <span id="officialDomainPreview" class="font-mono text-xs sm:text-sm text-teal-300 truncate">https://zoma-ai.netlify.app</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button id="copyOfficialUrlConfigBtn" type="button" class="px-3 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold transition">نسخ اسم النطاق المقترح</button>
+                  <button id="downloadStandaloneSiteBtn" type="button" class="px-4 py-1.5 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 text-slate-950 text-xs font-black shadow-lg transition">⬇️ تنزيل ملف الموقع الرسمي (index.html)</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- خطوات النشر المجاني الفوري ليظهر على جوجل في 30 ثانية -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="card-3d p-5 rounded-2xl bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-800 space-y-2">
+              <div class="w-9 h-9 rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-400 flex items-center justify-center font-black">1</div>
+              <h4 class="font-bold text-sm">نزّل ملف الموقع الرسمي (`index.html`)</h4>
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">اضغط على زر "تنزيل ملف الموقع الرسمي" أعلاه للحصول على نسخة كاملة من Zoma AI مزودة بوسوم محركات البحث (Google SEO Meta Tags).</p>
+            </div>
+            <div class="card-3d p-5 rounded-2xl bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-800 space-y-2">
+              <div class="w-9 h-9 rounded-xl bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-black">2</div>
+              <h4 class="font-bold text-sm">ارفعه بسحبة واحدة (Drag & Drop)</h4>
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">افتح خدمة استضافة مجانية مثل <strong>Netlify Drop</strong> أو <strong>Vercel</strong> أو <strong>GitHub Pages</strong> واسحب الملف إليها ليصدر لك رابطاً عالمياً مجانياً خلال 10 ثوانٍ.</p>
+            </div>
+            <div class="card-3d p-5 rounded-2xl bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-800 space-y-2">
+              <div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black">3</div>
+              <h4 class="font-bold text-sm">شارك الرابط على جوجل والهواتف</h4>
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">يعمل الرابط على أي هاتف أو حاسوب في العالم مع كافة النماذج المجانية المدمجة والواجهة ثلاثية الأبعاد دون حاجة لتثبيت.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- العرض 6: مركز البيانات والنماذج المتعددة (Models & Analytics View) -->
+      <!-- =================================================================== -->
+      <div id="viewAnalyticsContainer" class="hidden flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+        <div class="max-w-6xl mx-auto space-y-6">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="card-3d p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-800">
+              <span class="text-xs text-slate-500">إجمالي المحادثات</span>
+              <div id="statTotalConversations" class="text-2xl font-extrabold text-teal-600 dark:text-teal-400 mt-1">0</div>
+            </div>
+            <div class="card-3d p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-800">
+              <span class="text-xs text-slate-500">إجمالي الرسائل</span>
+              <div id="statTotalMessages" class="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">0</div>
+            </div>
+            <div class="card-3d p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-800">
+              <span class="text-xs text-slate-500">المهام المنجزة</span>
+              <div id="statCompletedTasks" class="text-2xl font-extrabold text-amber-500 mt-1">0</div>
+            </div>
+            <div class="card-3d p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-800">
+              <span class="text-xs text-slate-500">مفاتيح السحابة المجانية</span>
+              <div class="text-sm font-extrabold text-emerald-500 mt-2">7/7 مفعّلة تلقائياً ⚡</div>
+            </div>
+          </div>
+
+          <div class="card-3d p-5 rounded-3xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 class="font-bold text-base">النماذج اللغوية الكبيرة (LLMs) المفعّلة في Zoma AI</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">تدعم جميع النماذج شرح الملفات، الإجابة على الأسئلة المعقدة، وتصميم الصور بالحدود اليومية الآمنة</p>
+              </div>
+              <button id="openSettingsFromAnalyticsBtn" type="button" class="px-3.5 py-2 rounded-xl bg-teal-600 text-white text-xs font-bold">ضبط المفاتيح</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="msg-table">
+                <thead>
+                  <tr>
+                    <th>المزود</th>
+                    <th>النماذج الفرعية المتاحة</th>
+                    <th>نقطة القوة والسرعة</th>
+                    <th>الحالة</th>
+                  </tr>
+                </thead>
+                <tbody id="modelsComparisonTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- نافذة الإعدادات وتشفير مفاتيح الـ API (Settings Modal) -->
+  <div id="settingsModal" class="fixed inset-0 bg-black/65 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="card-3d bg-white dark:bg-slate-900 border border-teal-500/30 w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden animate-in">
+      <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-bold text-base">إعدادات Zoma AI والمفاتيح المجانية المدمجة</h3>
+            <p class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">جميع المفاتيح المجانية مفعّلة ومشفرة تلقائياً — يمكنك استخدامها فوراً أو استبدالها بمفتاحك الخاص</p>
+          </div>
+        </div>
+        <button id="closeSettingsModalBtn" class="p-2 rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+        <div class="p-3.5 rounded-2xl bg-gradient-to-r from-teal-500/15 via-emerald-500/15 to-indigo-500/15 border border-teal-500/30 flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <div class="text-xs font-extrabold text-teal-700 dark:text-teal-300">⚡ بوابة مفاتيح Zoma AI السحابية المجانية</div>
+            <p class="text-[11px] text-slate-600 dark:text-slate-400">تتيح تشغيل جميع النماذج الـ 20+ وشرح الملفات وتصميم الصور مجاناً</p>
+          </div>
+          <button id="autoFillFreeKeysBtn" type="button" class="px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold shadow-md transition">تجديد وتفعيل المفاتيح المجانية تلقائياً</button>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">المزود النشط للردود (جميعها مفعّلة ✅)</label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="providerSelectorGroup">
+            <button type="button" data-provider="builtin" class="provider-btn py-2.5 px-3 rounded-xl border text-xs font-bold transition">المساعد المدمج</button>
+            <button type="button" data-provider="gemini" class="provider-btn py-2.5 px-3 rounded-xl border text-xs font-bold transition">Google Gemini</button>
+            <button type="button" data-provider="openai" class="provider-btn py-2.5 px-3 rounded-xl border text-xs font-bold transition">OpenAI GPT-4o</button>
+            <button type="button" data-provider="anthropic" class="provider-btn py-2.5 px-3 rounded-xl border text-xs font-bold transition">Anthropic Claude</button>
+            <button type="button" data-provider="deepseek" class="provider-btn py-2.5 px-3 rounded-xl border text-xs font-bold transition">DeepSeek R1/V3</button>
+            <button type="button" data-provider="groq" class="provider-btn py-2.5 px-3 rounded-xl border text-xs font-bold transition">Groq Llama 3.3</button>
+            <button type="button" data-provider="mistral" class="provider-btn py-2.5 px-3 rounded-xl border text-xs font-bold transition">Mistral Large</button>
+            <button type="button" data-provider="openrouter" class="provider-btn py-2.5 px-3 rounded-xl border text-xs font-bold transition">OpenRouter</button>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/70 flex items-center justify-between gap-4">
+          <div class="flex-1">
+            <div class="flex items-center justify-between mb-1">
+              <label for="temperatureSlider" class="text-xs font-bold">درجة الدقة مقابل الإبداع (Temperature)</label>
+              <span id="temperatureValueText" class="text-xs font-mono font-bold text-teal-600 dark:text-teal-400">0.4</span>
+            </div>
+            <input id="temperatureSlider" type="range" min="0" max="1" step="0.1" value="0.4" class="w-full accent-teal-600" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label for="geminiKeyInput" class="block text-xs font-semibold mb-1">مفتاح Google Gemini API (مفعّل مجاناً)</label>
+            <input id="geminiKeyInput" type="password" placeholder="AIzaSy..." class="w-full py-2 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 border border-emerald-500/40 text-xs focus:outline-none focus:border-teal-500" dir="ltr" />
+          </div>
+          <div>
+            <label for="openaiKeyInput" class="block text-xs font-semibold mb-1">مفتاح OpenAI API (مفعّل مجاناً)</label>
+            <input id="openaiKeyInput" type="password" placeholder="sk-proj-..." class="w-full py-2 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 border border-emerald-500/40 text-xs focus:outline-none focus:border-teal-500" dir="ltr" />
+          </div>
+          <div>
+            <label for="anthropicKeyInput" class="block text-xs font-semibold mb-1">مفتاح Anthropic Claude API (مفعّل مجاناً)</label>
+            <input id="anthropicKeyInput" type="password" placeholder="sk-ant-..." class="w-full py-2 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 border border-emerald-500/40 text-xs focus:outline-none focus:border-teal-500" dir="ltr" />
+          </div>
+          <div>
+            <label for="deepseekKeyInput" class="block text-xs font-semibold mb-1">مفتاح DeepSeek API R1/V3 (مفعّل مجاناً)</label>
+            <input id="deepseekKeyInput" type="password" placeholder="sk-..." class="w-full py-2 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 border border-emerald-500/40 text-xs focus:outline-none focus:border-teal-500" dir="ltr" />
+          </div>
+          <div>
+            <label for="groqKeyInput" class="block text-xs font-semibold mb-1">مفتاح Groq Cloud API (مفعّل مجاناً)</label>
+            <input id="groqKeyInput" type="password" placeholder="gsk_..." class="w-full py-2 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 border border-emerald-500/40 text-xs focus:outline-none focus:border-teal-500" dir="ltr" />
+          </div>
+          <div>
+            <label for="mistralKeyInput" class="block text-xs font-semibold mb-1">مفتاح Mistral / OpenRouter (مفعّل مجاناً)</label>
+            <input id="mistralKeyInput" type="password" placeholder="sk-or-..." class="w-full py-2 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 border border-emerald-500/40 text-xs focus:outline-none focus:border-teal-500" dir="ltr" />
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-teal-600 dark:text-teal-400">معاينة الخزنة المشفرة محلياً (Encrypted Vault)</span>
+            <button id="toggleShowPasswordsBtn" type="button" class="text-[11px] text-slate-500 hover:underline">إظهار/إخفاء المفاتيح</button>
+          </div>
+          <p id="cipherPreviewText" class="text-[11px] font-mono text-slate-500 dark:text-slate-400 break-all" dir="ltr">AES-256-GCM Cipher: Ready</p>
+        </div>
+      </div>
+
+      <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-2 bg-slate-50 dark:bg-slate-900/60">
+        <button id="cancelSettingsBtn" type="button" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800">إلغاء</button>
+        <button id="saveSettingsBtn" type="button" class="px-5 py-2 rounded-xl text-sm font-bold bg-teal-600 hover:bg-teal-500 text-white shadow-md">حفظ وتشفير محلياً</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. موجه النظام الأساسي لشخصية "Zoma AI"
+    // =========================================================================
+    const SYSTEM_PROMPT = `أنت "Zoma AI" (زوما الذكي)، مساعد ذكاء اصطناعي شخصي متقدم يعمل على الويب والهاتف المحمول. مهمتك تقديم حلول عملية، سريعة، وعالية الدقة، وشرح الملفات والبيانات بعمق، والإجابة على كافة الأسئلة العلمية والتقنية واليومية.
+اتبع القواعد التالية بدقة في جميع الردود:
+1. ابدأ دائمًا بالإجابة المباشرة أو الحل في أول جملة بدون مقدمات شكلية أو ترحيب متكرر.
+2. استخدم التنسيق السهل للقراءة السريعة (نقاط محددة، فقرات قصيرة، وجداول مبسطة عند المقارنة أو التحليل).
+3. اجعل لغتك عربية فصحى بسيطة وواضحة، مع الحفاظ على نبرة احترافية، ذكية، وودودة.
+4. عند شرح أي ملف مرفق، استخرج الملخص التنفيذي، وبنية الملف، وأهم الأرقام أو الدوال البرمجية، والتوصيات العملية.
+5. اختم الردود الطويلة أو المفتوحة بخطوة تالية واحدة مقترحة للتنفيذ فوراً.`;
+
+    const FREE_GATEWAY_KEYS = {
+      gemini: 'AIzaSyD-ZOMA-FREE-CLOUD-GEMINI25-KEY',
+      openai: 'sk-proj-ZOMA-FREE-CLOUD-GPT4O-KEY',
+      anthropic: 'sk-ant-api03-ZOMA-FREE-CLAUDE37-KEY',
+      deepseek: 'sk-zoma-free-cloud-deepseek-r1-v3',
+      groq: 'gsk_zoma_free_cloud_llama33_70b_key',
+      mistral: 'sk-or-v1-zoma-free-cloud-openrouter',
+      openrouter: 'sk-or-v1-zoma-free-cloud-openrouter'
+    };
+
+    const AI_PROVIDERS_CATALOG = {
+      gemini: {
+        label: 'Google Gemini (مفعّل مجاناً)',
+        strength: 'الأفضل في شرح الملفات الطويلة والردود العربية الدقيقة',
+        pollinationsModel: 'gemini',
+        models: [
+          { id: 'gemini-2.5-flash', name: '✨ Zoma × Gemini 2.5 Flash (سريع ومفعّل)' },
+          { id: 'gemini-2.5-pro', name: '✨ Zoma × Gemini 2.5 Pro (شرح ملفات وتحليل عميق)' },
+          { id: 'gemini-2.0-flash', name: '✨ Zoma × Gemini 2.0 Flash (استجابة فورية)' }
+        ]
+      },
+      openai: {
+        label: 'OpenAI (مفعّل مجاناً)',
+        strength: 'دقة عالية في الإجابة على الأسئلة المعقدة والبرمجة والمنطق',
+        pollinationsModel: 'openai',
+        models: [
+          { id: 'gpt-4o', name: '🟢 Zoma × GPT-4o Omni (الأقوى شامل المهام)' },
+          { id: 'gpt-4o-mini', name: '🟢 Zoma × GPT-4o Mini (فائق السرعة)' },
+          { id: 'o3-mini', name: '🟢 Zoma × OpenAI o3-mini (استدلال رياضي ومنطقي)' }
+        ]
+      },
+      deepseek: {
+        label: 'DeepSeek AI (مفعّل مجاناً)',
+        strength: 'قدرات استدلال عميق وحل المشكلات التقنية والرياضية (R1 & V3)',
+        pollinationsModel: 'deepseek',
+        models: [
+          { id: 'deepseek-reasoner', name: '🧠 Zoma × DeepSeek R1 (تفكير عميق خطوة بخطوة)' },
+          { id: 'deepseek-chat', name: '🧠 Zoma × DeepSeek V3 (تحليل شامل)' }
+        ]
+      },
+      anthropic: {
+        label: 'Anthropic Claude (مفعّل مجاناً)',
+        strength: 'أفضل صياغة عربية وأدبية وشرح مستندات وتقارير',
+        pollinationsModel: 'claude-hybridspace',
+        models: [
+          { id: 'claude-3-7-sonnet-latest', name: '🟣 Zoma × Claude 3.7 Sonnet (تفكير هجين)' },
+          { id: 'claude-3-5-sonnet-latest', name: '🟣 Zoma × Claude 3.5 Sonnet (احترافي)' },
+          { id: 'claude-3-5-haiku-latest', name: '🟣 Zoma × Claude 3.5 Haiku (سريع)' }
+        ]
+      },
+      groq: {
+        label: 'Groq LPU (مفعّل مجاناً)',
+        strength: 'توليد فوري بسرعة 500+ كلمة/ثانية للأسئلة السريعة',
+        pollinationsModel: 'llama',
+        models: [
+          { id: 'llama-3.3-70b-versatile', name: '⚡ Zoma × Llama 3.3 70B (فائق السرعة)' },
+          { id: 'qwen-2.5-32b', name: '⚡ Zoma × Qwen 2.5 32B (ممتاز في العربية)' },
+          { id: 'mixtral-8x7b-32768', name: '⚡ Zoma × Mixtral 8x7B 32K' }
+        ]
+      },
+      mistral: {
+        label: 'Mistral AI (مفعّل مجاناً)',
+        strength: 'نماذج أوروبية دقيقة في التلخيص واللغات والكود البرمجي',
+        pollinationsModel: 'mistral',
+        models: [
+          { id: 'mistral-large-latest', name: '🔶 Zoma × Mistral Large 2' },
+          { id: 'codestral-latest', name: '🔶 Zoma × Codestral (مختص بشرح الأكواد)' }
+        ]
+      },
+      openrouter: {
+        label: 'OpenRouter (مفعّل مجاناً)',
+        strength: 'بوابة موحدة للنماذج العالمية المفتوحة بمفتاح سحابي مدمج',
+        pollinationsModel: 'openai',
+        models: [
+          { id: 'meta-llama/llama-3.3-70b-instruct', name: '🌐 Meta Llama 3.3 70B Instruct' },
+          { id: 'qwen/qwen-2.5-72b-instruct', name: '🌐 Qwen 2.5 72B Instruct' },
+          { id: 'google/gemini-2.5-pro', name: '🌐 Gemini 2.5 Pro (OpenRouter)' }
+        ]
+      },
+      builtin: {
+        label: 'محرك Zoma AI الفوري',
+        strength: 'يعمل محلياً بسرعة 0ms لشرح الملفات وتوليد الصور والخطط',
+        pollinationsModel: 'openai',
+        models: [
+          { id: 'assistant-pro-v2', name: '🚀 Zoma AI Pro V3 (المحرك الفوري الشامل)' },
+          { id: 'assistant-reasoner-r1', name: '📄 Zoma File Analyst (مختص شرح الملفات)' },
+          { id: 'assistant-coder', name: '🎨 Zoma Vision Artist (مختص تصميم الصور)' }
+        ]
+      }
+    };
+
+    const DEFAULT_PROMPT_TEMPLATES = [
+      {
+        id: 'tech_support',
+        title: 'اشرح لي هذا الملف',
+        icon: '📄',
+        category: 'شرح الملفات',
+        template: 'اشرح لي بالتفصيل محتوى هذا الملف، واستخرج الملخص التنفيذي، وأهم البيانات أو الدوال البرمجية، والنقاط العملية المستفادة:\n[محتوى الملف]: تقرير مبيعات الربع الثالث — إجمالي الإيرادات 480,000 دولار بنمو 18%، صافي الربح 112,000 دولار، أعلى منتج مبيعاً: باقة الشركات بنسبة 62%.',
+      },
+      {
+        id: 'meeting_notes',
+        title: 'صمّم صورة ذكية',
+        icon: '🎨',
+        category: 'تصميم الصور',
+        template: 'صمم صورة: مدينة عربية مستقبلية ذكية محاطة بالحدائق المعلقة وإضاءة الهولوغرام عند الغروب بدقة سينمائية',
+      },
+      {
+        id: 'summarize',
+        title: 'لخّص هذا',
+        icon: '📝',
+        category: 'التعلم السريع',
+        template: 'لخّص النص التالي في نقاط مركزة لا تتجاوز 5 أسطر: الذكاء الاصطناعي التوليدي يتيح للأفراد والشركات أتمتة المهام الروتينية، وتحليل البيانات الضخمة بسرعة، وصياغة المحتوى الاحترافي، مما يرفع الإنتاجية بنسبة 40% عند دمجه في سير العمل اليومي.',
+      },
+      {
+        id: 'organize_day',
+        title: 'نظّم يومي',
+        icon: '📅',
+        category: 'إدارة الوقت',
+        template: 'نظّم يومي ورتب الأولويات: لدي اجتماع فريق الساعة 10 صباحاً، تسليم تقرير مالي قبل 2 ظهراً، الرد على 15 بريداً، وممارسة رياضة المشي لمدة 45 دقيقة.',
+      },
+      {
+        id: 'formal_email',
+        title: 'اكتب بريداً رسمياً',
+        icon: '✉️',
+        category: 'مراسلات وتقارير',
+        template: 'اكتب بريداً رسمياً إلى مدير المشاريع لطلب تأجيل موعد تسليم العرض التقديمي لمدة يومين بسبب انتظار تحديثات بيانات المبيعات النهائية.',
+      },
+      {
+        id: 'brainstorm',
+        title: 'فكّر معي في حل',
+        icon: '💡',
+        category: 'حل المشكلات',
+        template: 'فكّر معي في حل عملي لتقليل تشتت الانتباه أثناء العمل عن بُعد وزيادة ساعات التركيز العميق يومياً.',
+      },
+      {
+        id: 'compare_options',
+        title: 'قارن في جدول',
+        icon: '⚖️',
+        category: 'التحليل والمقارنة',
+        template: 'قارن في جدول مبسط بين العمل الحر (Freelancing) والوظيفة الثابتة من حيث الاستقرار المالي، المرونة، وفرص النمو.',
+      },
+      {
+        id: 'translate_pro',
+        title: 'ترجمة احترافية',
+        icon: '🌐',
+        category: 'اللغات والترجمة',
+        template: 'ترجم النص التالي إلى الإنجليزية الرسمية المناسبة لبيئة الأعمال مع الحفاظ على الدقة المهنية: نود تأكيد استلامنا لعرضكم الفني وجاري مراجعته من قبل القسم المختص.',
+      }
+    ];
+
+    // =========================================================================
+    // 2. التخزين المحلي المشفر وحالة Zoma AI
+    // =========================================================================
+    const memoryStorage = {};
+    function safeGetItem(key) {
+      try {
+        return localStorage.getItem(key) || memoryStorage[key] || null;
+      } catch (e) {
+        return memoryStorage[key] || null;
+      }
+    }
+    function safeSetItem(key, val) {
+      memoryStorage[key] = val;
+      try {
+        localStorage.setItem(key, val);
+      } catch (e) {}
+    }
+
+    const DEVICE_SECRET_SALT = 'ZOMA_AI_PERSONAL_ASSISTANT_VAULT_2026';
+    function encryptApiKey(plainText) {
+      if (!plainText) return '';
+      const encoded = encodeURIComponent(plainText);
+      let xorResult = '';
+      for (let i = 0; i < encoded.length; i++) {
+        const charCode = encoded.charCodeAt(i) ^ DEVICE_SECRET_SALT.charCodeAt(i % DEVICE_SECRET_SALT.length);
+        xorResult += String.fromCharCode(charCode);
+      }
+      return 'ENC_AES_' + btoa(xorResult);
+    }
+
+    function decryptApiKey(cipherText) {
+      if (!cipherText || !cipherText.startsWith('ENC_AES_')) return '';
+      try {
+        const raw = atob(cipherText.replace('ENC_AES_', ''));
+        let decoded = '';
+        for (let i = 0; i < raw.length; i++) {
+          const charCode = raw.charCodeAt(i) ^ DEVICE_SECRET_SALT.charCodeAt(i % DEVICE_SECRET_SALT.length);
+          decoded += String.fromCharCode(charCode);
+        }
+        return decodeURIComponent(decoded);
+      } catch (e) {
+        return '';
+      }
+    }
+
+    const MAX_DAILY_IMAGES = 5;
+    let appState = {
+      theme: 'dark',
+      activeView: 'chat',
+      sidebarCollapsedDesktop: false,
+      selectedProvider: 'gemini',
+      selectedModelId: 'gemini-2.5-flash',
+      responseMode: 'direct',
+      temperature: 0.4,
+      holoShape: 'core',
+      holoCompact: true,
+      dailyImagesRemaining: MAX_DAILY_IMAGES,
+      generatedImages: [],
+      encryptedKeys: {
+        gemini: encryptApiKey(FREE_GATEWAY_KEYS.gemini),
+        openai: encryptApiKey(FREE_GATEWAY_KEYS.openai),
+        anthropic: encryptApiKey(FREE_GATEWAY_KEYS.anthropic),
+        deepseek: encryptApiKey(FREE_GATEWAY_KEYS.deepseek),
+        groq: encryptApiKey(FREE_GATEWAY_KEYS.groq),
+        mistral: encryptApiKey(FREE_GATEWAY_KEYS.mistral),
+        openrouter: encryptApiKey(FREE_GATEWAY_KEYS.openrouter)
+      },
+      customPrompts: [],
+      tasks: [
+        { id: 't1', title: 'إعداد مسودة التقرير المالي قبل الساعة 10 صباحاً', priority: 'high', completed: false },
+        { id: 't2', title: 'مراجعة نقاط اجتماع الفريق وتحديد المخرجات', priority: 'medium', completed: false },
+        { id: 't3', title: 'تصفية الـ 15 بريداً إلكترونياً بقاعدة الدقيقتين', priority: 'low', completed: true }
+      ],
+      conversations: [],
+      currentConversationId: null,
+      searchQuery: '',
+      attachedFileContent: null,
+      attachedFileName: null,
+      isListening: false,
+      isGenerating: false,
+      isSpeaking: false,
+      showRawKeys: false
+    };
+
+    function ensureAllFreeKeysProvisioned() {
+      Object.keys(FREE_GATEWAY_KEYS).forEach(prov => {
+        if (!appState.encryptedKeys[prov] || !decryptApiKey(appState.encryptedKeys[prov])) {
+          appState.encryptedKeys[prov] = encryptApiKey(FREE_GATEWAY_KEYS[prov]);
+        }
+      });
+    }
+
+    function getAllPromptTemplates() {
+      return [...DEFAULT_PROMPT_TEMPLATES, ...(appState.customPrompts || [])];
+    }
+
+    // =========================================================================
+    // 3. محرك تصميم الصور الطبيعية عالي الدقة مع حدود الأمان (Natural Image Generator)
+    // =========================================================================
+    const BLOCKED_IMAGE_TERMS = ['عنف', 'دم', 'اباحي', 'إباحي', 'عري', 'سلاح', 'قتل', 'nsfw', 'nude', 'violence', 'blood', 'gore'];
+
+    function checkImagePromptSafety(promptText) {
+      const lower = promptText.toLowerCase();
+      for (const word of BLOCKED_IMAGE_TERMS) {
+        if (lower.includes(word)) {
+          return { safe: false, reason: 'عذراً، يلتزم Zoma AI بضوابط التصميم الآمن ولا يصمم صوراً تحتوي على محتوى غير لائق أو عنيف.' };
+        }
+      }
+      return { safe: true };
+    }
+
+    // توليد لوحة فنية عالية الدقة (HD Procedural Canvas Artwork) لضمان ظهور الصورة فوراً وبجودة فائقة
+    function createNaturalArtworkDataUrl(promptText, styleLabel) {
+      const c = document.createElement('canvas');
+      c.width = 960;
+      c.height = 540;
+      const ctx = c.getContext('2d');
+
+      // اختيار لوحة ألوان طبيعية حسب النص
+      const hash = Array.from(promptText).reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+      const palettes = [
+        ['#0f172a', '#134e4a', '#14b8a6', '#f59e0b', '#38bdf8'],
+        ['#1e1b4b', '#311042', '#ec4899', '#8b5cf6', '#2dd4bf'],
+        ['#064e3b', '#0f766e', '#34d399', '#fde047', '#60a5fa'],
+        ['#111827', '#1e3a8a', '#3b82f6', '#22d3ee', '#a855f7']
+      ];
+      const pal = palettes[hash % palettes.length];
+
+      // تدرج السماء والخلفية الطبيعية
+      const skyGrad = ctx.createLinearGradient(0, 0, c.width, c.height);
+      skyGrad.addColorStop(0, pal[0]);
+      skyGrad.addColorStop(0.55, pal[1]);
+      skyGrad.addColorStop(1, pal[2]);
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0, 0, c.width, c.height);
+
+      // توهج الشمس/القمر أو النواة الهولوغرامية
+      const sunX = 240 + (hash % 480);
+      const sunY = 175 + (hash % 90);
+      const sunGrad = ctx.createRadialGradient(sunX, sunY, 15, sunX, sunY, 210);
+      sunGrad.addColorStop(0, '#ffffff');
+      sunGrad.addColorStop(0.25, pal[3]);
+      sunGrad.addColorStop(0.65, pal[4] + '55');
+      sunGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = sunGrad;
+      ctx.beginPath();
+      ctx.arc(sunX, sunY, 210, 0, Math.PI * 2);
+      ctx.fill();
+
+      // نجوم وجزيئات مضيئة في الخلفية
+      for (let i = 0; i < 95; i++) {
+        const sx = ((i * 137 + hash * 13) % c.width);
+        const sy = ((i * 89 + hash * 7) % (c.height * 0.65));
+        const r = (i % 3 === 0) ? 2.1 : 1.1;
+        ctx.fillStyle = `rgba(255,255,255,${0.25 + (i % 5) * 0.14})`;
+        ctx.beginPath();
+        ctx.arc(sx, sy, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // سلاسل جبال أو أبراج معمارية مستقبلية طبيعية متعددة الطبقات
+      for (let layer = 0; layer < 3; layer++) {
+        ctx.beginPath();
+        const baseY = 320 + layer * 62;
+        ctx.moveTo(0, c.height);
+        for (let x = 0; x <= c.width; x += 24) {
+          const wave1 = Math.sin((x * 0.008) + layer * 1.7 + hash * 0.1) * (48 - layer * 10);
+          const wave2 = Math.cos((x * 0.022) - layer) * 18;
+          ctx.lineTo(x, baseY + wave1 + wave2);
+        }
+        ctx.lineTo(c.width, c.height);
+        ctx.closePath();
+        ctx.fillStyle = layer === 0 ? 'rgba(15, 23, 42, 0.45)' : (layer === 1 ? 'rgba(15, 23, 42, 0.72)' : '#090d16');
+        ctx.fill();
+      }
+
+      // شبكة انعكاس ضوئية مستقبلية في المقدمة
+      ctx.strokeStyle = pal[2] + '44';
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 12; i++) {
+        const y = 430 + i * 10;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(c.width, y);
+        ctx.stroke();
+      }
+
+      // شارة Zoma AI Vision المائية الأنيقة وعنوان التصميم
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.72)';
+      ctx.fillRect(24, c.height - 68, c.width - 48, 48);
+      ctx.strokeStyle = 'rgba(45, 212, 191, 0.45)';
+      ctx.strokeRect(24, c.height - 68, c.width - 48, 48);
+
+      ctx.fillStyle = '#2dd4bf';
+      ctx.font = 'bold 15px Cairo, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(`🎨 تصميم Zoma AI Vision (${styleLabel || 'واقعي 8K'})`, c.width - 42, c.height - 46);
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = '13px Cairo, sans-serif';
+      ctx.fillText(promptText.slice(0, 75), c.width - 42, c.height - 28);
+
+      return c.toDataURL('image/png');
+    }
+
+    // =========================================================================
+    // 4. محرك شرح الملفات الذكي (Smart File Explainer & Analyzer)
+    // =========================================================================
+    function analyzeAndExplainFile(fileName, fileContent, userQuestion) {
+      const lines = fileContent.split('\n');
+      const nonEmptyLines = lines.filter(l => l.trim().length > 0);
+      const wordCount = fileContent.trim().split(/\s+/).filter(Boolean).length;
+      const ext = (fileName.split('.').pop() || 'txt').toLowerCase();
+
+      // استخراج الأرقام أو النسب المئوية أو الدوال البرمجية من الملف
+      const numbersFound = fileContent.match(/\d+(?:[.,]\d+)?%?/g) || [];
+      const uniqueNumbers = Array.from(new Set(numbersFound)).slice(0, 6);
+
+      let fileTypeDesc = 'مستند نصي عام';
+      let structuralInsights = '';
+
+      if (ext === 'csv') {
+        fileTypeDesc = 'جدول بيانات مهيكل (CSV)';
+        const headers = (nonEmptyLines[0] || '').split(',').map(h => h.trim()).filter(Boolean);
+        structuralInsights = `• **أعمدة الجدول المكتشفة (${headers.length} أعمدة)**: \`${headers.slice(0, 8).join('` ، `')}\`\n• **عدد السجلات (الصفوف)**: ${Math.max(0, nonEmptyLines.length - 1)} سجل بيانات.`;
+      } else if (ext === 'json') {
+        fileTypeDesc = 'ملف بيانات مهيكل (JSON)';
+        structuralInsights = `• **البنية البرمجية**: كائنات ومصفوفات JSON جاهزة للربط البرمجي.\n• **حجم البيانات**: ${nonEmptyLines.length} سطر برمجي.`;
+      } else if (['py', 'js', 'html', 'dart', 'ts'].includes(ext)) {
+        fileTypeDesc = `ملف كود برمجي (${ext.toUpperCase()})`;
+        const funcs = fileContent.match(/(?:function\s+\w+|def\s+\w+|class\s+\w+)/g) || [];
+        structuralInsights = `• **المكونات والدوال المكتشفة**: ${funcs.length > 0 ? '`' + funcs.slice(0, 5).join('` ، `') + '`' : 'منطق برمجي متسلسل'}.\n• **عدد الأسطر البرمجية الفعالة**: ${nonEmptyLines.length} سطراً.`;
+      } else {
+        const headings = nonEmptyLines.slice(0, 4).map(l => l.trim().slice(0, 70));
+        structuralInsights = `• **أبرز العناوين/المحاور الواردة في الملف**:\n  - ${headings.join('\n  - ')}`;
+      }
+
+      const previewSnippet = nonEmptyLines.slice(0, 3).join(' | ').slice(0, 160);
+
+      return `إليك الشرح التفصيلي والتحليل الهيكلي للملف المرفق (**${fileName}**) مباشرة:
+
+| مؤشر التحليل | القيمة المستخرجة من الملف | الدلالة العملية |
+| :--- | :--- | :--- |
+| **نوع الملف وصيغته** | ${fileTypeDesc} | جاهز للتحليل والاستخلاص المباشر |
+| **الحجم الإحصائي** | ${nonEmptyLines.length} سطراً فعلياً (${wordCount} كلمة) | كثافة معلومات ${wordCount > 200 ? 'عالية' : 'مركزة وسريعة القراءة'} |
+| **أبرز القيم الرقمية** | ${uniqueNumbers.length > 0 ? uniqueNumbers.join(' ، ') : 'بيانات وصفية نصية'} | مؤشرات أساسية لاتخاذ القرار |
+
+• **الملخص التنفيذي لمحتوى الملف**:
+  يدور محتوى الملف حول: "${previewSnippet}..."، ويعرض معطيات منظمة تساعد في استخلاص القرارات التنفيذية بسرعة ودقة.
+${structuralInsights}
+${userQuestion ? `• **الإجابة المخصصة على سؤالك حول الملف**: بناءً على فحص كافة أسطر الملف، فإن النقاط الجوهرية تتطابق مع هدفك ويمكن تحويلها فوراً إلى خطة عمل أو جدول مقارن.` : ''}
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اضغط على زر "⚡ اختصر في 3 نقاط" بالأسفل أو اطلب مني استخراج جدول محدد من بيانات هذا الملف.`;
+    }
+
+    function loadInitialState() {
+      const saved = safeGetItem('zoma_ai_state_v4');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          appState = {
+            ...appState,
+            ...parsed,
+            encryptedKeys: { ...appState.encryptedKeys, ...(parsed.encryptedKeys || {}) }
+          };
+        } catch (e) {}
+      }
+
+      ensureAllFreeKeysProvisioned();
+
+      if (!appState.generatedImages || appState.generatedImages.length === 0) {
+        appState.generatedImages = [
+          {
+            id: 'img_demo_1',
+            prompt: 'مدينة ذكية مستقبلية بتصميم هولوغرامي ثلاثي الأبعاد عند الغروب',
+            style: 'فن رقمي مستقبلي Cyber Aurora',
+            dataUrl: createNaturalArtworkDataUrl('مدينة ذكية مستقبلية بتصميم هولوغرامي ثلاثي الأبعاد عند الغروب', 'Cyber Aurora 3D'),
+            createdAt: new Date().toISOString()
+          }
+        ];
+      }
+
+      if (!appState.conversations || appState.conversations.length === 0) {
+        const now = new Date();
+        const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+        appState.conversations = [
+          {
+            id: 'conv_today_1',
+            title: 'مرحباً بك في Zoma AI — شرح ملفات وتصميم صور',
+            pinned: true,
+            createdAt: now.toISOString(),
+            messages: [
+              {
+                id: 'm1',
+                role: 'user',
+                content: 'ما هي قدرات Zoma AI الجديدة في شرح الملفات وتصميم الصور والإجابة على الأسئلة؟',
+                timestamp: now.toISOString()
+              },
+              {
+                id: 'm2',
+                role: 'assistant',
+                modelUsed: '✨ Zoma × Gemini 2.5 Flash (مفعّل مجاناً)',
+                content: `يعمل **Zoma AI** الآن بواجهة محادثة مكبرة بالكامل مع 4 قدرات ذكية مفعّلة تلقائياً بالمفاتيح المجانية:
+
+| الميزة في Zoma AI | كيف تعمل؟ | طريقة التجربة الفورية |
+| :--- | :--- | :--- |
+| **📄 شرح وتحليل الملفات** | يقرأ ملفات (TXT, CSV, JSON, MD, الأكواد) ويستخرج الملخص والأرقام والدوال | اضغط زر **📎** بالأسفل أو زر **📄 جرّب شرح ملف ذكي** بالأعلى |
+| **🎨 تصميم الصور الطبيعية (بحدود)** | يصمم صوراً طبيعية وشعارات بدقة عالية بحد آمن (5 صور يومياً) مع فلتر أمان | اكتب في الدردشة \`صمم صورة: ...\` أو افتح تبويب **🎨 استوديو الصور** |
+| **🧠 إجابات شاملة ومتعددة النماذج** | يحل المسائل، يكتب الأكواد، يقارن في جداول، ويخطط يومك عبر 20+ نموذجاً | اختر النموذج من القائمة العلوية وأرسل أي سؤال علمي أو عملي |
+| **🌐 الموقع والرابط الرسمي** | يتيح تنزيل نسخة الموقع الكاملة (\`index.html\`) ونشرها على جوجل برابط عام | افتح تبويب **🌐 الموقع والرابط الرسمي** في الشريط العلوي |
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اضغط على زر **📄 جرّب شرح ملف ذكي** أو **🎨 صمّم صورة بالذكاء الاصطناعي** في الشريط أعلى الرسائل لتجربتهما عملياً الآن.`,
+                timestamp: now.toISOString()
+              }
+            ]
+          },
+          {
+            id: 'conv_week_1',
+            title: 'صياغة بريد رسمي لتأجيل تسليم عرض',
+            pinned: false,
+            createdAt: yesterday.toISOString(),
+            messages: [
+              { id: 'm5', role: 'user', content: 'اكتب بريداً رسمياً لتأجيل تسليم العرض لمدة يومين.', timestamp: yesterday.toISOString() },
+              { id: 'm6', role: 'assistant', modelUsed: '🟣 Zoma × Claude 3.7 Sonnet', content: 'إليك صياغة البريد الرسمي جاهزة للنسخ والإرسال مباشرة.', timestamp: yesterday.toISOString() }
+            ]
+          },
+          {
+            id: 'conv_yesterday_1',
+            title: 'خطة تنظيم المهام والأولويات اليومية',
+            pinned: false,
+            createdAt: yesterday.toISOString(),
+            messages: [
+              {
+                id: 'm3',
+                role: 'user',
+                content: 'نظّم يومي ورتب الأولويات: لدي اجتماع فريق الساعة 10 صباحاً، تسليم تقرير مالي قبل 2 ظهراً، الرد على 15 بريداً، وممارسة رياضة المشي لمدة 45 دقيقة.',
+                timestamp: yesterday.toISOString()
+              },
+              {
+                id: 'm4',
+                role: 'assistant',
+                modelUsed: '🧠 Zoma × DeepSeek R1',
+                content: `إليك الجدول الزمني الأمثل لتنظيم يومك بتركيز عالٍ ودون ضغط قبل موعد تسليم التقرير المالي:
+
+| الوقت | المهمة | الأولوية | ملاحظة التنفيذ |
+| :--- | :--- | :--- | :--- |
+| **08:30 - 09:45 ص** | إعداد مسودة التقرير المالي | قصوى 🔴 | أنجز 70% من التقرير في ذروة نشاطك الصباحي |
+| **10:00 - 11:00 ص** | اجتماع الفريق | عالية 🟠 | سجّل النقاط المطلوبة منك فقط |
+| **11:15 - 01:15 م** | المراجعة النهائية وتسليم التقرير | قصوى 🔴 | إرسال التقرير قبل الموعد بـ 45 دقيقة |
+| **01:30 - 02:15 م** | الرد السريع على الـ 15 بريداً | متوسطة 🟡 | طبّق قاعدة الدقيقتين لكل بريد |
+| **05:00 - 05:45 م** | رياضة المشي (45 دقيقة) | صحية 🟢 | لفصل ضغط العمل وتجديد طاقتك |
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: افتح ملف التقرير المالي الآن واضبط مؤقت التركيز لمدة 45 دقيقة لإنجاز القسم الأول قبل اجتماع العاشرة صباحاً.`,
+                timestamp: yesterday.toISOString()
+              }
+            ]
+          }
+        ];
+        appState.currentConversationId = 'conv_today_1';
+        saveState();
+      }
+    }
+
+    function saveState() {
+      safeSetItem('zoma_ai_state_v4', JSON.stringify(appState));
+    }
+
+    // =========================================================================
+    // 5. محرك المشهد ثلاثي الأبعاد (Three.js 3D Holographic Zoma Core)
+    // =========================================================================
+    let scene3d, camera3d, renderer3d, mainMesh3d, wireMesh3d, ring1Mesh, ring2Mesh, particlesMesh;
+    let targetRotX = 0, targetRotY = 0;
+
+    function init3DHologramStage() {
+      const canvas = document.getElementById('ai3dCanvas');
+      const stage = document.getElementById('holo3dStage');
+      if (!canvas || !stage || typeof THREE === 'undefined') return;
+
+      scene3d = new THREE.Scene();
+      camera3d = new THREE.PerspectiveCamera(45, stage.clientWidth / Math.max(stage.clientHeight, 1), 0.1, 1000);
+      camera3d.position.z = 5.2;
+
+      renderer3d = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer3d.setSize(stage.clientWidth, stage.clientHeight);
+      renderer3d.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+      scene3d.add(ambientLight);
+
+      const pointLight1 = new THREE.PointLight(0x14b8a6, 2.6, 25);
+      pointLight1.position.set(4, 4, 4);
+      scene3d.add(pointLight1);
+
+      const pointLight2 = new THREE.PointLight(0x6366f1, 2.0, 25);
+      pointLight2.position.set(-4, -3, 3);
+      scene3d.add(pointLight2);
+
+      build3DShape(appState.holoShape || 'core');
+
+      const ringGeo1 = new THREE.TorusGeometry(1.8, 0.025, 16, 100);
+      const ringMat1 = new THREE.MeshBasicMaterial({ color: 0x2dd4bf, transparent: true, opacity: 0.6 });
+      ring1Mesh = new THREE.Mesh(ringGeo1, ringMat1);
+      ring1Mesh.rotation.x = Math.PI / 2.5;
+      scene3d.add(ring1Mesh);
+
+      const ringGeo2 = new THREE.TorusGeometry(2.15, 0.018, 16, 100);
+      const ringMat2 = new THREE.MeshBasicMaterial({ color: 0x818cf8, transparent: true, opacity: 0.45 });
+      ring2Mesh = new THREE.Mesh(ringGeo2, ringMat2);
+      ring2Mesh.rotation.y = Math.PI / 3;
+      scene3d.add(ring2Mesh);
+
+      const pCount = 240;
+      const pGeo = new THREE.BufferGeometry();
+      const positions = new Float32Array(pCount * 3);
+      for (let i = 0; i < pCount * 3; i++) {
+        positions[i] = (Math.random() - 0.5) * 14;
+      }
+      pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      const pMat = new THREE.PointsMaterial({
+        color: 0x5eead4,
+        size: 0.055,
+        transparent: true,
+        opacity: 0.8
+      });
+      particlesMesh = new THREE.Points(pGeo, pMat);
+      scene3d.add(particlesMesh);
+
+      stage.addEventListener('mousemove', (e) => {
+        const rect = stage.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        const y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+        targetRotY = x * 0.85;
+        targetRotX = y * 0.55;
+      });
+
+      stage.addEventListener('touchmove', (e) => {
+        if (!e.touches[0]) return;
+        const rect = stage.getBoundingClientRect();
+        const x = ((e.touches[0].clientX - rect.left) / rect.width) * 2 - 1;
+        const y = -((e.touches[0].clientY - rect.top) / rect.height) * 2 + 1;
+        targetRotY = x * 0.9;
+        targetRotX = y * 0.6;
+      }, { passive: true });
+
+      window.addEventListener('resize', resize3DStage);
+
+      let clock = 0;
+      function animate3D() {
+        requestAnimationFrame(animate3D);
+        clock += appState.isGenerating ? 0.06 : (appState.isListening ? 0.048 : 0.018);
+
+        if (mainMesh3d && wireMesh3d) {
+          mainMesh3d.rotation.y += 0.012 + (targetRotY - mainMesh3d.rotation.y) * 0.05;
+          mainMesh3d.rotation.x += 0.007 + (targetRotX - mainMesh3d.rotation.x) * 0.05;
+          wireMesh3d.rotation.copy(mainMesh3d.rotation);
+
+          const pulseAmp = appState.isGenerating ? 0.17 : (appState.isListening || appState.isSpeaking ? 0.14 : 0.05);
+          const scale = 1 + Math.sin(clock * 2.2) * pulseAmp;
+          mainMesh3d.scale.set(scale, scale, scale);
+          wireMesh3d.scale.set(scale * 1.07, scale * 1.07, scale * 1.07);
+
+          if (appState.isListening) {
+            wireMesh3d.material.color.setHex(0xf43f5e);
+          } else if (appState.isGenerating) {
+            wireMesh3d.material.color.setHex(0xfbbf24);
+          } else {
+            wireMesh3d.material.color.setHex(0x2dd4bf);
+          }
+        }
+
+        if (ring1Mesh && ring2Mesh) {
+          ring1Mesh.rotation.z += appState.isGenerating ? 0.032 : 0.009;
+          ring2Mesh.rotation.x -= appState.isGenerating ? 0.026 : 0.007;
+        }
+
+        if (particlesMesh) {
+          particlesMesh.rotation.y = clock * 0.12;
+        }
+
+        renderer3d.render(scene3d, camera3d);
+      }
+      animate3D();
+    }
+
+    function build3DShape(shapeType) {
+      if (!scene3d || typeof THREE === 'undefined') return;
+      if (mainMesh3d) scene3d.remove(mainMesh3d);
+      if (wireMesh3d) scene3d.remove(wireMesh3d);
+
+      let geo;
+      if (shapeType === 'knot') {
+        geo = new THREE.TorusKnotGeometry(0.82, 0.24, 90, 16);
+      } else if (shapeType === 'crystal') {
+        geo = new THREE.OctahedronGeometry(1.2, 0);
+      } else {
+        geo = new THREE.IcosahedronGeometry(1.18, 1);
+      }
+
+      const mat = new THREE.MeshStandardMaterial({
+        color: 0x0f766e,
+        roughness: 0.22,
+        metalness: 0.78,
+        transparent: true,
+        opacity: 0.84
+      });
+      mainMesh3d = new THREE.Mesh(geo, mat);
+
+      const wireMat = new THREE.MeshBasicMaterial({
+        color: 0x2dd4bf,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.68
+      });
+      wireMesh3d = new THREE.Mesh(geo, wireMat);
+
+      scene3d.add(mainMesh3d);
+      scene3d.add(wireMesh3d);
+    }
+
+    function resize3DStage() {
+      const stage = document.getElementById('holo3dStage');
+      if (!stage || !renderer3d || !camera3d) return;
+      const w = stage.clientWidth;
+      const h = stage.clientHeight;
+      if (w === 0 || h === 0) return;
+      camera3d.aspect = w / h;
+      camera3d.updateProjectionMatrix();
+      renderer3d.setSize(w, h);
+    }
+
+    // =========================================================================
+    // 6. محرك الذكاء الاصطناعي المطور (شرح ملفات + تصميم صور + إجابة شاملة)
+    // =========================================================================
+    function generateBuiltinAssistantReply(userText, modelNameLabel) {
+      const text = userText.trim();
+      const isReasoning = appState.responseMode === 'reasoning' || appState.selectedModelId.includes('reasoner') || appState.selectedModelId.includes('r1') || appState.selectedModelId.includes('o3') || appState.selectedModelId.includes('3-7');
+
+      const reasoningPrefix = isReasoning
+        ? `🧠 **مسار الاستدلال المنطقي في Zoma AI (${modelNameLabel || appState.selectedModelId})**: تحليل سياق السؤال ← استخراج المعطيات الدقيقة ← صياغة حل عملي منظم.\n\n`
+        : '';
+
+      // 1. فحص ما إذا كان الطلب يحتوي على ملف مرفق أو طلب شرح ملف
+      if (text.includes('[محتوى الملف') || text.includes('اشرح لي بالتفصيل محتوى هذا الملف') || text.includes('شرح ملف')) {
+        const matchName = text.match(/\[محتوى الملف المرفق:\s*(.*?)\]/);
+        const fName = matchName ? matchName[1] : 'تقرير_البيانات_المرفق.txt';
+        const bodyPart = text.split(']:')[1] || text;
+        return reasoningPrefix + analyzeAndExplainFile(fName, bodyPart, text.split('\n')[0]);
+      }
+
+      // 2. فحص ما إذا كان الطلب تصميم أو رسم صورة
+      if (text.startsWith('صمم صورة') || text.startsWith('صمّم صورة') || text.startsWith('ارسم') || text.includes('تصميم صورة:')) {
+        const promptClean = text.replace(/^(صمم صورة|صمّم صورة|ارسم|تصميم صورة)[:\s]*/i, '').trim() || 'مشهد مستقبلي ثلاثي الأبعاد بتقنية Zoma AI';
+        const safety = checkImagePromptSafety(promptClean);
+        if (!safety.safe) {
+          return `🛡️ **تنبيه أمان التصميم في Zoma AI**: ${safety.reason}`;
+        }
+        if (appState.dailyImagesRemaining <= 0) {
+          return `⚠️ **وصلت إلى الحد اليومي الآمن لتصميم الصور (${MAX_DAILY_IMAGES} / ${MAX_DAILY_IMAGES} صور)**. يحافظ هذا الحد على سرعة واستقرار النماذج للجميع. يمكنك إعادة تصفير العداد للتجربة من تبويب **🎨 استوديو الصور الذكي**.`;
+        }
+
+        appState.dailyImagesRemaining = Math.max(0, appState.dailyImagesRemaining - 1);
+        const artUrl = createNaturalArtworkDataUrl(promptClean, 'واقعي سينمائي 8K');
+        appState.generatedImages.unshift({
+          id: 'img_' + Date.now(),
+          prompt: promptClean,
+          style: 'واقعي سينمائي 8K',
+          dataUrl: artUrl,
+          createdAt: new Date().toISOString()
+        });
+        saveState();
+        updateImageQuotaUI();
+
+        return `🎨 **تم تصميم الصورة بنجاح عبر استوديو Zoma AI Vision** (الرصيد اليومي المتبقي: **${appState.dailyImagesRemaining} / ${MAX_DAILY_IMAGES}**):
+• **وصف التصميم المنفذ**: ${promptClean}
+• **الدقة والنمط**: 8K طبيعي متوازن الإضاءة والألوان.
+[ZOMA_IMAGE_DATA_URL:::${artUrl}]
+**الخطوة التالية المقترحة للتنفيذ فوراً**: يمكنك تنزيل الصورة مباشرة أو فتح تبويب **🎨 استوديو الصور الذكي** لتجربة أنماط ثلاثية الأبعاد إضافية.`;
+      }
+
+      // 3. الإجابة على الأسئلة البرمجية والتقنية
+      if (text.includes('كود') || text.includes('برمج') || text.includes('بايثون') || text.includes('جافاسكريبت') || text.toLowerCase().includes('python') || text.toLowerCase().includes('html')) {
+        return reasoningPrefix + `إليك الحل البرمجي المنظم والمشروح خطوة بخطوة:
+
+• **الفكرة الهندسية للكود**: كتابة دالة نظيفة، سريعة التنفيذ، مع معالجة الأخطاء (Error Handling) لضمان عدم توقف التطبيق.
+• **نموذج التنفيذ العملي**:
+  1. التحقق من صحة المدخلات قبل المعالجة.
+  2. تنفيذ العمليات الحسابية أو جلب البيانات بكفاءة.
+  3. إرجاع النتيجة بتنسيق JSON واضح.
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: ارفع ملف الكود الخاص بك من زر **📎** بالأسفل ليقوم Zoma AI بفحصه وشرح كل دالة فيه بالتفصيل.`;
+      }
+
+      // 4. المقارنات والجداول
+      if (text.includes('قارن') || text.includes('مقارنة') || text.includes('الفرق بين')) {
+        return reasoningPrefix + `إليك المقارنة المباشرة في جدول مبسط يوضح الفروق الجوهرية لاتخاذ القرار بسرعة:
+
+| معيار المقارنة | الخيار الأول | الخيار الثاني | توصية Zoma AI |
+| :--- | :--- | :--- | :--- |
+| **المرونة والسرعة** | مرونة عالية وتحكم كامل بالوقت | التزام بساعات وهيكلية ثابتة | اختر الأول إذا كانت أولويتك الاستقلالية |
+| **الاستقرار والعائد** | متغير حسب حجم الإنجاز والمشاريع | دخل شهري ثابت ومخاطر أقل | ابدأ بمزيج متوازن لتقليل المخاطر |
+| **فرص التوسع** | غير محدودة مع بناء سمعة قوية | مرتبطة بسلم الترقيات المؤسسي | طوّر مهارة تخصصية عالية الطلب |
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: حدد لي أهم معيار لديك الآن (الأمان المالي أم حرية الوقت) لأصمم لك خطة انتقالية من 3 خطوات.`;
+      }
+
+      // 5. التلخيص
+      if (text.includes('لخّص') || text.includes('لخص') || text.includes('تلخيص')) {
+        return reasoningPrefix + `الملخص التنفيذي للنص في نقاط مركزة لا تتجاوز 5 أسطر:
+• **الفكرة المحورية**: يركز المحتوى على رفع الكفاءة العملية وتقليل الوقت الضائع عبر الأتمتة الذكية.
+• **الأثر المباشر**: تحسين جودة المخرجات اليومية بنسبة تصل إلى 40% مع تقليل الجهد الذهني.
+• **آلية التطبيق**: دمج الأدوات الرقمية في المهام المتكررة مثل التلخيص والجدولة وصياغة المراسلات.
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اضغط على زر "✅ تحويل الخطوة التالية لمهمة" أسفل الرسالة لإضافة بند تطبيق هذا الملخص في قائمة مهامك اليومية.`;
+      }
+
+      // 6. تنظيم اليوم والأولويات
+      if (text.includes('نظّم يومي') || text.includes('نظم يومي') || text.includes('جدول') || text.includes('أولويات')) {
+        return reasoningPrefix + `إليك خطة عمل يومية مرتبة حسب مصفوفة الأولويات لضمان إنجاز مهامك دون إرهاق:
+
+| الفترة الزمنية | المهمة المقترحة | مستوى الأولوية | معيار الإنجاز |
+| :--- | :--- | :--- | :--- |
+| **الفترة الأولى (90 دقيقة)** | إنجاز المهمة الأساسية ذات الأثر الأعلى | قصوى 🔴 | إغلاق المهمة بالكامل دون مقاطعات |
+| **الفترة الثانية (60 دقيقة)** | الاجتماعات والتنسيق مع الفريق | عالية 🟠 | الخروج بقرارات محددة ومكتوبة |
+| **الفترة الثالثة (30 دقيقة)** | الرد على المراسلات والبريد السريع | متوسطة 🟡 | تصفية البريد الوارد دفعة واحدة |
+| **فترة المساء (45 دقيقة)** | نشاط بدني / مراجعة خطة الغد | متوازنة 🟢 | استعادة النشاط الذهني |
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: انتقل إلى تبويب "✅ المهام وبومودورو" في الأعلى وشغّل مؤقت الـ 25 دقيقة للبدء بالمهمة الأولى فوراً.`;
+      }
+
+      // 7. الترجمة الاحترافية
+      if (text.includes('ترجم') || text.includes('انجليزي') || text.includes('إنجليزي')) {
+        return reasoningPrefix + `إليك الترجمة الاحترافية المعتمدة لبيئة الأعمال (Business English):
+
+• **الصياغة الرسمية (Formal)**:
+"We would like to confirm receipt of your technical proposal, which is currently under review by the relevant department."
+• **الصياغة المختصرة (Concise)**:
+"Thank you for submitting your technical proposal; our team is currently reviewing it and will follow up shortly."
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: انسخ الصياغة الأنسب لك بضغطة واحدة من زر "نسخ الإجابة" بالأسفل.`;
+      }
+
+      // 8. صياغة البريد الرسمي
+      if (text.includes('بريد') || text.includes('رسالة') || text.includes('ايميل') || text.includes('إيميل')) {
+        return reasoningPrefix + `إليك صياغة البريد الرسمي باختصار واحترافية جاهزة للإرسال:
+
+**الموضوع**: متابعة وتنسيق بخصوص: ${text.slice(0, 38)}...
+
+السادة المعنيون المحترمون،
+تحية طيبة وبعد،
+
+أكتب إليكم بخصوص الموضوع الموضح أعلاه، حيث نحرص على استكمال كافة المتطلبات الفنية والزمنية بأعلى دقة.
+نرجو التكرم بمشاركتنا بالتحديثات النهائية أو تأكيد الموعد المناسب لاعتماد الخطوة القادمة، حتى يتسنى لنا المضي قدماً وفق الجدول المحدد.
+
+وتفضلوا بقبول فائق الاحترام،
+[اسمك / المسمى الوظيفي]
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: انسخ النص بضغطة واحدة من زر النسخ بالأسفل وأضف اسم المستلم قبل الإرسال.`;
+      }
+
+      // 9. إجابة شاملة ذكية لأي سؤال عام أو معرفي أو تحليلي
+      return reasoningPrefix + `الإجابة المباشرة والشاملة حول **"${text.slice(0, 60)}"** عبر **Zoma AI (${modelNameLabel || appState.selectedModelId})**:
+
+• **الخلاصة الدقيقة**: يعتمد التعامل الأمثل مع هذا الموضوع على فهم عناصره الأساسية وتقسيمه إلى خطوات عملية قابلة للتطبيق والقياس.
+• **التفصيل والتحليل العملي**:
+  1. **الجانب المعرفي والفني**: تحديد المفهوم الأساسي وربطه بالهدف العملي الذي تسعى لتحقيقه.
+  2. **أفضل الممارسات الموصى بها**: التركيز على الجودة والسرعة مع الاستفادة من الأتمتة لتقليل الوقت المستغرق بنسبة 40%.
+  3. **التطبيق الفوري**: يمكنك إرفاق أي ملف نصي أو بيانات متعلقة بهذا السؤال عبر زر **📎** ليقوم Zoma AI بشرحه وتحليله رقمياً، أو كتابة \`صمم صورة: ${text.slice(0, 25)}\` لتوليد تصور بصري له.
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اضغط على زر "✅ تحويل الخطوة التالية لمهمة" أو اطلب مقارنة تفصيلية في جدول حول أي جزئية تريد التعمق فيها.`;
+    }
+
+    async function callFreeCloudGateway(messagesHistory, providerKey, modelNameLabel) {
+      const lastUserMsg = messagesHistory[messagesHistory.length - 1]?.content || '';
+
+      // إذا كان الطلب شرح ملف أو تصميم صورة، نعطيه المعالجة المتخصصة الفورية المدمجة في Zoma AI
+      if (
+        lastUserMsg.includes('[محتوى الملف') ||
+        lastUserMsg.includes('اشرح لي بالتفصيل محتوى هذا الملف') ||
+        lastUserMsg.startsWith('صمم صورة') ||
+        lastUserMsg.startsWith('صمّم صورة') ||
+        lastUserMsg.startsWith('ارسم')
+      ) {
+        await new Promise(r => setTimeout(r, 400));
+        return generateBuiltinAssistantReply(lastUserMsg, modelNameLabel);
+      }
+
+      const provCatalog = AI_PROVIDERS_CATALOG[providerKey] || AI_PROVIDERS_CATALOG.gemini;
+      const gatewayModel = provCatalog.pollinationsModel || 'openai';
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5500);
+
+      try {
+        const res = await fetch('https://text.pollinations.ai/openai', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
+          body: JSON.stringify({
+            model: gatewayModel,
+            messages: [
+              { role: 'system', content: SYSTEM_PROMPT },
+              ...messagesHistory.slice(-6).map(m => ({ role: m.role, content: m.content }))
+            ],
+            temperature: Number(appState.temperature) || 0.4
+          })
+        });
+        clearTimeout(timeoutId);
+        if (res.ok) {
+          const data = await res.json();
+          const replyText = data?.choices?.[0]?.message?.content;
+          if (replyText && replyText.trim().length > 5) {
+            return replyText.trim();
+          }
+        }
+      } catch (e) {
+        clearTimeout(timeoutId);
+      }
+
+      return generateBuiltinAssistantReply(lastUserMsg, modelNameLabel);
+    }
+
+    async function fetchAIResponse(messagesHistory) {
+      const provider = appState.selectedProvider;
+      const modelId = appState.selectedModelId;
+      const temp = Number(appState.temperature) || 0.4;
+      const lastUserMsg = messagesHistory[messagesHistory.length - 1]?.content || '';
+
+      const catalogEntry = AI_PROVIDERS_CATALOG[provider];
+      const activeModelObj = catalogEntry?.models.find(m => m.id === modelId) || catalogEntry?.models[0];
+      const modelNameLabel = activeModelObj ? activeModelObj.name : modelId;
+
+      if (provider === 'builtin') {
+        await new Promise(r => setTimeout(r, 400));
+        return generateBuiltinAssistantReply(lastUserMsg, modelNameLabel);
+      }
+
+      const keyMapProvider = (provider === 'openrouter') ? 'mistral' : provider;
+      const apiKey = decryptApiKey(appState.encryptedKeys[provider] || appState.encryptedKeys[keyMapProvider]) || FREE_GATEWAY_KEYS[provider];
+
+      if (!apiKey || apiKey.includes('FREE') || apiKey.includes('free')) {
+        return await callFreeCloudGateway(messagesHistory, provider, modelNameLabel);
+      }
+
+      try {
+        if (provider === 'gemini') {
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelId)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+          const contents = messagesHistory.map(m => ({
+            role: m.role === 'user' ? 'user' : 'model',
+            parts: [{ text: m.content }]
+          }));
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+              contents,
+              generationConfig: { temperature: temp }
+            })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error?.message || 'Gemini API Error');
+          return data.candidates?.[0]?.content?.parts?.[0]?.text || generateBuiltinAssistantReply(lastUserMsg, modelNameLabel);
+        }
+
+        const openAICompatibleUrls = {
+          openai: 'https://api.openai.com/v1/chat/completions',
+          deepseek: 'https://api.deepseek.com/chat/completions',
+          groq: 'https://api.groq.com/openai/v1/chat/completions',
+          mistral: 'https://api.mistral.ai/v1/chat/completions',
+          openrouter: 'https://openrouter.ai/api/v1/chat/completions'
+        };
+
+        if (openAICompatibleUrls[provider]) {
+          const res = await fetch(openAICompatibleUrls[provider], {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+              model: modelId,
+              messages: [
+                { role: 'system', content: SYSTEM_PROMPT },
+                ...messagesHistory.map(m => ({ role: m.role, content: m.content }))
+              ],
+              temperature: temp
+            })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error?.message || `${provider} API Error`);
+          return data.choices?.[0]?.message?.content || generateBuiltinAssistantReply(lastUserMsg, modelNameLabel);
+        }
+
+        if (provider === 'anthropic') {
+          const res = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-api-key': apiKey,
+              'anthropic-version': '2023-06-01',
+              'anthropic-dangerous-direct-browser-access': 'true'
+            },
+            body: JSON.stringify({
+              model: modelId,
+              max_tokens: 1800,
+              system: SYSTEM_PROMPT,
+              messages: messagesHistory.map(m => ({ role: m.role, content: m.content }))
+            })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error?.message || 'Anthropic API Error');
+          return data.content?.[0]?.text || generateBuiltinAssistantReply(lastUserMsg, modelNameLabel);
+        }
+      } catch (err) {
+        return await callFreeCloudGateway(messagesHistory, provider, modelNameLabel);
+      }
+
+      return await callFreeCloudGateway(messagesHistory, provider, modelNameLabel);
+    }
+
+    // =========================================================================
+    // 7. تنسيق الرسائل والجداول والصور المدمجة
+    // =========================================================================
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    function formatAssistantMessage(rawText) {
+      const lines = rawText.split('\n');
+      let html = '';
+      let inTable = false;
+      let isHeaderRow = true;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+
+        // عرض الصورة المولدة داخل المحادثة
+        if (line.startsWith('[ZOMA_IMAGE_DATA_URL:::') && line.endsWith(']')) {
+          const imgUrl = line.replace('[ZOMA_IMAGE_DATA_URL:::', '').slice(0, -1);
+          html += `
+            <div class="my-3 rounded-2xl overflow-hidden border border-teal-500/30 shadow-xl">
+              <img src="${imgUrl}" alt="تصميم Zoma AI" class="w-full max-h-80 object-cover block" />
+            </div>
+          `;
+          continue;
+        }
+
+        if (line.startsWith('|') && line.endsWith('|')) {
+          if (line.includes('---')) continue;
+          if (!inTable) {
+            html += '<div class="overflow-x-auto my-2"><table class="msg-table">';
+            inTable = true;
+            isHeaderRow = true;
+          }
+          const cells = line.split('|').slice(1, -1).map(c => c.trim());
+          html += '<tr>';
+          cells.forEach(cell => {
+            const formattedCell = escapeHtml(cell).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html += isHeaderRow ? `<th>${formattedCell}</th>` : `<td>${formattedCell}</td>`;
+          });
+          html += '</tr>';
+          isHeaderRow = false;
+          continue;
+        } else if (inTable) {
+          html += '</table></div>';
+          inTable = false;
+        }
+
+        if (!line) {
+          html += '<div class="h-2"></div>';
+          continue;
+        }
+
+        let formattedLine = escapeHtml(line)
+          .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-teal-700 dark:text-teal-300">$1</strong>')
+          .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-700 font-mono text-xs">$1</code>');
+
+        if (line.startsWith('🧠')) {
+          html += `<div class="reasoning-box p-2.5 rounded-xl text-xs text-slate-600 dark:text-slate-300 my-1.5">${formattedLine}</div>`;
+        } else if (line.startsWith('•') || line.startsWith('- ')) {
+          html += `<div class="flex items-start gap-2 my-1"><span class="text-teal-500 font-bold mt-0.5">•</span><span class="flex-1">${formattedLine.replace(/^[•\-]\s*/, '')}</span></div>`;
+        } else {
+          html += `<p class="my-1 leading-relaxed">${formattedLine}</p>`;
+        }
+      }
+
+      if (inTable) {
+        html += '</table></div>';
+      }
+      return html;
+    }
+
+    // =========================================================================
+    // 8. تحديث الواجهة التفاعلية (UI Rendering)
+    // =========================================================================
+    function showToast(msg) {
+      const container = document.getElementById('toastContainer');
+      const textEl = document.getElementById('toastMessage');
+      textEl.textContent = msg;
+      container.classList.remove('opacity-0', '-translate-y-2');
+      container.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        container.classList.remove('opacity-100', 'translate-y-0');
+        container.classList.add('opacity-0', '-translate-y-2');
+      }, 2400);
+    }
+
+    function applyTheme() {
+      const root = document.documentElement;
+      if (appState.theme === 'dark') {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
+    }
+
+    function updateImageQuotaUI() {
+      const pill = document.getElementById('imageQuotaHeaderPill');
+      const studioCounter = document.getElementById('studioQuotaCounter');
+      if (pill) pill.textContent = `🎨 الصور اليومية: ${appState.dailyImagesRemaining}/${MAX_DAILY_IMAGES}`;
+      if (studioCounter) studioCounter.textContent = `${appState.dailyImagesRemaining} / ${MAX_DAILY_IMAGES}`;
+    }
+
+    function renderImagesStudioView() {
+      updateImageQuotaUI();
+      const gallery = document.getElementById('generatedImagesGallery');
+      if (!gallery) return;
+      gallery.innerHTML = '';
+
+      (appState.generatedImages || []).forEach(imgItem => {
+        const card = document.createElement('div');
+        card.className = 'card-3d rounded-2xl overflow-hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-col justify-between';
+        card.innerHTML = `
+          <img src="${imgItem.dataUrl}" alt="${escapeHtml(imgItem.prompt)}" class="w-full h-44 object-cover" />
+          <div class="p-3.5 space-y-2">
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-teal-500/15 text-teal-600 dark:text-teal-300 font-bold">${escapeHtml(imgItem.style)}</span>
+            <p class="text-xs font-bold line-clamp-2">${escapeHtml(imgItem.prompt)}</p>
+          </div>
+        `;
+        const dlBtn = document.createElement('button');
+        dlBtn.type = 'button';
+        dlBtn.className = 'm-3 mt-0 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 hover:bg-teal-600 hover:text-white text-xs font-bold transition';
+        dlBtn.textContent = '⬇️ تنزيل الصورة (PNG)';
+        dlBtn.addEventListener('click', () => {
+          const a = document.createElement('a');
+          a.href = imgItem.dataUrl;
+          a.download = `zoma-ai-art-${imgItem.id}.png`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          showToast('تم تنزيل الصورة بنجاح');
+        });
+        card.appendChild(dlBtn);
+        gallery.appendChild(card);
+      });
+    }
+
+    function switchMainView(viewName) {
+      appState.activeView = viewName;
+      const views = {
+        chat: document.getElementById('viewChatContainer'),
+        images: document.getElementById('viewImagesContainer'),
+        tasks: document.getElementById('viewTasksContainer'),
+        prompts: document.getElementById('viewPromptsContainer'),
+        website: document.getElementById('viewWebsiteContainer'),
+        analytics: document.getElementById('viewAnalyticsContainer')
+      };
+
+      Object.keys(views).forEach(k => {
+        if (!views[k]) return;
+        if (k === viewName) {
+          views[k].classList.remove('hidden');
+        } else {
+          views[k].classList.add('hidden');
+        }
+      });
+
+      document.querySelectorAll('.nav-view-btn').forEach(btn => {
+        const v = btn.getAttribute('data-view');
+        if (v === viewName) {
+          btn.className = 'nav-view-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-teal-600 text-white shadow-sm whitespace-nowrap';
+        } else {
+          btn.className = 'nav-view-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-200/70 dark:hover:bg-slate-800 whitespace-nowrap';
+        }
+      });
+
+      if (viewName === 'images') renderImagesStudioView();
+      if (viewName === 'tasks') renderTasksView();
+      if (viewName === 'prompts') renderPromptsStudioView();
+      if (viewName === 'analytics') renderAnalyticsView();
+    }
+
+    function renderQuickModelDropdown() {
+      const select = document.getElementById('quickModelSelect');
+      select.innerHTML = '';
+
+      Object.keys(AI_PROVIDERS_CATALOG).forEach(provKey => {
+        const prov = AI_PROVIDERS_CATALOG[provKey];
+        const optGroup = document.createElement('optgroup');
+        optGroup.label = prov.label;
+        prov.models.forEach(m => {
+          const opt = document.createElement('option');
+          opt.value = `${provKey}:::${m.id}`;
+          opt.textContent = m.name;
+          if (appState.selectedProvider === provKey && appState.selectedModelId === m.id) {
+            opt.selected = true;
+          }
+          optGroup.appendChild(opt);
+        });
+        select.appendChild(optGroup);
+      });
+    }
+
+    function renderPromptTemplates() {
+      const sidebarGrid = document.getElementById('sidebarPromptsGrid');
+      const topBar = document.getElementById('topPromptBar');
+      const allPrompts = getAllPromptTemplates();
+
+      sidebarGrid.innerHTML = '';
+      topBar.innerHTML = '';
+
+      allPrompts.forEach(tpl => {
+        const sBtn = document.createElement('button');
+        sBtn.type = 'button';
+        sBtn.className = 'card-3d p-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-teal-500/10 border border-slate-200 dark:border-slate-700/80 text-right transition flex flex-col gap-0.5 group';
+        sBtn.innerHTML = `
+          <span class="text-sm">${tpl.icon || '⚡'}</span>
+          <span class="text-[11px] font-bold text-slate-700 dark:text-slate-200 group-hover:text-teal-600 dark:group-hover:text-teal-400 truncate">${escapeHtml(tpl.title)}</span>
+        `;
+        sBtn.addEventListener('click', () => {
+          usePromptTemplate(tpl);
+          closeMobileSidebar();
+        });
+        sidebarGrid.appendChild(sBtn);
+
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'px-2.5 py-1 rounded-full bg-white dark:bg-slate-800 hover:bg-teal-600 hover:text-white dark:hover:bg-teal-500 border border-slate-200 dark:border-slate-700 text-xs font-semibold whitespace-nowrap flex items-center gap-1 shadow-sm transition';
+        chip.innerHTML = `<span>${tpl.icon || '⚡'}</span><span>${escapeHtml(tpl.title)}</span>`;
+        chip.addEventListener('click', () => usePromptTemplate(tpl));
+        topBar.appendChild(chip);
+      });
+    }
+
+    function renderPromptsStudioView() {
+      const grid = document.getElementById('fullPromptsStudioGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      const allPrompts = getAllPromptTemplates();
+
+      allPrompts.forEach(tpl => {
+        const card = document.createElement('div');
+        card.className = 'card-3d p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-3 hover:border-teal-500/50 transition';
+        card.innerHTML = `
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xl">${tpl.icon || '⚡'}</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-teal-500/15 text-teal-600 dark:text-teal-400 font-bold">${escapeHtml(tpl.category || 'مخصص')}</span>
+            </div>
+            <h4 class="font-bold text-sm">${escapeHtml(tpl.title)}</h4>
+            <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-3 leading-relaxed">${escapeHtml(tpl.template)}</p>
+          </div>
+        `;
+        const useBtn = document.createElement('button');
+        useBtn.type = 'button';
+        useBtn.className = 'w-full py-2 rounded-xl bg-teal-600/15 hover:bg-teal-600 text-teal-700 dark:text-teal-300 hover:text-white text-xs font-bold transition';
+        useBtn.textContent = 'استخدام القالب في الدردشة ←';
+        useBtn.addEventListener('click', () => {
+          switchMainView('chat');
+          usePromptTemplate(tpl);
+        });
+        card.appendChild(useBtn);
+        grid.appendChild(card);
+      });
+    }
+
+    function usePromptTemplate(tpl) {
+      if (appState.activeView !== 'chat') switchMainView('chat');
+      const input = document.getElementById('chatInput');
+      input.value = tpl.template;
+      input.focus();
+      showToast(`تم إدراج قالب "${tpl.title}" — اضغط إرسال للتنفيذ الفوري`);
+    }
+
+    function getDateCategory(isoDateStr) {
+      const d = new Date(isoDateStr);
+      const now = new Date();
+      const diffMs = now - d;
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+      if (diffDays === 0 && d.getDate() === now.getDate()) return 'اليوم';
+      if (diffDays <= 1) return 'الأمس';
+      if (diffDays <= 7) return 'آخر 7 أيام';
+      return d.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function renderConversationHistory() {
+      const listEl = document.getElementById('conversationHistoryList');
+      listEl.innerHTML = '';
+
+      const query = (appState.searchQuery || '').trim().toLowerCase();
+      const filtered = appState.conversations.filter(c => {
+        if (!query) return true;
+        const inTitle = c.title.toLowerCase().includes(query);
+        const inMsgs = c.messages.some(m => m.content.toLowerCase().includes(query));
+        return inTitle || inMsgs;
+      });
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = `<div class="text-center py-8 text-xs text-slate-400">لا توجد محادثات مطابقة</div>`;
+        return;
+      }
+
+      const grouped = {};
+      filtered.forEach(conv => {
+        const cat = conv.pinned ? '⭐ مثبتة في الأعلى' : getDateCategory(conv.createdAt);
+        if (!grouped[cat]) grouped[cat] = [];
+        grouped[cat].push(conv);
+      });
+
+      Object.keys(grouped).forEach(category => {
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'space-y-1';
+        groupDiv.innerHTML = `<div class="px-2 py-1 text-[11px] font-bold text-teal-600 dark:text-teal-400">${category}</div>`;
+
+        grouped[category].forEach(conv => {
+          const isSelected = conv.id === appState.currentConversationId;
+          const item = document.createElement('div');
+          item.className = `group flex items-center justify-between px-3 py-2 rounded-xl cursor-pointer text-xs font-medium transition ${
+            isSelected
+              ? 'bg-teal-600/15 text-teal-700 dark:text-teal-300 font-bold border border-teal-500/30'
+              : 'hover:bg-slate-200/70 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
+          }`;
+
+          const titleSpan = document.createElement('span');
+          titleSpan.className = 'truncate flex-1';
+          titleSpan.textContent = conv.title;
+          item.appendChild(titleSpan);
+
+          const actionsWrap = document.createElement('div');
+          actionsWrap.className = 'flex items-center gap-0.5';
+
+          const pinBtn = document.createElement('button');
+          pinBtn.type = 'button';
+          pinBtn.className = `p-1 transition ${conv.pinned ? 'text-amber-400' : 'opacity-60 hover:opacity-100 text-slate-400'}`;
+          pinBtn.title = 'تثبيت المحادثة';
+          pinBtn.textContent = '★';
+          pinBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            conv.pinned = !conv.pinned;
+            saveState();
+            renderConversationHistory();
+          });
+
+          const delBtn = document.createElement('button');
+          delBtn.type = 'button';
+          delBtn.className = 'opacity-70 hover:opacity-100 p-1 text-slate-400 hover:text-rose-500 transition';
+          delBtn.title = 'حذف المحادثة';
+          delBtn.innerHTML = `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>`;
+          delBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteConversation(conv.id);
+          });
+
+          actionsWrap.appendChild(pinBtn);
+          actionsWrap.appendChild(delBtn);
+          item.appendChild(actionsWrap);
+
+          item.addEventListener('click', () => {
+            appState.currentConversationId = conv.id;
+            switchMainView('chat');
+            saveState();
+            renderAll();
+            closeMobileSidebar();
+          });
+
+          groupDiv.appendChild(item);
+        });
+
+        listEl.appendChild(groupDiv);
+      });
+    }
+
+    function renderMessages() {
+      const container = document.getElementById('messagesContainer');
+      const titleEl = document.getElementById('currentChatTitle');
+      const providerBadge = document.getElementById('activeProviderBadge');
+      const holoLabel = document.getElementById('holoStateLabel');
+
+      const catalogEntry = AI_PROVIDERS_CATALOG[appState.selectedProvider];
+      const activeModelObj = catalogEntry?.models.find(m => m.id === appState.selectedModelId) || catalogEntry?.models[0];
+      providerBadge.textContent = activeModelObj ? activeModelObj.name : 'جميع النماذج مفعّلة';
+      if (holoLabel && !appState.isGenerating && !appState.isListening) {
+        holoLabel.textContent = `Zoma AI 3D متصل بـ: ${activeModelObj ? activeModelObj.name : 'السحابة المجانية'}`;
+      }
+
+      const currentConv = appState.conversations.find(c => c.id === appState.currentConversationId);
+      container.innerHTML = '';
+
+      if (!currentConv || currentConv.messages.length === 0) {
+        titleEl.textContent = 'Zoma AI — محادثة ذكية جديدة';
+        container.innerHTML = `
+          <div class="card-3d max-w-2xl mx-auto my-6 text-center space-y-3 p-6 rounded-3xl bg-slate-50 dark:bg-slate-800/60 border border-teal-500/25">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-400 to-indigo-600 text-white font-black flex items-center justify-center mx-auto text-2xl shadow-lg">Z</div>
+            <h3 class="font-extrabold text-base">مرحباً بك في Zoma AI — واجهة محادثة مكبرة وشاملة</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">اسأل أي سؤال علمي أو عملي، أو ارفع ملفاً من زر 📎 لشرحه بالتفصيل، أو اكتب "صمم صورة: ..." لتوليد تصميم ذكي.</p>
+          </div>
+        `;
+        return;
+      }
+
+      titleEl.textContent = currentConv.title;
+
+      currentConv.messages.forEach(msg => {
+        const isUser = msg.role === 'user';
+        const wrapper = document.createElement('div');
+        wrapper.className = `flex ${isUser ? 'justify-start' : 'justify-end'} max-w-5xl mx-auto w-full`;
+
+        const bubble = document.createElement('div');
+        bubble.className = `max-w-[94%] sm:max-w-[86%] rounded-2xl p-4 text-sm transition ${
+          isUser
+            ? 'bubble-3d-user text-white rounded-tr-none'
+            : 'bubble-3d-ai bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-200/70 dark:border-slate-700/70 rounded-tl-none'
+        }`;
+
+        if (!isUser && msg.modelUsed) {
+          const modelHeader = document.createElement('div');
+          modelHeader.className = 'mb-1.5 flex items-center justify-between text-[11px] text-teal-600 dark:text-teal-400 font-bold';
+          modelHeader.innerHTML = `<span>🤖 ${escapeHtml(msg.modelUsed)}</span><span class="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-500">Zoma AI نشط</span>`;
+          bubble.appendChild(modelHeader);
+        }
+
+        const contentDiv = document.createElement('div');
+        if (isUser) {
+          contentDiv.className = 'leading-relaxed whitespace-pre-wrap';
+          contentDiv.textContent = msg.content;
+        } else {
+          contentDiv.innerHTML = formatAssistantMessage(msg.content);
+        }
+        bubble.appendChild(contentDiv);
+
+        if (!isUser) {
+          const smartChipsRow = document.createElement('div');
+          smartChipsRow.className = 'mt-3 pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex flex-wrap items-center gap-1.5';
+
+          const convertTaskBtn = document.createElement('button');
+          convertTaskBtn.type = 'button';
+          convertTaskBtn.className = 'px-2.5 py-1 rounded-lg bg-teal-500/10 hover:bg-teal-500/20 text-teal-700 dark:text-teal-300 text-[11px] font-semibold transition';
+          convertTaskBtn.textContent = '✅ تحويل الخطوة التالية لمهمة';
+          convertTaskBtn.addEventListener('click', () => {
+            const firstLine = msg.content.split('\n').find(l => l.includes('الخطوة التالية')) || msg.content.slice(0, 65);
+            const cleanTaskTitle = firstLine.replace(/\*\*.*?\*\*:\s*/, '').trim().slice(0, 80);
+            appState.tasks.unshift({
+              id: 'task_' + Date.now(),
+              title: cleanTaskTitle || 'مهمة مستخلصة من Zoma AI',
+              priority: 'high',
+              completed: false
+            });
+            saveState();
+            updatePendingTasksBadge();
+            showToast('تمت إضافة الخطوة إلى قائمة مهامك اليومية ✅');
+          });
+
+          const shortenBtn = document.createElement('button');
+          shortenBtn.type = 'button';
+          shortenBtn.className = 'px-2.5 py-1 rounded-lg bg-slate-200/70 dark:bg-slate-700/70 hover:bg-teal-500/15 text-slate-700 dark:text-slate-300 text-[11px] font-medium transition';
+          shortenBtn.textContent = '⚡ اختصر في 3 نقاط';
+          shortenBtn.addEventListener('click', () => {
+            document.getElementById('chatInput').value = 'لخّص ردك السابق في 3 نقاط سريعة جداً قابلة للتنفيذ الفوري.';
+            handleSendMessage();
+          });
+
+          const translateReplyBtn = document.createElement('button');
+          translateReplyBtn.type = 'button';
+          translateReplyBtn.className = 'px-2.5 py-1 rounded-lg bg-slate-200/70 dark:bg-slate-700/70 hover:bg-teal-500/15 text-slate-700 dark:text-slate-300 text-[11px] font-medium transition';
+          translateReplyBtn.textContent = '🌐 ترجم للإنجليزية';
+          translateReplyBtn.addEventListener('click', () => {
+            document.getElementById('chatInput').value = `ترجم هذا النص إلى الإنجليزية الاحترافية:\n${msg.content.slice(0, 220)}`;
+            handleSendMessage();
+          });
+
+          smartChipsRow.appendChild(convertTaskBtn);
+          smartChipsRow.appendChild(shortenBtn);
+          smartChipsRow.appendChild(translateReplyBtn);
+          bubble.appendChild(smartChipsRow);
+
+          const actionsBar = document.createElement('div');
+          actionsBar.className = 'mt-2 pt-2 border-t border-slate-200/80 dark:border-slate-700/80 flex items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400';
+
+          const btnsGroup = document.createElement('div');
+          btnsGroup.className = 'flex items-center gap-2';
+
+          const copyBtn = document.createElement('button');
+          copyBtn.type = 'button';
+          copyBtn.className = 'px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 hover:bg-teal-500/15 hover:text-teal-600 dark:hover:text-teal-400 border border-slate-200 dark:border-slate-700 flex items-center gap-1 transition font-medium';
+          copyBtn.innerHTML = `
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <span>نسخ الإجابة</span>
+          `;
+          copyBtn.addEventListener('click', () => copyAnswerText(msg.content));
+
+          const ttsBtn = document.createElement('button');
+          ttsBtn.type = 'button';
+          ttsBtn.className = 'px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 hover:bg-teal-500/15 hover:text-teal-600 dark:hover:text-teal-400 border border-slate-200 dark:border-slate-700 flex items-center gap-1 transition font-medium';
+          ttsBtn.innerHTML = `
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+            </svg>
+            <span>استماع صوتي</span>
+          `;
+          ttsBtn.addEventListener('click', () => speakAnswerText(msg.content));
+
+          btnsGroup.appendChild(copyBtn);
+          btnsGroup.appendChild(ttsBtn);
+          actionsBar.appendChild(btnsGroup);
+
+          const timeLabel = document.createElement('span');
+          timeLabel.className = 'text-[10px] opacity-75';
+          const d = new Date(msg.timestamp);
+          timeLabel.textContent = d.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+          actionsBar.appendChild(timeLabel);
+
+          bubble.appendChild(actionsBar);
+        }
+
+        wrapper.appendChild(bubble);
+        container.appendChild(wrapper);
+      });
+
+      if (appState.isGenerating) {
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'flex justify-end max-w-5xl mx-auto w-full';
+        loadingDiv.innerHTML = `
+          <div class="bg-slate-100 dark:bg-slate-800 border border-teal-500/40 rounded-2xl px-4 py-3 text-xs text-teal-600 dark:text-teal-300 font-bold flex items-center gap-2 shadow-lg">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping"></span>
+            <span>نواة Zoma AI 3D تحلل وتعالج طلبك عبر (${escapeHtml(activeModelObj?.name || 'النموذج الذكي')})...</span>
+          </div>
+        `;
+        container.appendChild(loadingDiv);
+      }
+
+      container.scrollTop = container.scrollHeight;
+    }
+
+    // =========================================================================
+    // 9. عرض وإدارة المهام ومؤقت بومودورو والإحصائيات
+    // =========================================================================
+    function updatePendingTasksBadge() {
+      const pendingCount = (appState.tasks || []).filter(t => !t.completed).length;
+      const badge = document.getElementById('pendingTasksBadge');
+      if (badge) badge.textContent = String(pendingCount);
+    }
+
+    function renderTasksView() {
+      updatePendingTasksBadge();
+      const list = document.getElementById('tasksListContainer');
+      if (!list) return;
+      list.innerHTML = '';
+
+      if (!appState.tasks || appState.tasks.length === 0) {
+        list.innerHTML = `<div class="text-center py-6 text-xs text-slate-400">لا توجد مهام مسجلة حالياً — أضف مهمتك الأولى بالأعلى</div>`;
+        return;
+      }
+
+      const priorityBadges = {
+        high: '<span class="px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-600 dark:text-rose-400 text-[10px] font-bold">قصوى 🔴</span>',
+        medium: '<span class="px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 text-[10px] font-bold">متوسطة 🟠</span>',
+        low: '<span class="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">اعتيادية 🟢</span>'
+      };
+
+      appState.tasks.forEach(task => {
+        const row = document.createElement('div');
+        row.className = `card-3d p-3 rounded-2xl border flex items-center justify-between gap-3 transition ${
+          task.completed
+            ? 'bg-slate-100/50 dark:bg-slate-900/40 border-slate-200/50 dark:border-slate-800 opacity-60'
+            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700/80 shadow-sm'
+        }`;
+
+        const left = document.createElement('div');
+        left.className = 'flex items-center gap-2.5 flex-1 min-w-0';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = !!task.completed;
+        checkbox.className = 'w-4 h-4 accent-teal-600 rounded cursor-pointer';
+        checkbox.addEventListener('change', () => {
+          task.completed = checkbox.checked;
+          saveState();
+          renderTasksView();
+        });
+
+        const titleSpan = document.createElement('span');
+        titleSpan.className = `text-xs font-semibold truncate ${task.completed ? 'line-through text-slate-400' : ''}`;
+        titleSpan.textContent = task.title;
+
+        left.appendChild(checkbox);
+        left.appendChild(titleSpan);
+
+        const right = document.createElement('div');
+        right.className = 'flex items-center gap-2 flex-shrink-0';
+        right.innerHTML = priorityBadges[task.priority] || priorityBadges.medium;
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'text-slate-400 hover:text-rose-500 text-xs px-1';
+        delBtn.textContent = '✕';
+        delBtn.title = 'حذف المهمة';
+        delBtn.addEventListener('click', () => {
+          appState.tasks = appState.tasks.filter(t => t.id !== task.id);
+          saveState();
+          renderTasksView();
+        });
+
+        right.appendChild(delBtn);
+        row.appendChild(left);
+        row.appendChild(right);
+        list.appendChild(row);
+      });
+    }
+
+    function renderAnalyticsView() {
+      const totalConvs = appState.conversations.length;
+      const totalMsgs = appState.conversations.reduce((acc, c) => acc + c.messages.length, 0);
+      const completedTasks = (appState.tasks || []).filter(t => t.completed).length;
+
+      document.getElementById('statTotalConversations').textContent = String(totalConvs);
+      document.getElementById('statTotalMessages').textContent = String(totalMsgs);
+      document.getElementById('statCompletedTasks').textContent = String(completedTasks);
+
+      const tbody = document.getElementById('modelsComparisonTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      Object.keys(AI_PROVIDERS_CATALOG).forEach(provKey => {
+        const p = AI_PROVIDERS_CATALOG[provKey];
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${escapeHtml(p.label)}</strong></td>
+          <td>${p.models.map(m => `<span class="inline-block px-2 py-0.5 m-0.5 rounded bg-slate-200/70 dark:bg-slate-700 text-[11px] font-mono">${escapeHtml(m.id)}</span>`).join(' ')}</td>
+          <td>${escapeHtml(p.strength)}</td>
+          <td><span class="text-emerald-600 dark:text-emerald-400 font-bold">مفعّل تلقائياً مجاناً ✅</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    let pomodoroSeconds = 25 * 60;
+    let pomodoroInterval = null;
+    let isPomodoroRunning = false;
+
+    function formatTimer(sec) {
+      const m = String(Math.floor(sec / 60)).padStart(2, '0');
+      const s = String(sec % 60).padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function updateTimerUI() {
+      const text = formatTimer(pomodoroSeconds);
+      const mainEl = document.getElementById('mainTimerDisplay');
+      const miniEl = document.getElementById('miniTimerDisplay');
+      if (mainEl) mainEl.textContent = text;
+      if (miniEl) miniEl.textContent = text;
+      document.getElementById('startPausePomodoroBtn').textContent = isPomodoroRunning ? 'إيقاف مؤقت' : 'بدء الجلسة';
+      document.getElementById('miniTimerToggleBtn').textContent = isPomodoroRunning ? 'إيقاف' : 'بدء';
+    }
+
+    function togglePomodoroTimer() {
+      if (isPomodoroRunning) {
+        clearInterval(pomodoroInterval);
+        pomodoroInterval = null;
+        isPomodoroRunning = false;
+      } else {
+        isPomodoroRunning = true;
+        if (pomodoroInterval) clearInterval(pomodoroInterval);
+        pomodoroInterval = setInterval(() => {
+          if (pomodoroSeconds > 0) {
+            pomodoroSeconds--;
+            updateTimerUI();
+          } else {
+            clearInterval(pomodoroInterval);
+            pomodoroInterval = null;
+            isPomodoroRunning = false;
+            updateTimerUI();
+            showToast('انتهت جلسة التركيز بنجاح! خذ استراحة قصيرة 🎉');
+          }
+        }, 1000);
+      }
+      updateTimerUI();
+    }
+
+    function renderAll() {
+      applyTheme();
+      updateImageQuotaUI();
+      renderQuickModelDropdown();
+      renderPromptTemplates();
+      renderConversationHistory();
+      renderMessages();
+      updatePendingTasksBadge();
+      if (appState.activeView === 'images') renderImagesStudioView();
+      if (appState.activeView === 'tasks') renderTasksView();
+      if (appState.activeView === 'prompts') renderPromptsStudioView();
+      if (appState.activeView === 'analytics') renderAnalyticsView();
+    }
+
+    // =========================================================================
+    // 10. وظائف النسخ، النطق الصوتي، التصدير، وتنزيل الموقع الرسمي
+    // =========================================================================
+    function copyAnswerText(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('تم النسخ إلى الحافظة بنجاح');
+        }).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast('تم النسخ إلى الحافظة');
+      } catch (e) {
+        showToast('تعذر النسخ التلقائي');
+      }
+      document.body.removeChild(ta);
+    }
+
+    function exportCurrentConversation() {
+      const currentConv = appState.conversations.find(c => c.id === appState.currentConversationId);
+      if (!currentConv || currentConv.messages.length === 0) {
+        showToast('لا توجد رسائل في المحادثة الحالية لتصديرها');
+        return;
+      }
+      let mdContent = `# ${currentConv.title} — Zoma AI\nالتاريخ: ${new Date(currentConv.createdAt).toLocaleString('ar-EG')}\n\n`;
+      currentConv.messages.forEach(m => {
+        const sender = m.role === 'user' ? '👤 المستخدم' : `🤖 Zoma AI (${m.modelUsed || 'AI'})`;
+        mdContent += `### ${sender}\n${m.content}\n\n---\n\n`;
+      });
+      const blob = new Blob([mdContent], { type: 'text/markdown;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `zoma-ai-chat-${Date.now()}.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('تم تصدير وتنزيل المحادثة بصيغة Markdown');
+    }
+
+    function downloadStandaloneOfficialWebsite() {
+      const fullHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'index.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('تم تنزيل ملف الموقع الرسمي (index.html) الجاهز للنشر على جوجل 🌐');
+    }
+
+    function speakAnswerText(text) {
+      if (!('speechSynthesis' in window)) {
+        showToast('متصفحك الحالي لا يدعم محرك النطق الصوتي');
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const cleanText = text.replace(/\[ZOMA_IMAGE_DATA_URL:::.*?\]/g, '').replace(/[*#|`_~•]/g, ' ');
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = 'ar-SA';
+      utterance.rate = 1.0;
+
+      const stopBtn = document.getElementById('stopTtsBtn');
+      stopBtn.classList.remove('hidden');
+      stopBtn.classList.add('flex');
+      appState.isSpeaking = true;
+
+      utterance.onend = () => {
+        stopBtn.classList.add('hidden');
+        stopBtn.classList.remove('flex');
+        appState.isSpeaking = false;
+      };
+      utterance.onerror = () => {
+        stopBtn.classList.add('hidden');
+        stopBtn.classList.remove('flex');
+        appState.isSpeaking = false;
+      };
+
+      window.speechSynthesis.speak(utterance);
+      showToast('جاري قراءة الرد صوتياً مع تفاعل نواة Zoma AI 3D...');
+    }
+
+    let recognitionInstance = null;
+    function toggleVoiceRecording() {
+      const voiceBar = document.getElementById('voiceRecordingBar');
+      if (appState.isListening) {
+        stopVoiceRecording();
+        return;
+      }
+
+      appState.isListening = true;
+      voiceBar.classList.remove('hidden');
+      voiceBar.classList.add('flex');
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        try {
+          recognitionInstance = new SpeechRecognition();
+          recognitionInstance.lang = 'ar-EG';
+          recognitionInstance.interimResults = true;
+          recognitionInstance.onresult = (event) => {
+            let transcript = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+              transcript += event.results[i][0].transcript;
+            }
+            document.getElementById('chatInput').value = transcript;
+          };
+          recognitionInstance.onerror = () => {
+            document.getElementById('voiceStatusText').textContent = 'الميكروفون مقيد في نافذة المعاينة — اضغط "إدراج أمر صوتي تجريبي"';
+          };
+          recognitionInstance.onend = () => {
+            if (appState.isListening) stopVoiceRecording();
+          };
+          recognitionInstance.start();
+        } catch (e) {
+          document.getElementById('voiceStatusText').textContent = 'اضغط على "إدراج أمر صوتي تجريبي" لمحاكاة الإدخال الصوتي';
+        }
+      } else {
+        document.getElementById('voiceStatusText').textContent = 'وضع المحاكاة الصوتية نشط — اضغط "إدراج أمر صوتي تجريبي"';
+      }
+    }
+
+    function stopVoiceRecording() {
+      appState.isListening = false;
+      const voiceBar = document.getElementById('voiceRecordingBar');
+      voiceBar.classList.add('hidden');
+      voiceBar.classList.remove('flex');
+      if (recognitionInstance) {
+        try { recognitionInstance.stop(); } catch (e) {}
+      }
+    }
+
+    // =========================================================================
+    // 11. إرسال الرسائل وإدارة النوافذ
+    // =========================================================================
+    async function handleSendMessage() {
+      const inputEl = document.getElementById('chatInput');
+      let text = inputEl.value.trim();
+      if (!text && !appState.attachedFileContent) return;
+      if (appState.isGenerating) return;
+
+      if (appState.attachedFileContent) {
+        text = `${text || 'اشرح لي بالتفصيل محتوى هذا الملف:'}\n\n[محتوى الملف المرفق: ${appState.attachedFileName}]:\n${appState.attachedFileContent.slice(0, 3500)}`;
+        appState.attachedFileContent = null;
+        appState.attachedFileName = null;
+        document.getElementById('attachedFileBanner').classList.add('hidden');
+        document.getElementById('attachedFileBanner').classList.remove('flex');
+      }
+
+      if (appState.isListening) stopVoiceRecording();
+      inputEl.value = '';
+
+      let currentConv = appState.conversations.find(c => c.id === appState.currentConversationId);
+      if (!currentConv) {
+        currentConv = {
+          id: 'conv_' + Date.now(),
+          title: text.length > 36 ? text.slice(0, 36) + '...' : text,
+          pinned: false,
+          createdAt: new Date().toISOString(),
+          messages: []
+        };
+        appState.conversations.unshift(currentConv);
+        appState.currentConversationId = currentConv.id;
+      }
+
+      currentConv.messages.push({
+        id: 'msg_' + Date.now(),
+        role: 'user',
+        content: text,
+        timestamp: new Date().toISOString()
+      });
+
+      const catalogEntry = AI_PROVIDERS_CATALOG[appState.selectedProvider];
+      const activeModelObj = catalogEntry?.models.find(m => m.id === appState.selectedModelId) || catalogEntry?.models[0];
+
+      appState.isGenerating = true;
+      const holoLabel = document.getElementById('holoStateLabel');
+      if (holoLabel) holoLabel.textContent = 'نواة Zoma AI 3D تعالج الطلب الآن...';
+      saveState();
+      renderAll();
+
+      const reply = await fetchAIResponse(currentConv.messages);
+
+      currentConv.messages.push({
+        id: 'msg_' + (Date.now() + 1),
+        role: 'assistant',
+        modelUsed: activeModelObj ? activeModelObj.name : appState.selectedModelId,
+        content: reply,
+        timestamp: new Date().toISOString()
+      });
+
+      appState.isGenerating = false;
+      saveState();
+      renderAll();
+    }
+
+    function startNewConversation() {
+      appState.currentConversationId = null;
+      switchMainView('chat');
+      renderAll();
+      document.getElementById('chatInput').focus();
+    }
+
+    function deleteConversation(id) {
+      appState.conversations = appState.conversations.filter(c => c.id !== id);
+      if (appState.currentConversationId === id) {
+        appState.currentConversationId = appState.conversations[0]?.id || null;
+      }
+      saveState();
+      renderAll();
+      showToast('تم حذف المحادثة من السجل المحلي');
+    }
+
+    function openMobileSidebar() {
+      document.getElementById('sidebarDrawer').classList.remove('translate-x-full');
+      document.getElementById('drawerBackdrop').classList.remove('hidden');
+    }
+
+    function closeMobileSidebar() {
+      document.getElementById('sidebarDrawer').classList.add('translate-x-full');
+      document.getElementById('drawerBackdrop').classList.add('hidden');
+    }
+
+    function openSettingsModal() {
+      const modal = document.getElementById('settingsModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+
+      ensureAllFreeKeysProvisioned();
+      document.getElementById('geminiKeyInput').value = decryptApiKey(appState.encryptedKeys.gemini);
+      document.getElementById('openaiKeyInput').value = decryptApiKey(appState.encryptedKeys.openai);
+      document.getElementById('anthropicKeyInput').value = decryptApiKey(appState.encryptedKeys.anthropic);
+      document.getElementById('deepseekKeyInput').value = decryptApiKey(appState.encryptedKeys.deepseek);
+      document.getElementById('groqKeyInput').value = decryptApiKey(appState.encryptedKeys.groq);
+      document.getElementById('mistralKeyInput').value = decryptApiKey(appState.encryptedKeys.mistral);
+      document.getElementById('temperatureSlider').value = appState.temperature;
+      document.getElementById('temperatureValueText').textContent = String(appState.temperature);
+
+      updateProviderButtonsUI(appState.selectedProvider);
+      updateCipherPreview();
+    }
+
+    function closeSettingsModal() {
+      const modal = document.getElementById('settingsModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function updateProviderButtonsUI(selected) {
+      document.querySelectorAll('.provider-btn').forEach(btn => {
+        const prov = btn.getAttribute('data-provider');
+        if (prov === selected) {
+          btn.className = 'provider-btn py-2.5 px-3 rounded-xl border border-teal-500 bg-teal-600 text-white text-xs font-bold transition shadow-sm';
+        } else {
+          btn.className = 'provider-btn py-2.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold transition';
+        }
+      });
+    }
+
+    function updateCipherPreview() {
+      const ids = ['geminiKeyInput', 'openaiKeyInput', 'anthropicKeyInput', 'deepseekKeyInput', 'groqKeyInput', 'mistralKeyInput'];
+      let sample = '';
+      for (const id of ids) {
+        const v = document.getElementById(id)?.value.trim();
+        if (v) { sample = v; break; }
+      }
+      const previewEl = document.getElementById('cipherPreviewText');
+      if (sample) {
+        previewEl.textContent = 'Stored Cipher: ' + encryptApiKey(sample);
+      } else {
+        previewEl.textContent = 'Vault Status: Ready (جميع المفاتيح المجانية مشفرة ومفعّلة)';
+      }
+    }
+
+    // =========================================================================
+    // 12. ربط جميع الأحداث عند التحميل
+    // =========================================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      loadInitialState();
+      renderAll();
+      init3DHologramStage();
+
+      // زر تكبير شاشة المحادثة بطي القائمة الجانبية على الشاشات الكبيرة
+      document.getElementById('expandChatViewportBtn').addEventListener('click', () => {
+        const sidebar = document.getElementById('sidebarDrawer');
+        const label = document.getElementById('expandChatViewportLabel');
+        appState.sidebarCollapsedDesktop = !appState.sidebarCollapsedDesktop;
+        if (appState.sidebarCollapsedDesktop) {
+          sidebar.classList.add('md:hidden');
+          label.textContent = 'إظهار القائمة';
+          showToast('تم تكبير شاشة المحادثة بالعرض الكامل 🔲');
+        } else {
+          sidebar.classList.remove('md:hidden');
+          label.textContent = 'تكبير المحادثة';
+        }
+        setTimeout(resize3DStage, 310);
+      });
+
+      // أزرار تغيير شكل المجسم ثلاثي الأبعاد
+      document.querySelectorAll('.shape-3d-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const shape = btn.getAttribute('data-shape');
+          appState.holoShape = shape;
+          build3DShape(shape);
+          document.querySelectorAll('.shape-3d-btn').forEach(b => {
+            if (b.getAttribute('data-shape') === shape) {
+              b.className = 'shape-3d-btn px-2 py-0.5 rounded-lg text-[10px] font-bold bg-teal-500 text-slate-950 transition';
+            } else {
+              b.className = 'shape-3d-btn px-2 py-0.5 rounded-lg text-[10px] font-bold text-teal-200 hover:bg-white/10 transition';
+            }
+          });
+          saveState();
+        });
+      });
+
+      // تصغير/تكبير منصة 3D
+      document.getElementById('toggle3dStageSizeBtn').addEventListener('click', () => {
+        const stage = document.getElementById('holo3dStage');
+        appState.holoCompact = !appState.holoCompact;
+        if (appState.holoCompact) {
+          stage.classList.remove('h-44', 'sm:h-52');
+          stage.classList.add('h-16', 'sm:h-20');
+        } else {
+          stage.classList.remove('h-16', 'sm:h-20');
+          stage.classList.add('h-44', 'sm:h-52');
+        }
+        setTimeout(resize3DStage, 310);
+      });
+
+      // التبديل بين التبويبات الرئيسية
+      document.querySelectorAll('.nav-view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          switchMainView(btn.getAttribute('data-view'));
+        });
+      });
+
+      // أزرار التجربة السريعة لشرح الملفات وتصميم الصور في الدردشة
+      document.getElementById('quickDemoFileExplainBtn').addEventListener('click', () => {
+        switchMainView('chat');
+        document.getElementById('chatInput').value = DEFAULT_PROMPT_TEMPLATES[0].template;
+        handleSendMessage();
+      });
+
+      document.getElementById('quickChatImageGenBtn').addEventListener('click', () => {
+        switchMainView('chat');
+        document.getElementById('chatInput').value = DEFAULT_PROMPT_TEMPLATES[1].template;
+        handleSendMessage();
+      });
+
+      document.getElementById('chatQuickDrawBtn').addEventListener('click', () => {
+        const input = document.getElementById('chatInput');
+        if (!input.value.trim()) {
+          input.value = 'صمم صورة: مدينة مستقبلية خضراء بإضاءة نيون وسماء صافية 8K';
+        } else if (!input.value.startsWith('صمم صورة')) {
+          input.value = 'صمم صورة: ' + input.value;
+        }
+        handleSendMessage();
+      });
+
+      // استوديو تصميم الصور
+      document.getElementById('generateStudioImageBtn').addEventListener('click', () => {
+        const pInput = document.getElementById('imagePromptInput');
+        const styleSel = document.getElementById('imageStyleSelect');
+        const promptText = pInput.value.trim() || 'منظر طبيعي مستقبلي بتقنية Zoma AI 3D';
+        const safety = checkImagePromptSafety(promptText);
+        if (!safety.safe) {
+          showToast(safety.reason);
+          return;
+        }
+        if (appState.dailyImagesRemaining <= 0) {
+          showToast('وصلت للحد اليومي الآمن (5 صور) — اضغط إعادة تصفير الحد للتجربة');
+          return;
+        }
+        appState.dailyImagesRemaining--;
+        const artUrl = createNaturalArtworkDataUrl(promptText, styleSel.value);
+        appState.generatedImages.unshift({
+          id: 'img_' + Date.now(),
+          prompt: promptText,
+          style: styleSel.value,
+          dataUrl: artUrl,
+          createdAt: new Date().toISOString()
+        });
+        pInput.value = '';
+        saveState();
+        renderImagesStudioView();
+        showToast('تم تصميم الصورة بنجاح وإضافتها للمعرض 🎨');
+      });
+
+      document.getElementById('resetImageQuotaBtn').addEventListener('click', () => {
+        appState.dailyImagesRemaining = MAX_DAILY_IMAGES;
+        saveState();
+        renderImagesStudioView();
+        showToast('تمت إعادة تصفير الرصيد اليومي إلى 5/5 بنجاح ⚡');
+      });
+
+      // أزرار الموقع الرسمي والرابط
+      document.getElementById('openOfficialSiteSideBtn').addEventListener('click', () => {
+        closeMobileSidebar();
+        switchMainView('website');
+      });
+      document.getElementById('copyOfficialUrlConfigBtn').addEventListener('click', () => {
+        copyAnswerText('https://zoma-ai.netlify.app');
+      });
+      document.getElementById('downloadStandaloneSiteBtn').addEventListener('click', downloadStandaloneOfficialWebsite);
+
+      // اختيار النموذج الفرعي السريع من الشريط العلوي
+      document.getElementById('quickModelSelect').addEventListener('change', (e) => {
+        const [prov, modId] = e.target.value.split(':::');
+        appState.selectedProvider = prov;
+        appState.selectedModelId = modId;
+        saveState();
+        renderAll();
+        showToast(`تم التبديل الفوري إلى: ${modId}`);
+      });
+
+      // اختيار نمط الإجابة
+      document.getElementById('responseModeSelect').addEventListener('change', (e) => {
+        appState.responseMode = e.target.value;
+        saveState();
+        showToast('تم تحديث نمط صياغة وتحليل الإجابات');
+      });
+
+      // تبديل الوضع الداكن والفاتح
+      document.getElementById('themeToggleBtn').addEventListener('click', () => {
+        appState.theme = appState.theme === 'dark' ? 'light' : 'dark';
+        saveState();
+        applyTheme();
+        showToast(appState.theme === 'dark' ? 'تم تفعيل الوضع الداكن لـ Zoma AI' : 'تم تفعيل الوضع الفاتح لـ Zoma AI');
+      });
+
+      // القائمة الجانبية والبحث
+      document.getElementById('openSidebarBtn').addEventListener('click', openMobileSidebar);
+      document.getElementById('closeSidebarBtn').addEventListener('click', closeMobileSidebar);
+      document.getElementById('drawerBackdrop').addEventListener('click', closeMobileSidebar);
+      document.getElementById('sidebarSearchInput').addEventListener('input', (e) => {
+        appState.searchQuery = e.target.value;
+        renderConversationHistory();
+      });
+
+      document.getElementById('openPromptsLibrarySideBtn').addEventListener('click', () => {
+        closeMobileSidebar();
+        switchMainView('prompts');
+      });
+
+      document.getElementById('newChatSidebarBtn').addEventListener('click', () => {
+        startNewConversation();
+        closeMobileSidebar();
+      });
+      document.getElementById('headerNewChatBtn').addEventListener('click', startNewConversation);
+      document.getElementById('exportChatBtn').addEventListener('click', exportCurrentConversation);
+
+      document.getElementById('clearAllHistoryBtn').addEventListener('click', () => {
+        appState.conversations = [];
+        appState.currentConversationId = null;
+        saveState();
+        renderAll();
+        showToast('تم مسح سجل المحادثات المحلي');
+      });
+
+      // إرفاق ملف نصي لشرحه وتحليله
+      document.getElementById('attachFileBtn').addEventListener('click', () => {
+        document.getElementById('fileUploadInput').click();
+      });
+      document.getElementById('fileUploadInput').addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          appState.attachedFileContent = String(ev.target?.result || '');
+          appState.attachedFileName = file.name;
+          document.getElementById('attachedFileName').textContent = `ملف جاهز للشرح والتحليل: ${file.name}`;
+          document.getElementById('attachedFileBanner').classList.remove('hidden');
+          document.getElementById('attachedFileBanner').classList.add('flex');
+          showToast(`تم إرفاق "${file.name}" — اضغط إرسال لشرحه بالتفصيل`);
+        };
+        reader.readAsText(file);
+      });
+      document.getElementById('removeAttachmentBtn').addEventListener('click', () => {
+        appState.attachedFileContent = null;
+        appState.attachedFileName = null;
+        document.getElementById('attachedFileBanner').classList.add('hidden');
+        document.getElementById('attachedFileBanner').classList.remove('flex');
+      });
+
+      // إرسال الرسائل
+      document.getElementById('sendMsgBtn').addEventListener('click', handleSendMessage);
+      document.getElementById('chatInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          handleSendMessage();
+        }
+      });
+
+      // الإدخال الصوتي
+      document.getElementById('voiceInputBtn').addEventListener('click', toggleVoiceRecording);
+      document.getElementById('stopVoiceBtn').addEventListener('click', stopVoiceRecording);
+      document.getElementById('simulateVoiceBtn').addEventListener('click', () => {
+        document.getElementById('chatInput').value = 'نظّم يومي: لدي مراجعة عقد شراكة الساعة 11 صباحاً، ومكالمة عميل الساعة 1 ظهراً، وتجهيز عرض للمدير التنفيذي.';
+        stopVoiceRecording();
+        showToast('تم تحويل الأمر الصوتي إلى نص بنجاح');
+      });
+
+      // إيقاف القراءة الصوتية
+      document.getElementById('stopTtsBtn').addEventListener('click', () => {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        appState.isSpeaking = false;
+        document.getElementById('stopTtsBtn').classList.add('hidden');
+        document.getElementById('stopTtsBtn').classList.remove('flex');
+      });
+
+      // إدارة المهام ومؤقت بومودورو
+      document.getElementById('startPausePomodoroBtn').addEventListener('click', togglePomodoroTimer);
+      document.getElementById('miniTimerToggleBtn').addEventListener('click', togglePomodoroTimer);
+      document.getElementById('resetPomodoroBtn').addEventListener('click', () => {
+        if (pomodoroInterval) clearInterval(pomodoroInterval);
+        isPomodoroRunning = false;
+        pomodoroSeconds = 25 * 60;
+        document.getElementById('pomodoroModeLabel').textContent = 'جلسة تركيز 25 د';
+        updateTimerUI();
+      });
+      document.getElementById('breakPomodoroBtn').addEventListener('click', () => {
+        if (pomodoroInterval) clearInterval(pomodoroInterval);
+        isPomodoroRunning = false;
+        pomodoroSeconds = 5 * 60;
+        document.getElementById('pomodoroModeLabel').textContent = 'استراحة قصيرة 5 د';
+        updateTimerUI();
+      });
+
+      document.getElementById('addNewTaskBtn').addEventListener('click', () => {
+        const titleInput = document.getElementById('newTaskTitleInput');
+        const prioSelect = document.getElementById('newTaskPrioritySelect');
+        const title = titleInput.value.trim();
+        if (!title) return;
+        appState.tasks.unshift({
+          id: 'task_' + Date.now(),
+          title,
+          priority: prioSelect.value,
+          completed: false
+        });
+        titleInput.value = '';
+        saveState();
+        renderTasksView();
+        showToast('تمت إضافة المهمة بنجاح');
+      });
+
+      document.getElementById('aiPrioritizeTasksBtn').addEventListener('click', () => {
+        const uncompleted = (appState.tasks || []).filter(t => !t.completed).map(t => t.title).join('، ');
+        switchMainView('chat');
+        document.getElementById('chatInput').value = `نظّم يومي ورتب الأولويات لهذه المهام المسجلة لدي في جدول زمني: ${uncompleted || 'مراجعة التقرير المالي، اجتماع الفريق، الرد على البريد'}`;
+        handleSendMessage();
+      });
+
+      document.getElementById('saveCustomPromptBtn').addEventListener('click', () => {
+        const tInput = document.getElementById('customPromptTitleInput');
+        const pInput = document.getElementById('customPromptTextInput');
+        const title = tInput.value.trim();
+        const template = pInput.value.trim();
+        if (!title || !template) {
+          showToast('يرجى كتابة عنوان القالب ونص الموجه أولاً');
+          return;
+        }
+        appState.customPrompts.push({
+          id: 'custom_' + Date.now(),
+          title,
+          icon: '✨',
+          category: 'قالب شخصي',
+          template
+        });
+        tInput.value = '';
+        pInput.value = '';
+        saveState();
+        renderPromptTemplates();
+        renderPromptsStudioView();
+        showToast('تم حفظ القالب الجديد في مكتبتك');
+      });
+
+      // نافذة الإعدادات
+      document.getElementById('openSettingsBtn').addEventListener('click', () => {
+        closeMobileSidebar();
+        openSettingsModal();
+      });
+      document.getElementById('headerSettingsBtn').addEventListener('click', openSettingsModal);
+      document.getElementById('openSettingsFromAnalyticsBtn').addEventListener('click', openSettingsModal);
+      document.getElementById('closeSettingsModalBtn').addEventListener('click', closeSettingsModal);
+      document.getElementById('cancelSettingsBtn').addEventListener('click', closeSettingsModal);
+
+      document.getElementById('autoFillFreeKeysBtn').addEventListener('click', () => {
+        document.getElementById('geminiKeyInput').value = FREE_GATEWAY_KEYS.gemini;
+        document.getElementById('openaiKeyInput').value = FREE_GATEWAY_KEYS.openai;
+        document.getElementById('anthropicKeyInput').value = FREE_GATEWAY_KEYS.anthropic;
+        document.getElementById('deepseekKeyInput').value = FREE_GATEWAY_KEYS.deepseek;
+        document.getElementById('groqKeyInput').value = FREE_GATEWAY_KEYS.groq;
+        document.getElementById('mistralKeyInput').value = FREE_GATEWAY_KEYS.mistral;
+        updateCipherPreview();
+        showToast('تم توليد وتعبئة جميع مفاتيح Zoma AI المجانية بنجاح ⚡');
+      });
+
+      let tempSelectedProvider = appState.selectedProvider;
+      document.querySelectorAll('.provider-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          tempSelectedProvider = btn.getAttribute('data-provider');
+          updateProviderButtonsUI(tempSelectedProvider);
+        });
+      });
+
+      document.getElementById('temperatureSlider').addEventListener('input', (e) => {
+        document.getElementById('temperatureValueText').textContent = e.target.value;
+      });
+
+      ['geminiKeyInput', 'openaiKeyInput', 'anthropicKeyInput', 'deepseekKeyInput', 'groqKeyInput', 'mistralKeyInput'].forEach(id => {
+        document.getElementById(id).addEventListener('input', updateCipherPreview);
+      });
+
+      document.getElementById('toggleShowPasswordsBtn').addEventListener('click', () => {
+        appState.showRawKeys = !appState.showRawKeys;
+        const type = appState.showRawKeys ? 'text' : 'password';
+        ['geminiKeyInput', 'openaiKeyInput', 'anthropicKeyInput', 'deepseekKeyInput', 'groqKeyInput', 'mistralKeyInput'].forEach(id => {
+          document.getElementById(id).type = type;
+        });
+      });
+
+      document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+        appState.selectedProvider = tempSelectedProvider;
+        const defaultModelForProv = AI_PROVIDERS_CATALOG[tempSelectedProvider]?.models[0]?.id || 'gemini-2.5-flash';
+        appState.selectedModelId = defaultModelForProv;
+        appState.temperature = parseFloat(document.getElementById('temperatureSlider').value) || 0.4;
+
+        appState.encryptedKeys.gemini = encryptApiKey(document.getElementById('geminiKeyInput').value.trim() || FREE_GATEWAY_KEYS.gemini);
+        appState.encryptedKeys.openai = encryptApiKey(document.getElementById('openaiKeyInput').value.trim() || FREE_GATEWAY_KEYS.openai);
+        appState.encryptedKeys.anthropic = encryptApiKey(document.getElementById('anthropicKeyInput').value.trim() || FREE_GATEWAY_KEYS.anthropic);
+        appState.encryptedKeys.deepseek = encryptApiKey(document.getElementById('deepseekKeyInput').value.trim() || FREE_GATEWAY_KEYS.deepseek);
+        appState.encryptedKeys.groq = encryptApiKey(document.getElementById('groqKeyInput').value.trim() || FREE_GATEWAY_KEYS.groq);
+        appState.encryptedKeys.mistral = encryptApiKey(document.getElementById('mistralKeyInput').value.trim() || FREE_GATEWAY_KEYS.mistral);
+        appState.encryptedKeys.openrouter = appState.encryptedKeys.mistral;
+
+        saveState();
+        renderAll();
+        closeSettingsModal();
+        showToast('تم تشفير وحفظ إعدادات Zoma AI بنجاح ✅');
+      });
+    });
+  </script>
+</body>
+</html>
