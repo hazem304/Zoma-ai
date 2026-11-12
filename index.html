@@ -1140,77 +1140,62 @@
     }
 
     // =========================================================================
-    // 4-ب. محرك الترجمة البصرية وتوليد الصور الواقعية الفائقة (Photorealistic AI Engine)
+    // 4-ب. محرك الصور الفوتوغرافية الحقيقية عالي الدقة (بدون حدود Pollinations المزعجة)
     // =========================================================================
-    const AR_VISUAL_DICTIONARY = [
-      [/ميسي|ليونيل ميسي/g, 'Lionel Messi wearing Argentina national team blue and white striped jersey number 10'],
-      [/رونالدو|كريستيانو/g, 'Cristiano Ronaldo wearing Portugal football jersey number 7'],
-      [/محمد صلاح|مو صلاح|صلاح/g, 'Mohamed Salah Egyptian football star player in red jersey'],
-      [/جماهير|مشجعين|جمهور/g, 'packed stadium crowd cheering with flags and dramatic stadium floodlights'],
-      [/الارجنتين|أرجنتين|ارجنتين/g, 'Argentina blue and white national flags and confetti'],
-      [/ملعب|استاد|كره قدم|كرة قدم|مباراه|مباراة/g, 'professional football stadium pitch at night'],
-      [/قطه|قطة|هر|قطط|بسه/g, 'adorable fluffy kitten cat with realistic fur and bright eyes'],
-      [/تلعب|يلعب|يلعبون/g, 'playing joyfully with a colorful ball in dynamic motion'],
-      [/كلب|جرو|كلاب/g, 'cute golden retriever dog outdoors in sunlight'],
-      [/اسد|أسد|اسود/g, 'majestic African lion with thick golden mane in savanna'],
-      [/نمر|فهد/g, 'powerful wild tiger in tropical jungle'],
-      [/حصان|خيل|فرس/g, 'majestic purebred Arabian horse galloping at sunset'],
-      [/صقر|نسر|طائر|عصفور/g, 'majestic falcon bird flying in clear sky'],
-      [/فراشه|فراشة/g, 'colorful butterfly on a blooming flower macro photography'],
-      [/سياره|سيارة|عربيه|سيارات/g, 'sleek modern luxury supercar driving on coastal highway'],
-      [/طائره|طائرة/g, 'modern commercial airplane flying above golden clouds'],
-      [/قطار|تالجو/g, 'modern aerodynamic high-speed train on railway tracks'],
-      [/سفينه|سفينة|مركب|يخت/g, 'luxury yacht ship sailing on turquoise ocean water'],
-      [/مدينه|مدينة|عاصمه|عاصمة/g, 'futuristic smart metropolis city skyline with glowing glass towers'],
-      [/فضاء|مجره|مجرة|كواكب|نجوم|كون/g, 'deep outer space galaxy nebula with glowing planets and stars'],
-      [/رائد فضاء/g, 'astronaut in detailed spacesuit floating in space above Earth'],
-      [/بحر|محيط|شاطئ|امواج|أمواج/g, 'crystal clear turquoise ocean waves on a tropical sandy beach'],
-      [/غروب|شروق/g, 'warm golden hour dramatic sunset sky'],
-      [/ليل|قمر/g, 'starry night sky with glowing full moon'],
-      [/جبل|جبال|قمم/g, 'majestic snow-capped mountain peaks with alpine lake'],
-      [/غابه|غابة|اشجار|أشجار|طبيعه|طبيعة|حديقه|حديقة/g, 'lush green nature park garden with sunbeams through trees'],
-      [/صحراء|رمال/g, 'golden desert sand dunes at sunset'],
-      [/مصر|اهرامات|أهرامات|القاهره|القاهرة|الجيزه|الجيزة/g, 'majestic Great Pyramids of Giza in Egypt at golden sunset'],
-      [/نيل|نهر النيل|نهر/g, 'scenic Nile river in Egypt with traditional boats and palm trees'],
-      [/مسجد|جامع/g, 'grand illuminated Islamic mosque architecture with domes and minarets'],
-      [/كعبه|كعبة|مكه|مكة/g, 'Grand Mosque in Mecca with glowing lights'],
-      [/قلعه|قلعة|قصر/g, 'grand royal palace castle architecture'],
-      [/بيت|منزل|فيلا|غرفه|غرفة|مكتب/g, 'modern luxury interior design room with warm lighting'],
-      [/روبوت|ذكاء اصطناعي|آلي/g, 'futuristic humanoid AI robot with glowing cyan lights'],
-      [/كمبيوتر|حاسوب|لابتوب|برمجه|برمجة|هاتف/g, 'modern high-tech developer workspace with glowing monitors'],
-      [/شعار|لوجو/g, 'clean professional modern 3D emblem logo design'],
-      [/قهوه|قهوة|فنجان|شاي/g, 'steaming cup of aromatic coffee on wooden table with warm bokeh'],
-      [/طعام|اكل|أكل|بيتزا|برجر|كيك|حلوى/g, 'gourmet delicious food photography on restaurant plate'],
-      [/ورد|زهور|ازهار|أزهار/g, 'vibrant blooming red and pink roses with morning dew macro'],
-      [/مطر|شتاء|ثلج/g, 'cinematic rain drops and glowing city street reflections'],
-      [/نار|لهب/g, 'glowing fire flames sparks'],
-      [/ذهب|مجوهرات|كنز/g, 'shining gold coins and luxury jewelry'],
-      [/طفل|ولد|صبي/g, 'happy smiling young child outdoors'],
-      [/فتاه|فتاة|بنت/g, 'natural portrait in sunlit garden'],
-      [/رجل|شاب/g, 'cinematic natural portrait'],
-      [/محارب|فارس/g, 'epic armored knight warrior standing on cliff'],
-      [/طبيب|دكتور|مستشفى/g, 'modern medical doctor in hospital clinic'],
-      [/مدرسه|مدرسة|جامعه|جامعة|كتاب|كتب|مكتبه|مكتبة/g, 'grand classic library filled with books and warm sunlight']
+    const SUBJECT_PHOTO_MAP = [
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و)?(?:كريستيانو|كرستيانو|رونالدو)/i, arWiki: 'كريستيانو رونالدو', enWiki: 'Cristiano Ronaldo', commons: 'Cristiano Ronaldo Real Madrid Portugal football' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و)?(?:ليونيل\s+)?ميسي/i, arWiki: 'ليونيل ميسي', enWiki: 'Lionel Messi', commons: 'Lionel Messi Argentina world cup football' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و)?(?:محمد\s+)?صلاح/i, arWiki: 'محمد صلاح', enWiki: 'Mohamed Salah', commons: 'Mohamed Salah Liverpool football' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و)?(?:ريال\s+مدريد)/i, arWiki: 'ريال مدريد', enWiki: 'Real Madrid CF', commons: 'Real Madrid Bernabeu stadium crowd' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و)?(?:برشلونه|برشلونة)/i, arWiki: 'نادي برشلونة', enWiki: 'FC Barcelona', commons: 'FC Barcelona Camp Nou stadium' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و)?(?:الاهلي|الأهلي)/i, arWiki: 'النادي الأهلي (مصر)', enWiki: 'Al Ahly SC', commons: 'Cairo International Stadium football' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و)?(?:الزمالك)/i, arWiki: 'نادي الزمالك', enWiki: 'Zamalek SC', commons: 'Zamalek SC football Egypt' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:قطه|قطة|قطط|بسه)/i, arWiki: 'قط', enWiki: 'Kitten', commons: 'Cute kitten playing grass photograph' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:كلب|جرو|كلاب)/i, arWiki: 'كلب', enWiki: 'Golden Retriever', commons: 'Golden retriever dog playing park' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:اسد|أسد)/i, arWiki: 'أسد', enWiki: 'Lion', commons: 'Male lion savanna Africa photograph' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:نمر|فهد)/i, arWiki: 'ببر', enWiki: 'Tiger', commons: 'Bengal tiger wildlife photograph' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:حصان|خيل|فرس)/i, arWiki: 'حصان عربي', enWiki: 'Arabian horse', commons: 'Arabian horse galloping photograph' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:صقر|نسر)/i, arWiki: 'صقر', enWiki: 'Peregrine falcon', commons: 'Falcon flying sky photograph' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:سياره|سيارة|عربيه|فراري|لامبورجيني|مرسيدس)/i, arWiki: 'سيارة رياضية', enWiki: 'Sports car', commons: 'Ferrari sports car road photograph' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:طائره|طائرة)/i, arWiki: 'طائرة', enWiki: 'Airliner', commons: 'Airplane flying clouds sunset' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:قطار|تالجو)/i, arWiki: 'قطار فائق السرعة', enWiki: 'High-speed rail', commons: 'Talgo high speed train railway' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:اهرامات|أهرامات|الجيزه|الجيزة)/i, arWiki: 'أهرام الجيزة', enWiki: 'Giza pyramid complex', commons: 'Pyramids of Giza sunset Egypt' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:نيل|نهر النيل)/i, arWiki: 'نهر النيل', enWiki: 'Nile', commons: 'Nile river Cairo Aswan Egypt' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:قاهره|قاهرة|مصر)/i, arWiki: 'القاهرة', enWiki: 'Cairo', commons: 'Cairo skyline Nile sunset' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:دبي|برج خليفه|برج خليفة)/i, arWiki: 'برج خليفة', enWiki: 'Burj Khalifa', commons: 'Dubai skyline Burj Khalifa night' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:مكه|مكة|كعبه|كعبة)/i, arWiki: 'المسجد الحرام', enWiki: 'Masjid al-Haram', commons: 'Masjid al-Haram Mecca night' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:مسجد|جامع)/i, arWiki: 'مسجد', enWiki: 'Mosque', commons: 'Islamic mosque architecture dome' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:فضاء|مجره|مجرة|كواكب|نجوم)/i, arWiki: 'مجرة', enWiki: 'Spiral galaxy', commons: 'Hubble Webb galaxy nebula stars' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:بحر|محيط|شاطئ)/i, arWiki: 'شاطئ', enWiki: 'Beach', commons: 'Tropical turquoise beach ocean sunset' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:جبل|جبال)/i, arWiki: 'جبل', enWiki: 'Mountain', commons: 'Snow mountains lake landscape' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:غابه|غابة|طبيعه|طبيعة|حديقه|حديقة)/i, arWiki: 'غابة', enWiki: 'Forest', commons: 'Sunlight green forest nature' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:قهوه|قهوة|فنجان)/i, arWiki: 'قهوة', enWiki: 'Coffee', commons: 'Cup of coffee beans wooden table' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:ورد|زهور|ازهار)/i, arWiki: 'ورد', enWiki: 'Rose', commons: 'Red rose flower dew photograph' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:روبوت|ذكاء اصطناعي)/i, arWiki: 'روبوت', enWiki: 'Humanoid robot', commons: 'Humanoid robot artificial intelligence' },
+      { pattern: /(?:^|\s)(?:ل|لل|ب|و|ال)?(?:مدينه|مدينة)/i, arWiki: 'ناطحات سحاب', enWiki: 'Cityscape', commons: 'Modern city skyline night lights' }
     ];
 
-    async function translateArabicPromptToEnglish(arabicPrompt) {
-      const cleanAr = arabicPrompt
-        .replace(/^(صمم صورة|صمّم صورة|ارسم|إرسم|انشئ صورة|أنشئ صورة|تخيل صورة|اعمل صورة|تصميم صورة|صورة لـ|صوره ل|صورة|صوره)[:\s]*/i, '')
+    function stripArabicImageCommandPrefixes(rawText) {
+      return rawText
+        .replace(/^(?:صمم صورة|صمّم صورة|ارسم صورة|ارسم|إرسم|انشئ صورة|أنشئ صورة|تخيل صورة|اعمل صورة|تصميم صورة|صورة لـ|صوره ل|صورة|صوره)[:\s]*/i, '')
+        .replace(/^\s*(?:لـ|للـ|لل|ل|عن|حول)(?=[أ-ي])/i, '')
         .trim();
+    }
 
-      // 1. استخراج المصطلحات البصرية الدقيقة من القاموس
-      let dictTokens = [];
-      for (const [regex, engDesc] of AR_VISUAL_DICTIONARY) {
-        if (regex.test(cleanAr)) {
-          dictTokens.push(engDesc);
+    async function translateArabicPromptToEnglish(arabicPrompt) {
+      const cleanAr = stripArabicImageCommandPrefixes(arabicPrompt);
+
+      // 1. فحص القاموس الموضوعي المباشر أولاً
+      for (const item of SUBJECT_PHOTO_MAP) {
+        if (item.pattern.test(cleanAr)) {
+          return item.commons;
         }
       }
 
-      // 2. ترجمة الجملة الكاملة عبر MyMemory API (يدعم CORS رسمياً)
-      let apiTranslated = '';
+      // 2. ترجمة الجملة عبر MyMemory CORS API
       try {
         const ctrl = new AbortController();
-        const tid = setTimeout(() => ctrl.abort(), 3500);
+        const tid = setTimeout(() => ctrl.abort(), 3200);
         const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanAr)}&langpair=ar|en`;
         const res = await fetch(url, { signal: ctrl.signal });
         clearTimeout(tid);
@@ -1218,52 +1203,17 @@
           const data = await res.json();
           const tText = (data?.responseData?.translatedText || '').trim();
           if (tText && !tText.includes('MYMEMORY WARNING') && !/[\u0600-\u06FF]/.test(tText)) {
-            apiTranslated = tText;
+            return tText.replace(/[^a-zA-Z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
           }
         }
       } catch (e) {}
 
-      // 3. محاولة احتياطية عبر Google Translate GTX API
-      if (!apiTranslated) {
-        try {
-          const ctrl2 = new AbortController();
-          const tid2 = setTimeout(() => ctrl2.abort(), 2800);
-          const url2 = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ar&tl=en&dt=t&q=${encodeURIComponent(cleanAr)}`;
-          const res2 = await fetch(url2, { signal: ctrl2.signal });
-          clearTimeout(tid2);
-          if (res2.ok) {
-            const data2 = await res2.json();
-            if (Array.isArray(data2) && Array.isArray(data2[0])) {
-              const joined = data2[0].map(item => item[0]).join(' ').trim();
-              if (joined && !/[\u0600-\u06FF]/.test(joined)) {
-                apiTranslated = joined;
-              }
-            }
-          }
-        } catch (e2) {}
-      }
-
-      // 4. بناء وصف إنجليزي نقي 100% خالٍ من أي حروف عربية
-      let combined = [];
-      if (apiTranslated) combined.push(apiTranslated);
-      if (dictTokens.length > 0) combined.push(dictTokens.slice(0, 3).join(', '));
-
-      let finalEng = combined
-        .join(', ')
-        .replace(/[\u0600-\u06FF]+/g, ' ')
-        .replace(/[^a-zA-Z0-9,\s\-#]/g, ' ')
-        .replace(/\s+/g, ' ')
-        .trim();
-
-      if (!finalEng || finalEng.length < 4) {
-        finalEng = dictTokens[0] || 'breathtaking realistic nature landscape at golden hour sunset';
-      }
-      return finalEng;
+      return 'high resolution nature landscape sunset';
     }
 
-    // تحميل مسبق للصورة الواقعية للتأكد من عمل الرابط الفعلي قبل عرضه للمستخدم
     function preloadImageUrl(url, timeoutMs) {
       return new Promise((resolve) => {
+        if (!url) return resolve(null);
         const img = new Image();
         let settled = false;
         const timer = setTimeout(() => {
@@ -1291,50 +1241,82 @@
       });
     }
 
-    // جلب صورة فوتوغرافية حقيقية 100% عالية الدقة (من ويكيبيديا الإنجليزية والعربية وويكيميديا) لمنع الصور الكرتونية أو العشوائية
+    // جلب صورة فوتوغرافية حقيقية 100% من ويكيبيديا الإنجليزية والعربية ومستودع ويكيميديا العالمي (بدون أي حدود أو رسائل خطأ)
     async function fetchRealMatchedImageFromWikimedia(arabicPrompt, englishPrompt) {
-      const cleanAr = arabicPrompt
-        .replace(/^(صمم صورة|صمّم صورة|ارسم|إرسم|انشئ صورة|أنشئ صورة|تخيل صورة|اعمل صورة|تصميم صورة|صورة لـ|صوره ل|صورة|صوره|لل|لـ|ل)[:\s]*/i, '')
-        .trim();
+      const cleanAr = stripArabicImageCommandPrefixes(arabicPrompt);
 
-      // استخراج الموضوع الأساسي للبحث عن الصورة الفوتوغرافية الحقيقية (مثال: "كريستيانو رونالدو بين جماهير" -> "كريستيانو رونالدو")
-      const mainSubjectAr = cleanAr
-        .split(/\s+(?:بين|مع|في|فى|على|امام|أمام|بجوار|داخل|فوق|تحت|وهو|وهي)\s+/)[0]
-        .replace(/^(لـ|لل|بـ|كـ)/, '')
-        .trim();
+      let matchedEntry = null;
+      for (const item of SUBJECT_PHOTO_MAP) {
+        if (item.pattern.test(cleanAr)) {
+          matchedEntry = item;
+          break;
+        }
+      }
 
-      // 1. البحث في ويكيبيديا العربية عن الصورة الرسمية عالية الدقة للموضوع الأساسي
-      for (const queryCandidate of [mainSubjectAr, cleanAr]) {
-        if (!queryCandidate || queryCandidate.length < 2) continue;
+      const mainSubjectAr = matchedEntry
+        ? matchedEntry.arWiki
+        : cleanAr.split(/\s+(?:بين|مع|في|فى|على|امام|أمام|بجوار|داخل|فوق|تحت|وهو|وهي)\s+/)[0].replace(/^(?:لل|ل|ب|ك)/, '').trim();
+
+      const enQuery = matchedEntry ? matchedEntry.enWiki : (englishPrompt || '').split(',')[0].trim();
+      const commonsQuery = matchedEntry ? matchedEntry.commons : (englishPrompt || mainSubjectAr);
+
+      const isGoodPhotoUrl = (u) => {
+        if (!u) return false;
+        const low = u.toLowerCase();
+        if (!/\.(jpg|jpeg|png|webp)$/i.test(low)) return false;
+        if (low.includes('icon') || low.includes('logo') || low.includes('flag') || low.includes('map') || low.includes('Coat_of_arms') || low.includes('symbol')) return false;
+        return true;
+      };
+
+      // 1. البحث في ويكيبيديا الإنجليزية (صور فوتوغرافية رسمية عالية الدقة للمشاهير والحيوانات والمعالم)
+      if (enQuery && enQuery.length >= 2) {
         try {
-          const arWikiImgUrl = `https://ar.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(queryCandidate)}&gsrlimit=4&prop=pageimages&piprop=original|thumbnail&pithumbsize=1200&format=json&origin=*`;
-          const wRes = await fetch(arWikiImgUrl);
-          const wData = await wRes.json();
-          const wPages = Object.values(wData?.query?.pages || {});
-          for (const wp of wPages) {
-            const src = wp?.original?.source || wp?.thumbnail?.source;
-            if (src && /\.(jpg|jpeg|png|webp)$/i.test(src) && !src.toLowerCase().includes('icon') && !src.toLowerCase().includes('logo') && !src.toLowerCase().includes('map')) {
-              return src;
+          const enUrl = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(enQuery)}&gsrlimit=5&prop=pageimages&piprop=original|thumbnail&pithumbsize=1200&format=json&origin=*`;
+          const enRes = await fetch(enUrl);
+          const enData = await enRes.json();
+          const enPages = Object.values(enData?.query?.pages || {});
+          for (const ep of enPages) {
+            const src = ep?.thumbnail?.source || ep?.original?.source;
+            if (isGoodPhotoUrl(src)) {
+              const verified = await preloadImageUrl(src, 4500);
+              if (verified) return verified;
             }
           }
         } catch (e) {}
       }
 
-      // 2. البحث في ويكيبيديا الإنجليزية (تحتوي على صور فوتوغرافية حقيقية عالية الدقة لكل المشاهير والحيوانات والمعالم)
-      const shortEngSubject = (englishPrompt || '').split(',')[0].replace(/wearing.*|playing.*|surrounded.*/i, '').trim();
-      if (shortEngSubject && shortEngSubject.length >= 3) {
+      // 2. البحث في ويكيبيديا العربية
+      if (mainSubjectAr && mainSubjectAr.length >= 2) {
         try {
-          const enWikiImgUrl = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(shortEngSubject)}&gsrlimit=4&prop=pageimages&piprop=original|thumbnail&pithumbsize=1200&format=json&origin=*`;
-          const enRes = await fetch(enWikiImgUrl);
-          const enData = await enRes.json();
-          const enPages = Object.values(enData?.query?.pages || {});
-          for (const ep of enPages) {
-            const src = ep?.original?.source || ep?.thumbnail?.source;
-            if (src && /\.(jpg|jpeg|png|webp)$/i.test(src) && !src.toLowerCase().includes('icon') && !src.toLowerCase().includes('flag')) {
-              return src;
+          const arUrl = `https://ar.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(mainSubjectAr)}&gsrlimit=5&prop=pageimages&piprop=original|thumbnail&pithumbsize=1200&format=json&origin=*`;
+          const arRes = await fetch(arUrl);
+          const arData = await arRes.json();
+          const arPages = Object.values(arData?.query?.pages || {});
+          for (const ap of arPages) {
+            const src = ap?.thumbnail?.source || ap?.original?.source;
+            if (isGoodPhotoUrl(src)) {
+              const verified = await preloadImageUrl(src, 4500);
+              if (verified) return verified;
             }
           }
-        } catch (e2) {}
+        } catch (e) {}
+      }
+
+      // 3. البحث في مستودع الصور الفوتوغرافية العالمي Wikimedia Commons (أكثر من 100 مليون صورة حقيقية مجانية بدون أي حد)
+      if (commonsQuery && commonsQuery.length >= 2) {
+        try {
+          const cUrl = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent('filetype:bitmap ' + commonsQuery)}&gsrnamespace=6&gsrlimit=8&prop=imageinfo&iiprop=url&iiurlwidth=1200&format=json&origin=*`;
+          const cRes = await fetch(cUrl);
+          const cData = await cRes.json();
+          const cPages = Object.values(cData?.query?.pages || {});
+          for (const cp of cPages) {
+            const src = cp?.imageinfo?.[0]?.thumburl || cp?.imageinfo?.[0]?.url;
+            if (isGoodPhotoUrl(src)) {
+              const verified = await preloadImageUrl(src, 4500);
+              if (verified) return verified;
+            }
+          }
+        } catch (e) {}
       }
 
       return null;
@@ -1352,16 +1334,14 @@
       ctx.fillStyle = skyGrad;
       ctx.fillRect(0, 0, c.width, c.height);
       ctx.fillStyle = '#2dd4bf';
-      ctx.font = 'bold 18px Cairo, sans-serif';
+      ctx.font = 'bold 20px Cairo, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(`🎨 Zoma AI Vision — ${promptText.slice(0, 60)}`, c.width / 2, c.height / 2);
       return c.toDataURL('image/png');
     }
 
     async function executeImageGenerationFlow(rawPrompt, styleLabel) {
-      const promptClean = rawPrompt
-        .replace(/^(صمم صورة|صمّم صورة|ارسم|إرسم|انشئ صورة|أنشئ صورة|تخيل صورة|اعمل صورة|تصميم صورة|صورة لـ|صوره ل|صورة|صوره)[:\s]*/i, '')
-        .trim() || 'مشهد طبيعي واقعي بدقة 8K';
+      const promptClean = stripArabicImageCommandPrefixes(rawPrompt) || 'مشهد طبيعي واقعي بدقة 8K';
 
       const safety = checkImagePromptSafety(promptClean);
       if (!safety.safe) {
@@ -1369,47 +1349,31 @@
       }
       const cap = appState.maxDailyImagesCap || MAX_DAILY_IMAGES;
       if (appState.dailyImagesRemaining <= 0) {
-        return `⚠️ **انتهى رصيد الصور الحالي (0/${cap})**. اكتب الكود **\`ZOMA\`** في **🔑 خانة الكود** بأعلى الشاشة لإضافة +5 صور إضافية (يُستخدم مرة واحدة لكل حساب)!`;
+        return `⚠️ **انتهى رصيد الصور الحالي (0/${cap})**. ${hasAccountUsedCode('ZOMA') ? 'لقد استنفدت كود ZOMA المخصص لحسابك مسبقاً.' : 'اكتب الكود **`ZOMA`** في **🔑 خانة الكود** بأعلى الشاشة لإضافة +5 صور إضافية (يُستخدم مرة واحدة لكل حساب)!'}`;
       }
 
       appState.dailyImagesRemaining = Math.max(0, appState.dailyImagesRemaining - 1);
 
-      // 1. ترجمة الوصف إلى إنجليزية خالصة ودقيقة
       const englishPrompt = await translateArabicPromptToEnglish(promptClean);
-      const seed = Math.floor(Math.random() * 899999) + 100000;
-
-      // 2. جلب صورة فوتوغرافية حقيقية 100% للموضوع بالتوازي مع التوليد الفوتوغرافي بالذكاء الاصطناعي (بدون مظهر كرتوني)
-      const realPhotoPromise = fetchRealMatchedImageFromWikimedia(promptClean, englishPrompt);
-
-      const photoCameraPrompt = `RAW candid press photograph of ${englishPrompt}, shot on Canon EOS R5, 85mm lens, f/1.8, natural skin texture, authentic photojournalism, real life photography, 8k uhd, not 3d render, not cartoon, not cgi`;
-      const fluxUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(photoCameraPrompt)}?model=flux&width=960&height=540&nologo=true&seed=${seed}`;
-      const turboUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(photoCameraPrompt)}?model=turbo&width=960&height=540&nologo=true&seed=${seed}`;
-
-      const realWikiPhoto = await realPhotoPromise;
-      let aiVerifiedUrl = await preloadImageUrl(fluxUrl, 5500);
-      if (!aiVerifiedUrl) {
-        aiVerifiedUrl = await preloadImageUrl(turboUrl, 4500);
-      }
-
-      // إذا توفرت صورة فوتوغرافية حقيقية موثقة للشخصية/الحيوان/المعلم نعرضها كصورة أساسية واقعية 100% مع توفير نسخة الذكاء الاصطناعي أيضاً
-      const primaryDisplayUrl = realWikiPhoto || aiVerifiedUrl || fluxUrl;
-      const secondaryAltUrl = (realWikiPhoto && aiVerifiedUrl) ? aiVerifiedUrl : (realWikiPhoto || fluxUrl);
+      const realWikiPhoto = await fetchRealMatchedImageFromWikimedia(promptClean, englishPrompt);
+      const fallbackArt = createNaturalArtworkDataUrl(promptClean, styleLabel || 'فوتوغرافي واقعي 8K');
+      const finalImgUrl = realWikiPhoto || fallbackArt;
 
       appState.generatedImages.unshift({
         id: 'img_' + Date.now(),
         prompt: promptClean,
         englishPrompt: englishPrompt,
         style: styleLabel || 'فوتوغرافي واقعي حقيقي 8K',
-        dataUrl: primaryDisplayUrl,
-        cloudUrl: secondaryAltUrl,
+        dataUrl: finalImgUrl,
+        cloudUrl: finalImgUrl,
         createdAt: new Date().toISOString()
       });
       saveState();
       updateImageQuotaUI();
 
-      return `🎨 **تم تجهيز الصورة الفوتوغرافية الواقعية المطابقة لطلبك ("${promptClean}")** (الرصيد المتبقي: **${appState.dailyImagesRemaining} / ${cap}**):
+      return `🎨 **تم تجهيز الصورة الفوتوغرافية الحقيقية المطابقة لطلبك ("${promptClean}")** (الرصيد المتبقي: **${appState.dailyImagesRemaining} / ${cap}**):
 • **الموضوع البصري المنفذ**: \`${englishPrompt}\`
-[ZOMA_IMAGE_PAIR:::${secondaryAltUrl}:::${primaryDisplayUrl}]
+[ZOMA_IMAGE_PAIR:::${finalImgUrl}:::${finalImgUrl}]
 **الخطوة التالية المقترحة للتنفيذ فوراً**: يمكنك حفظ الصورة مباشرة أو تجربة وصف جديد في الدردشة.`;
     }
 
@@ -1978,7 +1942,7 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
     }
 
     function loadInitialState() {
-      const saved = safeGetItem('zoma_ai_state_v11_perfect');
+      const saved = safeGetItem('zoma_ai_state_v12_clean');
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
@@ -2078,7 +2042,7 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
     }
 
     function saveState() {
-      safeSetItem('zoma_ai_state_v11_perfect', JSON.stringify(appState));
+      safeSetItem('zoma_ai_state_v12_clean', JSON.stringify(appState));
     }
 
     // =========================================================================
@@ -2402,9 +2366,11 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
 
     function hasAccountUsedCode(code) {
       const upper = code.toUpperCase();
-      if (safeGetItem('zoma_permanent_used_code_' + upper) === 'USED_ONCE') {
-        return true;
-      }
+      if (window['__ZOMA_LOCK_' + upper] === true) return true;
+      if (safeGetItem('zoma_permanent_used_code_' + upper) === 'USED_ONCE') return true;
+      try {
+        if ( document.cookie.includes('zoma_used_' + upper + '=1') ) return true;
+      } catch (e) {}
       if (Array.isArray(appState.activatedCodes) && appState.activatedCodes.some(c => c.code === upper)) {
         return true;
       }
@@ -2413,7 +2379,11 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
 
     function markAccountCodeUsed(code) {
       const upper = code.toUpperCase();
+      window['__ZOMA_LOCK_' + upper] = true;
       safeSetItem('zoma_permanent_used_code_' + upper, 'USED_ONCE');
+      try {
+        document.cookie = 'zoma_used_' + upper + '=1; max-age=31536000; path=/; SameSite=Lax';
+      } catch (e) {}
       if (!Array.isArray(appState.activatedCodes)) appState.activatedCodes = [];
       if (!appState.activatedCodes.some(c => c.code === upper)) {
         appState.activatedCodes.push({ code: upper, time: new Date().toISOString() });
@@ -3498,20 +3468,15 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
         appState.dailyImagesRemaining--;
         showToast('جاري ترجمة الوصف وتصميم الصورة المطابقة بدقة 8K...');
         const engPrompt = await translateArabicPromptToEnglish(promptText);
-        const seed = Math.floor(Math.random() * 899999) + 100000;
-        const fluxUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(engPrompt + ', realistic photography, 8k uhd, dslr, natural lighting, sharp focus')}?model=flux&width=960&height=540&nologo=true&enhance=true&seed=${seed}`;
-        const turboUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(engPrompt + ', realistic photo, 8k, detailed')}?model=turbo&width=960&height=540&nologo=true&seed=${seed}`;
-        let verifiedUrl = await preloadImageUrl(fluxUrl, 6500);
-        if (!verifiedUrl) verifiedUrl = await preloadImageUrl(turboUrl, 5000);
-        if (!verifiedUrl) verifiedUrl = await fetchRealMatchedImageFromWikimedia(promptText);
-        const finalStudioUrl = verifiedUrl || fluxUrl;
+        const realPhoto = await fetchRealMatchedImageFromWikimedia(promptText, engPrompt);
+        const finalStudioUrl = realPhoto || createNaturalArtworkDataUrl(promptText, styleSel.value);
 
         appState.generatedImages.unshift({
           id: 'img_' + Date.now(),
           prompt: promptText,
           style: styleSel.value,
           dataUrl: finalStudioUrl,
-          cloudUrl: fluxUrl,
+          cloudUrl: finalStudioUrl,
           createdAt: new Date().toISOString()
         });
         pInput.value = '';
