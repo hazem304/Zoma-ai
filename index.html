@@ -248,8 +248,8 @@
       </div>
       <div id="conversationHistoryList" class="flex-1 overflow-y-auto px-2.5 py-1.5 space-y-2.5"></div>
 
-      <!-- تذييل الشريط الجانبي: الذاكرة النشطة + الموقع الرسمي + الإعدادات -->
-      <div class="p-2.5 border-t border-slate-200 dark:border-slate-800 bg-slate-100/70 dark:bg-slate-900/90 space-y-1.5">
+      <!-- تذييل الشريط الجانبي (تم إخفاؤه بناءً على طلب المستخدم) -->
+      <div class="hidden">
         <button id="openMemoryHubSideBtn" type="button" class="w-full py-1.5 px-3 rounded-xl bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/25 flex items-center justify-between text-xs font-bold text-teal-700 dark:text-teal-300 transition">
           <span>🧠 الذاكرة الذكية النشطة</span>
           <span id="sidebarMemoryCountBadge" class="text-[10px] px-1.5 py-0.5 rounded bg-teal-600 text-white">نشطة</span>
@@ -454,20 +454,20 @@
         <!-- شريط الإدخال السفلي المتطور -->
         <footer class="p-2.5 sm:px-6 sm:py-3 border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95">
           <div class="max-w-5xl mx-auto flex items-end gap-2">
-            <button id="voiceInputBtn" type="button" class="hidden p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-teal-500/15 text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition flex-shrink-0" title="الإدخال الصوتي (Voice-to-Text)">
+            <button id="voiceInputBtn" type="button" class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-teal-500/15 text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition flex-shrink-0" title="الإدخال الصوتي (Voice-to-Text)">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
               </svg>
             </button>
 
             <input id="fileUploadInput" type="file" accept=".txt,.md,.csv,.json,.py,.js,.html,.log" class="hidden" />
-            <button id="attachFileBtn" type="button" class="hidden p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-indigo-500/15 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition flex-shrink-0" title="ارفع ملفاً لشرحه وتحليله بالتفصيل">
+            <button id="attachFileBtn" type="button" class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-indigo-500/15 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition flex-shrink-0" title="ارفع ملفاً لشرحه وتحليله بالتفصيل">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
               </svg>
             </button>
 
-            <button id="chatQuickDrawBtn" type="button" class="hidden p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-500/15 text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition flex-shrink-0" title="تصميم صورة طبيعية بالذكاء الاصطناعي">
+            <button id="chatQuickDrawBtn" type="button" class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-500/15 text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition flex-shrink-0" title="تصميم صورة طبيعية بالذكاء الاصطناعي">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
               </svg>
@@ -1139,51 +1139,66 @@
       );
     }
 
-    // قاموس بصري شامل + مترجم فوري لتحويل وصف الصور العربي إلى الإنجليزية بدقة عالية جداً
+    // =========================================================================
+    // 4-ب. محرك الترجمة البصرية وتوليد الصور الواقعية الفائقة (Photorealistic AI Engine)
+    // =========================================================================
     const AR_VISUAL_DICTIONARY = [
-      [/ميسي|ليونيل ميسي/g, 'Lionel Messi wearing Argentina national team blue and white striped jersey #10'],
-      [/رونالدو|كريستيانو/g, 'Cristiano Ronaldo in football jersey'],
-      [/محمد صلاح|مو صلاح|صلاح/g, 'Mohamed Salah Egyptian football star'],
-      [/جماهير|مشجعين|جمهور/g, 'cheering stadium crowd with flags and stadium lights'],
-      [/الارجنتين|أرجنتين|ارجنتين/g, 'Argentina national team colors and flags in stadium'],
-      [/ملعب|استاد|كره قدم|كرة قدم/g, 'packed football stadium arena at night with dramatic lighting'],
-      [/قطه|قطة|هر|قطط/g, 'cute fluffy cat with detailed fur and expressive eyes'],
-      [/تلعب|يلعب/g, 'playing joyfully in dynamic action pose'],
-      [/كلب|جرو/g, 'friendly loyal dog outdoors'],
-      [/اسد|أسد/g, 'majestic lion with golden mane'],
-      [/نمر/g, 'powerful tiger in nature'],
-      [/حصان|خيل|فرس/g, 'majestic Arabian horse galloping'],
-      [/صقر|نسر/g, 'majestic falcon flying in the sky'],
-      [/سياره|سيارة|عربيه/g, 'sleek modern luxury sports car'],
-      [/طائره|طائرة/g, 'modern airplane flying above clouds'],
-      [/قطار|تالجو/g, 'modern high-speed train on railway tracks'],
-      [/مدينه|مدينة/g, 'futuristic smart metropolis city with glowing architecture'],
-      [/فضاء|مجره|مجرة|كواكب|نجوم/g, 'deep outer space galaxy nebula with glowing planets and stars'],
-      [/بحر|محيط|شاطئ/g, 'crystal clear turquoise ocean waves on a sunny beach'],
-      [/غروب|شروق/g, 'golden hour dramatic sunset sky'],
-      [/جبل|جبال/g, 'majestic snow-capped mountains'],
-      [/غابه|غابة|اشجار|أشجار|طبيعه|طبيعة/g, 'lush green enchanted forest nature with sunbeams'],
-      [/مصر|اهرامات|أهرامات|القاهره|القاهرة/g, 'majestic Egyptian Pyramids of Giza and Nile river at sunset'],
-      [/نيل|نهر النيل/g, 'scenic Nile river in Egypt with boats'],
-      [/مسجد|جامع/g, 'grand illuminated Islamic mosque architecture with minarets'],
+      [/ميسي|ليونيل ميسي/g, 'Lionel Messi wearing Argentina national team blue and white striped jersey number 10'],
+      [/رونالدو|كريستيانو/g, 'Cristiano Ronaldo wearing Portugal football jersey number 7'],
+      [/محمد صلاح|مو صلاح|صلاح/g, 'Mohamed Salah Egyptian football star player in red jersey'],
+      [/جماهير|مشجعين|جمهور/g, 'packed stadium crowd cheering with flags and dramatic stadium floodlights'],
+      [/الارجنتين|أرجنتين|ارجنتين/g, 'Argentina blue and white national flags and confetti'],
+      [/ملعب|استاد|كره قدم|كرة قدم|مباراه|مباراة/g, 'professional football stadium pitch at night'],
+      [/قطه|قطة|هر|قطط|بسه/g, 'adorable fluffy kitten cat with realistic fur and bright eyes'],
+      [/تلعب|يلعب|يلعبون/g, 'playing joyfully with a colorful ball in dynamic motion'],
+      [/كلب|جرو|كلاب/g, 'cute golden retriever dog outdoors in sunlight'],
+      [/اسد|أسد|اسود/g, 'majestic African lion with thick golden mane in savanna'],
+      [/نمر|فهد/g, 'powerful wild tiger in tropical jungle'],
+      [/حصان|خيل|فرس/g, 'majestic purebred Arabian horse galloping at sunset'],
+      [/صقر|نسر|طائر|عصفور/g, 'majestic falcon bird flying in clear sky'],
+      [/فراشه|فراشة/g, 'colorful butterfly on a blooming flower macro photography'],
+      [/سياره|سيارة|عربيه|سيارات/g, 'sleek modern luxury supercar driving on coastal highway'],
+      [/طائره|طائرة/g, 'modern commercial airplane flying above golden clouds'],
+      [/قطار|تالجو/g, 'modern aerodynamic high-speed train on railway tracks'],
+      [/سفينه|سفينة|مركب|يخت/g, 'luxury yacht ship sailing on turquoise ocean water'],
+      [/مدينه|مدينة|عاصمه|عاصمة/g, 'futuristic smart metropolis city skyline with glowing glass towers'],
+      [/فضاء|مجره|مجرة|كواكب|نجوم|كون/g, 'deep outer space galaxy nebula with glowing planets and stars'],
+      [/رائد فضاء/g, 'astronaut in detailed spacesuit floating in space above Earth'],
+      [/بحر|محيط|شاطئ|امواج|أمواج/g, 'crystal clear turquoise ocean waves on a tropical sandy beach'],
+      [/غروب|شروق/g, 'warm golden hour dramatic sunset sky'],
+      [/ليل|قمر/g, 'starry night sky with glowing full moon'],
+      [/جبل|جبال|قمم/g, 'majestic snow-capped mountain peaks with alpine lake'],
+      [/غابه|غابة|اشجار|أشجار|طبيعه|طبيعة|حديقه|حديقة/g, 'lush green nature park garden with sunbeams through trees'],
+      [/صحراء|رمال/g, 'golden desert sand dunes at sunset'],
+      [/مصر|اهرامات|أهرامات|القاهره|القاهرة|الجيزه|الجيزة/g, 'majestic Great Pyramids of Giza in Egypt at golden sunset'],
+      [/نيل|نهر النيل|نهر/g, 'scenic Nile river in Egypt with traditional boats and palm trees'],
+      [/مسجد|جامع/g, 'grand illuminated Islamic mosque architecture with domes and minarets'],
+      [/كعبه|كعبة|مكه|مكة/g, 'Grand Mosque in Mecca with glowing lights'],
       [/قلعه|قلعة|قصر/g, 'grand royal palace castle architecture'],
-      [/روبوت|ذكاء اصطناعي|آلي/g, 'futuristic humanoid AI robot with glowing cyan circuits'],
-      [/شعار|لوجو/g, 'clean professional modern vector logo design emblem'],
-      [/قهوه|قهوة|فنجان/g, 'steaming cup of Arabic coffee on rustic wooden table'],
-      [/ورد|زهور|ازهار/g, 'vibrant blooming roses and flowers with morning dew'],
-      [/مطر|شتاء/g, 'cinematic rain drops and glowing street reflections'],
-      [/طفل|ولد/g, 'happy child portrait'],
-      [/فتاه|فتاة|بنت/g, 'portrait'],
-      [/رجل|شاب/g, 'cinematic portrait'],
-      [/محارب|فارس/g, 'epic armored knight warrior']
+      [/بيت|منزل|فيلا|غرفه|غرفة|مكتب/g, 'modern luxury interior design room with warm lighting'],
+      [/روبوت|ذكاء اصطناعي|آلي/g, 'futuristic humanoid AI robot with glowing cyan lights'],
+      [/كمبيوتر|حاسوب|لابتوب|برمجه|برمجة|هاتف/g, 'modern high-tech developer workspace with glowing monitors'],
+      [/شعار|لوجو/g, 'clean professional modern 3D emblem logo design'],
+      [/قهوه|قهوة|فنجان|شاي/g, 'steaming cup of aromatic coffee on wooden table with warm bokeh'],
+      [/طعام|اكل|أكل|بيتزا|برجر|كيك|حلوى/g, 'gourmet delicious food photography on restaurant plate'],
+      [/ورد|زهور|ازهار|أزهار/g, 'vibrant blooming red and pink roses with morning dew macro'],
+      [/مطر|شتاء|ثلج/g, 'cinematic rain drops and glowing city street reflections'],
+      [/نار|لهب/g, 'glowing fire flames sparks'],
+      [/ذهب|مجوهرات|كنز/g, 'shining gold coins and luxury jewelry'],
+      [/طفل|ولد|صبي/g, 'happy smiling young child outdoors'],
+      [/فتاه|فتاة|بنت/g, 'natural portrait in sunlit garden'],
+      [/رجل|شاب/g, 'cinematic natural portrait'],
+      [/محارب|فارس/g, 'epic armored knight warrior standing on cliff'],
+      [/طبيب|دكتور|مستشفى/g, 'modern medical doctor in hospital clinic'],
+      [/مدرسه|مدرسة|جامعه|جامعة|كتاب|كتب|مكتبه|مكتبة/g, 'grand classic library filled with books and warm sunlight']
     ];
 
     async function translateArabicPromptToEnglish(arabicPrompt) {
       const cleanAr = arabicPrompt
-        .replace(/^(صمم صورة|صمّم صورة|ارسم|إرسم|انشئ صورة|أنشئ صورة|تخيل صورة|اعمل صورة|تصميم صورة|صورة لـ|صوره ل|لـ|ل)[:\s]*/i, '')
+        .replace(/^(صمم صورة|صمّم صورة|ارسم|إرسم|انشئ صورة|أنشئ صورة|تخيل صورة|اعمل صورة|تصميم صورة|صورة لـ|صوره ل|صورة|صوره)[:\s]*/i, '')
         .trim();
 
-      // 1. جمع المصطلحات الإنجليزية المطابقة من القاموس البصري الدقيق
+      // 1. استخراج المصطلحات البصرية الدقيقة من القاموس
       let dictTokens = [];
       for (const [regex, engDesc] of AR_VISUAL_DICTIONARY) {
         if (regex.test(cleanAr)) {
@@ -1191,11 +1206,11 @@
         }
       }
 
-      // 2. ترجمة الجملة الكاملة عبر MyMemory API (يدعم CORS رسمياً على جميع المواقع والمتصفحات)
+      // 2. ترجمة الجملة الكاملة عبر MyMemory API (يدعم CORS رسمياً)
       let apiTranslated = '';
       try {
         const ctrl = new AbortController();
-        const tid = setTimeout(() => ctrl.abort(), 3200);
+        const tid = setTimeout(() => ctrl.abort(), 3500);
         const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanAr)}&langpair=ar|en`;
         const res = await fetch(url, { signal: ctrl.signal });
         clearTimeout(tid);
@@ -1208,11 +1223,11 @@
         }
       } catch (e) {}
 
-      // 3. محاولة احتياطية عبر Google GTX إن لم تتوفر ترجمة MyMemory
+      // 3. محاولة احتياطية عبر Google Translate GTX API
       if (!apiTranslated) {
         try {
           const ctrl2 = new AbortController();
-          const tid2 = setTimeout(() => ctrl2.abort(), 2500);
+          const tid2 = setTimeout(() => ctrl2.abort(), 2800);
           const url2 = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ar&tl=en&dt=t&q=${encodeURIComponent(cleanAr)}`;
           const res2 = await fetch(url2, { signal: ctrl2.signal });
           clearTimeout(tid2);
@@ -1228,55 +1243,99 @@
         } catch (e2) {}
       }
 
-      // 4. إزالة أي حروف عربية متبقية نهائياً حتى لا يخطئ محرك الصور السحابي أبداً
-      let finalEng = [apiTranslated, ...dictTokens]
-        .filter(Boolean)
+      // 4. بناء وصف إنجليزي نقي 100% خالٍ من أي حروف عربية
+      let combined = [];
+      if (apiTranslated) combined.push(apiTranslated);
+      if (dictTokens.length > 0) combined.push(dictTokens.slice(0, 3).join(', '));
+
+      let finalEng = combined
         .join(', ')
         .replace(/[\u0600-\u06FF]+/g, ' ')
+        .replace(/[^a-zA-Z0-9,\s\-#]/g, ' ')
         .replace(/\s+/g, ' ')
         .trim();
 
-      if (!finalEng || finalEng.length < 3) {
-        finalEng = 'cinematic ultra detailed photography of ' + (dictTokens[0] || 'futuristic nature landscape');
+      if (!finalEng || finalEng.length < 4) {
+        finalEng = dictTokens[0] || 'breathtaking realistic nature landscape at golden hour sunset';
       }
       return finalEng;
     }
 
-    // جلب صورة حقيقية عالية الدقة مطابقة للموضوع من ويكيميديا كومنز / ويكيبيديا كدعم فوري مضمون 100%
+    // تحميل مسبق للصورة الواقعية للتأكد من عمل الرابط الفعلي قبل عرضه للمستخدم
+    function preloadImageUrl(url, timeoutMs) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        let settled = false;
+        const timer = setTimeout(() => {
+          if (!settled) {
+            settled = true;
+            resolve(null);
+          }
+        }, timeoutMs);
+
+        img.onload = () => {
+          if (!settled) {
+            settled = true;
+            clearTimeout(timer);
+            resolve(url);
+          }
+        };
+        img.onerror = () => {
+          if (!settled) {
+            settled = true;
+            clearTimeout(timer);
+            resolve(null);
+          }
+        };
+        img.src = url;
+      });
+    }
+
+    // جلب صورة فوتوغرافية حقيقية 100% عالية الدقة (من ويكيبيديا الإنجليزية والعربية وويكيميديا) لمنع الصور الكرتونية أو العشوائية
     async function fetchRealMatchedImageFromWikimedia(arabicPrompt, englishPrompt) {
       const cleanAr = arabicPrompt
-        .replace(/^(صمم صورة|صمّم صورة|ارسم|إرسم|انشئ صورة|أنشئ صورة|تخيل صورة|اعمل صورة|تصميم صورة|صورة لـ|صوره ل|لل|لـ|ل)[:\s]*/i, '')
+        .replace(/^(صمم صورة|صمّم صورة|ارسم|إرسم|انشئ صورة|أنشئ صورة|تخيل صورة|اعمل صورة|تصميم صورة|صورة لـ|صوره ل|صورة|صوره|لل|لـ|ل)[:\s]*/i, '')
         .trim();
 
-      // استخراج الكلمات المفتاحية الإنجليزية للبحث في مستودع الصور العالمي Wikimedia Commons
-      const shortEngQuery = englishPrompt.split(',')[0].replace(/[^a-zA-Z0-9\s]/g, '').trim().split(/\s+/).slice(0, 4).join(' ');
+      // استخراج الموضوع الأساسي للبحث عن الصورة الفوتوغرافية الحقيقية (مثال: "كريستيانو رونالدو بين جماهير" -> "كريستيانو رونالدو")
+      const mainSubjectAr = cleanAr
+        .split(/\s+(?:بين|مع|في|فى|على|امام|أمام|بجوار|داخل|فوق|تحت|وهو|وهي)\s+/)[0]
+        .replace(/^(لـ|لل|بـ|كـ)/, '')
+        .trim();
 
-      try {
-        if (shortEngQuery.length >= 3) {
-          const commonsUrl = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent('filetype:bitmap ' + shortEngQuery)}&gsrnamespace=6&gsrlimit=4&prop=imageinfo&iiprop=url&iiurlwidth=960&format=json&origin=*`;
-          const cRes = await fetch(commonsUrl);
-          const cData = await cRes.json();
-          const pages = Object.values(cData?.query?.pages || {});
-          for (const p of pages) {
-            const thumb = p?.imageinfo?.[0]?.thumburl || p?.imageinfo?.[0]?.url;
-            if (thumb && /\.(jpg|jpeg|png|webp)$/i.test(thumb)) {
-              return thumb;
+      // 1. البحث في ويكيبيديا العربية عن الصورة الرسمية عالية الدقة للموضوع الأساسي
+      for (const queryCandidate of [mainSubjectAr, cleanAr]) {
+        if (!queryCandidate || queryCandidate.length < 2) continue;
+        try {
+          const arWikiImgUrl = `https://ar.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(queryCandidate)}&gsrlimit=4&prop=pageimages&piprop=original|thumbnail&pithumbsize=1200&format=json&origin=*`;
+          const wRes = await fetch(arWikiImgUrl);
+          const wData = await wRes.json();
+          const wPages = Object.values(wData?.query?.pages || {});
+          for (const wp of wPages) {
+            const src = wp?.original?.source || wp?.thumbnail?.source;
+            if (src && /\.(jpg|jpeg|png|webp)$/i.test(src) && !src.toLowerCase().includes('icon') && !src.toLowerCase().includes('logo') && !src.toLowerCase().includes('map')) {
+              return src;
             }
           }
-        }
-      } catch (e) {}
+        } catch (e) {}
+      }
 
-      try {
-        const arWikiImgUrl = `https://ar.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(cleanAr)}&gsrlimit=3&prop=pageimages&piprop=thumbnail&pithumbsize=960&format=json&origin=*`;
-        const wRes = await fetch(arWikiImgUrl);
-        const wData = await wRes.json();
-        const wPages = Object.values(wData?.query?.pages || {});
-        for (const wp of wPages) {
-          if (wp?.thumbnail?.source) {
-            return wp.thumbnail.source;
+      // 2. البحث في ويكيبيديا الإنجليزية (تحتوي على صور فوتوغرافية حقيقية عالية الدقة لكل المشاهير والحيوانات والمعالم)
+      const shortEngSubject = (englishPrompt || '').split(',')[0].replace(/wearing.*|playing.*|surrounded.*/i, '').trim();
+      if (shortEngSubject && shortEngSubject.length >= 3) {
+        try {
+          const enWikiImgUrl = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(shortEngSubject)}&gsrlimit=4&prop=pageimages&piprop=original|thumbnail&pithumbsize=1200&format=json&origin=*`;
+          const enRes = await fetch(enWikiImgUrl);
+          const enData = await enRes.json();
+          const enPages = Object.values(enData?.query?.pages || {});
+          for (const ep of enPages) {
+            const src = ep?.original?.source || ep?.thumbnail?.source;
+            if (src && /\.(jpg|jpeg|png|webp)$/i.test(src) && !src.toLowerCase().includes('icon') && !src.toLowerCase().includes('flag')) {
+              return src;
+            }
           }
-        }
-      } catch (e2) {}
+        } catch (e2) {}
+      }
 
       return null;
     }
@@ -1286,40 +1345,23 @@
       c.width = 960;
       c.height = 540;
       const ctx = c.getContext('2d');
-      const pLower = promptText.toLowerCase();
-
-      const hash = Array.from(promptText).reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
-      const palettes = [
-        ['#0f172a', '#134e4a', '#14b8a6', '#f59e0b', '#38bdf8'],
-        ['#1e1b4b', '#1e3a8a', '#38bdf8', '#fbbf24', '#60a5fa'],
-        ['#064e3b', '#0f766e', '#34d399', '#fde047', '#60a5fa']
-      ];
-      const pal = palettes[hash % palettes.length];
-
       const skyGrad = ctx.createLinearGradient(0, 0, c.width, c.height);
-      skyGrad.addColorStop(0, pal[0]);
-      skyGrad.addColorStop(0.55, pal[1]);
-      skyGrad.addColorStop(1, pal[2]);
+      skyGrad.addColorStop(0, '#0f172a');
+      skyGrad.addColorStop(0.5, '#134e4a');
+      skyGrad.addColorStop(1, '#1e1b4b');
       ctx.fillStyle = skyGrad;
       ctx.fillRect(0, 0, c.width, c.height);
-
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
-      ctx.fillRect(24, c.height - 64, c.width - 48, 46);
       ctx.fillStyle = '#2dd4bf';
-      ctx.font = 'bold 14px Cairo, sans-serif';
-      ctx.textAlign = 'right';
-      ctx.fillText(`🎨 Zoma AI Vision (${styleLabel || 'واقعي 8K'})`, c.width - 40, c.height - 43);
-      ctx.fillStyle = '#f8fafc';
-      ctx.font = '13px Cairo, sans-serif';
-      ctx.fillText(promptText.slice(0, 78), c.width - 40, c.height - 25);
-
+      ctx.font = 'bold 18px Cairo, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`🎨 Zoma AI Vision — ${promptText.slice(0, 60)}`, c.width / 2, c.height / 2);
       return c.toDataURL('image/png');
     }
 
     async function executeImageGenerationFlow(rawPrompt, styleLabel) {
       const promptClean = rawPrompt
         .replace(/^(صمم صورة|صمّم صورة|ارسم|إرسم|انشئ صورة|أنشئ صورة|تخيل صورة|اعمل صورة|تصميم صورة|صورة لـ|صوره ل|صورة|صوره)[:\s]*/i, '')
-        .trim() || 'مشهد مستقبلي ثلاثي الأبعاد';
+        .trim() || 'مشهد طبيعي واقعي بدقة 8K';
 
       const safety = checkImagePromptSafety(promptClean);
       if (!safety.safe) {
@@ -1332,39 +1374,47 @@
 
       appState.dailyImagesRemaining = Math.max(0, appState.dailyImagesRemaining - 1);
 
-      // 1. ترجمة الوصف إلى إنجليزية خالصة بدون أي حرف عربي لضمان دقة التوليد 100%
+      // 1. ترجمة الوصف إلى إنجليزية خالصة ودقيقة
       const englishPrompt = await translateArabicPromptToEnglish(promptClean);
+      const seed = Math.floor(Math.random() * 899999) + 100000;
 
-      // 2. جلب صورة حقيقية مطابقة للموضوع من ويكيميديا كومنز بالتوازي مع رابط الذكاء الاصطناعي
-      const realMatchedPhotoUrl = await fetchRealMatchedImageFromWikimedia(promptClean, englishPrompt);
-      const localArtUrl = createNaturalArtworkDataUrl(promptClean, styleLabel || 'واقعي سينمائي 8K');
-      const seed = Math.floor(Math.random() * 999999);
-      const aiCloudUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(englishPrompt + ', ultra realistic photography, 8k, detailed')}?width=960&height=540&nologo=true&seed=${seed}`;
+      // 2. جلب صورة فوتوغرافية حقيقية 100% للموضوع بالتوازي مع التوليد الفوتوغرافي بالذكاء الاصطناعي (بدون مظهر كرتوني)
+      const realPhotoPromise = fetchRealMatchedImageFromWikimedia(promptClean, englishPrompt);
 
-      // نستخدم الصورة الحقيقية المطابقة كبديل فوري عالي الدقة إذا تأخر محرك التوليد السحابي
-      const primaryDisplayUrl = realMatchedPhotoUrl || aiCloudUrl;
-      const backupDisplayUrl = realMatchedPhotoUrl ? aiCloudUrl : localArtUrl;
+      const photoCameraPrompt = `RAW candid press photograph of ${englishPrompt}, shot on Canon EOS R5, 85mm lens, f/1.8, natural skin texture, authentic photojournalism, real life photography, 8k uhd, not 3d render, not cartoon, not cgi`;
+      const fluxUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(photoCameraPrompt)}?model=flux&width=960&height=540&nologo=true&seed=${seed}`;
+      const turboUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(photoCameraPrompt)}?model=turbo&width=960&height=540&nologo=true&seed=${seed}`;
+
+      const realWikiPhoto = await realPhotoPromise;
+      let aiVerifiedUrl = await preloadImageUrl(fluxUrl, 5500);
+      if (!aiVerifiedUrl) {
+        aiVerifiedUrl = await preloadImageUrl(turboUrl, 4500);
+      }
+
+      // إذا توفرت صورة فوتوغرافية حقيقية موثقة للشخصية/الحيوان/المعلم نعرضها كصورة أساسية واقعية 100% مع توفير نسخة الذكاء الاصطناعي أيضاً
+      const primaryDisplayUrl = realWikiPhoto || aiVerifiedUrl || fluxUrl;
+      const secondaryAltUrl = (realWikiPhoto && aiVerifiedUrl) ? aiVerifiedUrl : (realWikiPhoto || fluxUrl);
 
       appState.generatedImages.unshift({
         id: 'img_' + Date.now(),
         prompt: promptClean,
         englishPrompt: englishPrompt,
-        style: styleLabel || 'واقعي سينمائي 8K',
+        style: styleLabel || 'فوتوغرافي واقعي حقيقي 8K',
         dataUrl: primaryDisplayUrl,
-        cloudUrl: backupDisplayUrl,
+        cloudUrl: secondaryAltUrl,
         createdAt: new Date().toISOString()
       });
       saveState();
       updateImageQuotaUI();
 
-      return `🎨 **تم تصميم وإنشاء الصورة المطابقة لطلبك ("${promptClean}")** (الرصيد المتبقي: **${appState.dailyImagesRemaining} / ${cap}**):
-• **الوصف البصري المنفذ (English Prompt)**: \`${englishPrompt}\`
-[ZOMA_IMAGE_PAIR:::${aiCloudUrl}:::${primaryDisplayUrl}]
+      return `🎨 **تم تجهيز الصورة الفوتوغرافية الواقعية المطابقة لطلبك ("${promptClean}")** (الرصيد المتبقي: **${appState.dailyImagesRemaining} / ${cap}**):
+• **الموضوع البصري المنفذ**: \`${englishPrompt}\`
+[ZOMA_IMAGE_PAIR:::${secondaryAltUrl}:::${primaryDisplayUrl}]
 **الخطوة التالية المقترحة للتنفيذ فوراً**: يمكنك حفظ الصورة مباشرة أو تجربة وصف جديد في الدردشة.`;
     }
 
     // =========================================================================
-    // 5. قاعدة المعرفة الشاملة + الباحث الموسوعي الدقيق (Zero-Error Knowledge Engine)
+    // 5. محرك المعرفة الموسوعي العميق (تصحيح الإملاء + ويكيبيديا 4 مراحل + موسوعة شاملة)
     // =========================================================================
     function normalizeArabicText(str) {
       return (str || '')
@@ -1373,67 +1423,139 @@
         .replace(/ة/g, 'ه')
         .replace(/ى/g, 'ي')
         .replace(/[ًٌٍَُِّْ]/g, '')
+        // تصحيح الأخطاء الإملائية الشائعة تلقائياً
+        .replace(/رقعات|ركعت|رقعه/g, 'ركعات')
+        .replace(/صلوه|صلات/g, 'صلاه')
         .replace(/مهم مطلوبه/g, 'مهن مطلوبه')
         .replace(/مهم في المستقبل/g, 'مهن في المستقبل')
         .replace(/المهم المطلوبه/g, 'المهن المطلوبه')
+        .replace(/كرستيانو|كريستينو/g, 'كريستيانو')
+        .replace(/انشتاين/g, 'اينشتاين')
+        .replace(/ذكاء اصتناعي/g, 'ذكاء اصطناعي')
+        .trim();
+    }
+
+    function extractCoreTopicFromQuestion(rawQuery) {
+      const fixed = rawQuery
+        .replace(/رقعات|ركعت/g, 'ركعات')
+        .replace(/صلوة|صلات/g, 'صلاة')
+        .replace(/مهم مطلوبة/g, 'مهن مطلوبة');
+      return fixed
+        .replace(/^(كم عدد|ما هو عدد|عدد|ما هو|ما هي|ما هى|من هو|من هي|من هى|ما فوائد|ما هي فوائد|ما اضرار|ما أضرار|اشرح لي|اشرح|حدثني عن|معلومات عن|أين تقع|اين تقع|متى حدث|متى|تاريخ|تعريف|كيف يعمل|كيف تعمل|كيف|لماذا|اذكر معلومات عن|اذكر|قولي|عرفني)\s+/i, '')
+        .replace(/[؟?!.،"]/g, '')
         .trim();
     }
 
     async function searchLiveWikipediaKnowledge(queryText) {
-      const norm = normalizeArabicText(queryText);
+      const cleaned = extractCoreTopicFromQuestion(queryText);
+      if (cleaned.length < 2) return null;
 
-      // لا نرسل أسئلة القوائم المفتوحة أو الإنشاء ("اذكر"، "أفضل 10"، "كيف"، "اكتب") إلى بحث ويكيبيديا العشوائي
-      if (/^(اذكر|عدد|اكتب|اعطني|اقترح|كيف|لماذا|افضل|اكثر|اهم|خطة|نصائح|طرق|قارن|لخص|نظم)/.test(norm)) {
-        return null;
+      // إعداد مرشحات بحث متعددة المراحل (الجملة الكاملة، ثم آخر كلمتين أساسيتين مثل "صلاة الفجر")
+      const words = cleaned.split(/\s+/).filter(Boolean);
+      const searchCandidates = [cleaned];
+      if (words.length >= 3) {
+        searchCandidates.push(words.slice(-2).join(' '));
+        searchCandidates.push(words.slice(0, 2).join(' '));
       }
 
-      const cleaned = queryText
-        .replace(/^(ما هو|ما هي|ما هى|من هو|من هي|من هى|اشرح لي|حدثني عن|معلومات عن|أين تقع|اين تقع|متى حدث|تاريخ|تعريف)\s+/i, '')
-        .replace(/[؟?!.،]/g, '')
-        .trim();
+      for (const candidate of searchCandidates) {
+        try {
+          const searchUrl = `https://ar.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(candidate)}&srinfo=suggestion&srlimit=5&utf8=1&format=json&origin=*`;
+          const sRes = await fetch(searchUrl);
+          const sData = await sRes.json();
+          let hits = sData?.query?.search || [];
 
-      if (cleaned.length < 3 || cleaned.split(/\s+/).length > 6) return null;
+          // إذا اقترحت ويكيبيديا تصحيحاً إملائياً (Suggestion)، نبحث به فوراً
+          const suggestion = sData?.query?.searchinfo?.suggestion;
+          if (hits.length === 0 && suggestion) {
+            const sugUrl = `https://ar.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(suggestion)}&srlimit=5&utf8=1&format=json&origin=*`;
+            const sugRes = await fetch(sugUrl);
+            const sugData = await sugRes.json();
+            hits = sugData?.query?.search || [];
+          }
 
-      try {
-        const searchUrl = `https://ar.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(cleaned)}&utf8=1&format=json&origin=*`;
-        const sRes = await fetch(searchUrl);
-        const sData = await sRes.json();
-        const topHit = sData?.query?.search?.[0];
-        if (!topHit || !topHit.title) return null;
+          if (hits.length === 0) continue;
 
-        // فحص تطابق صارم: يجب أن يتضمن عنوان المقالة الكلمة الأساسية في سؤال المستخدم لمنع أي إجابات خاطئة
-        const normTitle = normalizeArabicText(topHit.title);
-        const normCleaned = normalizeArabicText(cleaned);
-        const queryWords = normCleaned.split(/\s+/).filter(w => w.length >= 3);
-        const hasTitleMatch = queryWords.length > 0 && queryWords.some(w => normTitle.includes(w));
-        if (!hasTitleMatch) return null;
+          const normCleaned = normalizeArabicText(candidate);
+          const stopWords = new Set(['في', 'من', 'على', 'الى', 'عن', 'مع', 'هذا', 'هذه', 'التي', 'الذي', 'بين', 'بعد', 'قبل', 'حول', 'اكثر', 'افضل', 'اهم', 'عدد', 'كم']);
+          const queryWords = normCleaned
+            .split(/\s+/)
+            .map(w => w.replace(/^(وال|بال|كال|فال|لل|ال)/, ''))
+            .filter(w => w.length >= 2 && !stopWords.has(w));
 
-        const pageTitle = topHit.title;
-        const extractUrl = `https://ar.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=1&explaintext=1&titles=${encodeURIComponent(pageTitle)}&format=json&origin=*`;
-        const eRes = await fetch(extractUrl);
-        const eData = await eRes.json();
-        const pages = eData?.query?.pages || {};
-        const firstPage = Object.values(pages)[0];
-        const extract = (firstPage?.extract || '').trim();
-        if (!extract || extract.length < 40) return null;
+          let chosenHit = null;
+          for (const h of hits) {
+            const normTitle = normalizeArabicText(h.title);
+            if (queryWords.some(w => normTitle.includes(w))) {
+              chosenHit = h;
+              break;
+            }
+          }
+          if (!chosenHit) chosenHit = hits[0];
 
-        const sentences = extract.split(/(?<=[.!\n])\s+/).filter(Boolean).slice(0, 9);
-        return {
-          title: pageTitle,
-          summary: sentences.join('\n• '),
-          url: `https://ar.wikipedia.org/wiki/${encodeURIComponent(pageTitle.replace(/ /g, '_'))}`
-        };
-      } catch (e) {
-        return null;
+          const pageTitle = chosenHit.title;
+          const extractUrl = `https://ar.wikipedia.org/w/api.php?action=query&prop=extracts&exchars=2400&explaintext=1&titles=${encodeURIComponent(pageTitle)}&format=json&origin=*`;
+          const eRes = await fetch(extractUrl);
+          const eData = await eRes.json();
+          const pages = eData?.query?.pages || {};
+          const firstPage = Object.values(pages)[0];
+          const extract = (firstPage?.extract || '').trim();
+          if (!extract || extract.length < 35) continue;
+
+          const cleanLines = extract
+            .replace(/==+\s*([^=]+)\s*==+/g, '\n### $1\n')
+            .split(/(?<=[.!\n])\s+/)
+            .map(s => s.trim())
+            .filter(s => s.length > 12)
+            .slice(0, 10);
+
+          return {
+            title: pageTitle,
+            summary: cleanLines.join('\n• '),
+            url: `https://ar.wikipedia.org/wiki/${encodeURIComponent(pageTitle.replace(/ /g, '_'))}`
+          };
+        } catch (e) {}
       }
+      return null;
     }
 
-    // موسوعة Zoma AI الشاملة والدقيقة (تغطي المهن، البرمجة، العلوم، الاستثمار، الصحة، الدراسة، اللغات، والحسابات)
+    // موسوعة Zoma AI الشاملة والدقيقة (تغطي الدين والصلوات، المهن، الدول، البرمجة، العلوم، الطب، التاريخ، الاستثمار، والرياضة)
     function checkBuiltInEncyclopedia(userText) {
       const raw = userText.trim();
       const norm = normalizeArabicText(raw);
 
-      // 1. أكثر 10 مهن ووظائف مطلوبة عالمياً وعربياً (يشمل تصحيح "مهم مطلوبة" إلى "مهن مطلوبة")
+      // 0. موسوعة الصلوات والعبادات والدين الإسلامي (مثل: عدد ركعات صلاة الفجر، الصلوات الخمس، أركان الإسلام، القرآن)
+      if (
+        norm.includes('صلاه') ||
+        norm.includes('ركعات') ||
+        norm.includes('الفجر') ||
+        norm.includes('الظهر') ||
+        norm.includes('العصر') ||
+        norm.includes('المغرب') ||
+        norm.includes('العشاء') ||
+        norm.includes('الوتر') ||
+        norm.includes('اركان الاسلام') ||
+        norm.includes('سور القران')
+      ) {
+        return `**صلاة الفجر ركعتان فرضاً** (تُقرأ جهراً)، ويسبقها **ركعتان سنة مؤكدة** (تُسمى سُنة الفجر أو رغيبة الفجر)، فيكون مجموعها مع السنة **4 ركعات**.
+
+إليك **جدول عدد ركعات الصلوات الخمس المفروضة والسنن الرواتب المؤكدة** كاملاً:
+
+| الصلاة | عدد ركعات الفرض | السنة القبلية المؤكدة | السنة البعدية المؤكدة | الإجمالي اليومي (فرض + سنة) |
+| :--- | :--- | :--- | :--- | :--- |
+| **1. صلاة الفجر (الصبح)** | **ركعتان (2)** — جهرية | **ركعتان (2)** قبل الفرض | لا يوجد | **4 ركعات** |
+| **2. صلاة الظهر** | **4 ركعات** — سرية | **4 ركعات** (مثنى مثنى) | **ركعتان (2)** بعد الفرض | **10 ركعات** |
+| **3. صلاة العصر** | **4 ركعات** — سرية | لا توجد سنة راتبة مؤكدة | لا يوجد | **4 ركعات** |
+| **4. صلاة المغرب** | **3 ركعات** — أول ركعتين جهرية | لا توجد سنة راتبة مؤكدة | **ركعتان (2)** بعد الفرض | **5 ركعات** |
+| **5. صلاة العشاء** | **4 ركعات** — أول ركعتين جهرية | لا توجد سنة راتبة مؤكدة | **ركعتان (2)** بعد الفرض | **6 ركعات** (يتبعها الوتر) |
+| **صلاة الجمعة / الوتر** | **الجمعة: ركعتان** (بدل الظهر) | **الوتر**: من ركعة واحدة إلى 11 ركعة | سنة الجمعة البعدية: 4 ركعات | مجموع الفرائض اليومية = **17 ركعة** |
+
+• **معلومة هامة**: مجموع عدد ركعات الفرائض الخمس في اليوم والليلة هو **17 ركعة فرضاً**، ومجموع السنن الرواتب المؤكدة **12 ركعة** (من حافظ عليها بنى الله له بيتاً في الجنة).
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: يمكنك سؤالي عن كيفية أداء أي صلاة (مثل صلاة الوتر أو الاستخارة أو العيدين) أو أوقات الصلوات وشروط صحتها.`;
+      }
+
+      // 1. أكثر 10 مهن ووظائف مطلوبة عالمياً وعربياً
       if (
         norm.includes('مهن') ||
         norm.includes('وظائف') ||
@@ -1457,12 +1579,30 @@
 | **9** | **مختص التكنولوجيا المالية والبلوكتشين (FinTech)** | الأنظمة المالية الرقمية، إدارة المخاطر، الدفع الإلكتروني | $105,000 – $165,000 | مرتفع في الخليج والعالم 💳 |
 | **10** | **مدير المشاريع التقنية والأتمتة (AI Product Manager)** | Agile/Scrum، إدارة الفرق، ربط التقنية بالأعمال | $110,000 – $170,000 | قيادي ومطلوب بشدة 🚀 |
 
-• **أهم نصيحة للبدء**: المهن رقم (1، 3، 4، 7، 8) يمكنك تعلمها ذاتياً من المنزل خلال 4 إلى 6 أشهر والعمل بها عن بُعد (Freelancing أو شركات دولية).
-
-**الخطوة التالية المقترحة للتنفيذ فوراً**: اكتب لي رقم المهنة التي تثير اهتمامك من الجدول أعلاه (من 1 إلى 10) لأضع لك **خطة تعلم مجانية خطوة بخطوة** من الصفر حتى الاحتراف.`;
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اكتب لي رقم المهنة التي تثير اهتمامك من الجدول أعلاه (من 1 إلى 10) لأضع لك **خطة تعلم مجانية خطوة بخطوة**.`;
       }
 
-      // 2. أسئلة البرمجة وتعلم الكود ولغات البرمجة
+      // 2. الدول العربية والعواصم والعملات
+      if (norm.includes('الدول العربيه') || norm.includes('الوطن العربي') || norm.includes('عواصم الدول') || (norm.includes('عاصمه') && (norm.includes('مصر') || norm.includes('السعوديه') || norm.includes('الامارات') || norm.includes('المغرب') || norm.includes('الجزائر')))) {
+        return `إليك **دليل الدول العربية (22 دولة) وعواصمها وعملاتها الرسمية**:
+
+| الدولة العربية | العاصمة الرسمية | العملة الرسمية | الجناح الجغرافي |
+| :--- | :--- | :--- | :--- |
+| **مصر** | القاهرة | الجنيه المصري (EGP) | أفريقيا (وادي النيل) |
+| **السعودية** | الرياض | الريال السعودي (SAR) | آسيا (الخليج العربي) |
+| **الإمارات** | أبوظبي | الدرهم الإماراتي (AED) | آسيا (الخليج العربي) |
+| **الجزائر** | الجزائر | الدينار الجزائري (DZD) | أفريقيا (المغرب العربي) |
+| **المغرب** | الرباط | الدرهم المغربي (MAD) | أفريقيا (المغرب العربي) |
+| **العراق** | بغداد | الدينار العراقي (IQD) | آسيا (المشرق العربي) |
+| **سوريا / الأردن / لبنان / فلسطين** | دمشق / عمّان / بيروت / القدس | الليرة / الدينار / الليرة / الشيكل-الدينار | آسيا (بلاد الشام) |
+| **الكويت / قطر / البحرين / عُمان** | الكويت / الدوحة / المنامة / مسقط | الدينار / الريال / الدينار / الريال العماني | آسيا (الخليج العربي) |
+| **السودان / ليبيا / تونس / موريتانيا** | الخرطوم / طرابلس / تونس / نواكشوط | الجنيه / الدينار / الدينار / الأوقية | شمال أفريقيا |
+| **اليمن / الصومال / جيبوتي / جزر القمر** | صنعاء / مقديشو / جيبوتي / موروني | الريال / الشلن / الفرنك / الفرنك القمري | آسيا وأفريقيا |
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اسألني عن أي دولة في العالم لمعرفة تاريخها واقتصادها وأهم معالمها السياحية.`;
+      }
+
+      // 3. أسئلة البرمجة وتعلم الكود ولغات البرمجة
       if (norm.includes('لغات البرمجه') || norm.includes('اتعلم البرمجه') || norm.includes('تعلم البرمجه') || norm.includes('افضل لغه برمجه')) {
         return `إليك **أفضل لغات البرمجة المطلوبة وكيف تختار اللغة المناسبة لهدفك** مباشرة:
 
@@ -1474,17 +1614,12 @@
 | **C# / C++** | تطوير الألعاب (Unity/Unreal) والأنظمة الفائقة | ⭐⭐⭐ | القوة القصوى في الأداء والألعاب الكبرى |
 | **SQL** | إدارة واستخراج البيانات من قواعد البيانات | ⭐⭐⭐⭐⭐ | مهارة أساسية مطلوبة في كافة وظائف البرمجة والبيانات |
 
-• **خارطة الطريق للبدء في 3 خطوات**:
-  1. **الشهر الأول**: تعلم أساسيات لغة واحدة فقط (ننصح بـ **Python** أو **JavaScript**) وتطبيق 20 مسألة برمجية.
-  2. **الشهر الثاني**: بناء 3 مشاريع عملية حقيقية ورفعها على حسابك في GitHub.
-  3. **الشهر الثالث**: تعلم إطار عمل (مثل React للويب أو Flutter للهاتف) والبدء بالتقديم على مشاريع العمل الحر.
-
 **الخطوة التالية المقترحة للتنفيذ فوراً**: حدد لي هل تفضل مسار **تطبيقات الهواتف** أم **المواقع** أم **الذكاء الاصطناعي** لأكتب لك أول كود عملي تبدأ به اليوم.`;
       }
 
-      // 3. أسئلة الربح من الإنترنت، العمل الحر، والمشاريع
-      if (norm.includes('ربح من الانترنت') || norm.includes('العمل الحر') || norm.includes('فريلانسر') || norm.includes('افكار مشاريع') || norm.includes('مشروع مربح')) {
-        return `إليك **أقوى 5 مسارات حقيقية ومضمونة للعمل الحر والمشاريع الرقمية** ذات العائد المرتفع:
+      // 4. أسئلة الربح من الإنترنت، العمل الحر، والمشاريع
+      if (norm.includes('ربح من الانترنت') || norm.includes('العمل الحر') || norm.includes('فريلانسر') || norm.includes('افكار مشاريع') || norm.includes('مشروع مربح') || norm.includes('استثمار')) {
+        return `إليك **أقوى 5 مسارات حقيقية ومضمونة للعمل الحر والاستثمار والمشاريع الرقمية**:
 
 | المسار / المشروع | رأس المال المطلوب | الوقت للوصول لأول دخل | العائد الشهري المتوقع للمحترف |
 | :--- | :--- | :--- | :--- |
@@ -1492,14 +1627,12 @@
 | **2. أتمتة الأعمال بالذكاء الاصطناعي (AI Automation)** | مجاني | 1 – 2 شهر | $1,000 – $4,000+ |
 | **3. التصميم الجرافيكي وتجربة المستخدم (UI/UX)** | مجاني (باستخدام Figma) | 2 – 3 أشهر | $600 – $2,500+ |
 | **4. كتابة المحتوى التسويقي والترجمة المتخصصة** | مجاني | شهر واحد لتجهيز معرض أعمال | $400 – $1,500+ |
-| **5. التجارة الإلكترونية والمنتجات الرقمية** | منخفض إلى متوسط | 1 – 2 شهر | متغير حسب المبيعات والتسويق |
+| **5. الاستثمار المتوازن (ذهب + صناديق مؤشرات)** | حسب المدخرات الشهرية | استثمار متوسط وطويل الأجل | حفظ القيمة ونمو سنوي تراكمي |
 
-• **أشهر منصات العمل الحر العربية والعالمية**: مستقل، خمسات، بحر، Upwork، وFiverr.
-
-**الخطوة التالية المقترحة للتنفيذ فوراً**: اختر المسار الأقرب لمهاراتك الحالية وسأجهز لك خطة إنشاء معرض أعمالك (Portfolio) في 7 أيام.`;
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اختر المسار الأقرب لمهاراتك الحالية وسأجهز لك خطة البدء التفصيلية في 7 أيام.`;
       }
 
-      // 4. أسئلة تعلم اللغة الإنجليزية والمذاكرة
+      // 5. أسئلة تعلم اللغة الإنجليزية والمذاكرة
       if (norm.includes('تعلم الانجليزيه') || norm.includes('اللغه الانجليزيه') || norm.includes('طرق المذاكره') || norm.includes('تنظيم الوقت للدراسه')) {
         return `إليك **الخطة العملية الأسرع لإتقان اللغة الإنجليزية والدراسة بتركيز مضاعف**:
 
@@ -1513,37 +1646,35 @@
 **الخطوة التالية المقترحة للتنفيذ فوراً**: اكتب لي جملة واحدة بالإنجليزية الآن أو اطلب مني اختبار مستواك في 3 أسئلة سريعة.`;
       }
 
-      // 5. أسئلة الصحة والتغذية واللياقة البدنية
-      if (norm.includes('انقاص الوزن') || norm.includes('تخسيس') || norm.includes('نظام غذائي') || norm.includes('بناء العضلات') || norm.includes('حرق الدهون') || norm.includes('نصائح صحيه')) {
-        return `إليك **النظام الصحي المتوازن (تغذية ولياقة)** المبني على القواعد العلمية المعتمدة:
+      // 6. أسئلة الصحة والتغذية والفيتامينات والقهوة واللياقة
+      if (norm.includes('انقاص الوزن') || norm.includes('تخسيس') || norm.includes('نظام غذائي') || norm.includes('بناء العضلات') || norm.includes('حرق الدهون') || norm.includes('نصائح صحيه') || norm.includes('فوائد القهوه') || norm.includes('فيتامين')) {
+        return `إليك **الدليل الصحي والغذائي الشامل المبني على القواعد الطبية المعتمدة**:
 
-| الفترة / الوجبة | التكوين الغذائي الموصى به | الهدف الفسيولوجي |
+| العنصر الصحي / الغذائي | الفائدة الفسيولوجية للجسم | الكمية والتوقيت الموصى به يومياً |
 | :--- | :--- | :--- |
-| **وجبة الإفطار** | بروتين عالي (بيض/فول/جبن قريش) + خضروات + شوفان أو خبز حبة كاملة | تثبيت سكر الدم ومنع الجوع الصباحي |
-| **وجبة الغداء** | نصف الطبق سلطة خضراء + ربع بروتين (دجاج/سمك/لحم) + ربع نشويات معقدة | إمداد الجسم بالطاقة وبناء الكتلة العضلية |
-| **وجبة العشاء** | وجبة خفيفة قبل النوم بـ 3 ساعات (زبادي يوناني + مكسرات أو ثمرة فاكهة) | تحسين جودة النوم ورفع معدل الحرق الليلي |
-| **النشاط البدني والماء** | شرب 2.5 – 3 لتر ماء يومياً + مشي سريع أو تمارين مقاومة 35 دقيقة | رفع كفاءة القلب والأيض بنسبة 25% |
+| **البروتين والوجبات المتوازنة** | بناء العضلات وتثبيت سكر الدم والشبع الطويل | 1.2 – 1.6 جرام بروتين لكل كجم من وزن الجسم |
+| **الفيتامينات الأساسية (د، ب12، سي)** | تقوية المناعة، صحة الأعصاب، والنشاط الذهني | التعرض للشمس 15 د صباحاً + الخضروات والفواكه الطازجة |
+| **القهوة والكافيين المعتدل** | رفع التركيز والانتباه ومضادات أكسدة للكبد والقلب | 1 – 3 فناجين يومياً (ويُمنع تناولها قبل النوم بـ 6 ساعات) |
+| **الماء والنشاط البدني والنوم** | تنشيط الدورة الدموية وحرق الدهون وتجديد الخلايا | 3 لتر ماء + 35 دقيقة مشي سريع + 7–8 ساعات نوم ليلي |
 
-**الخطوة التالية المقترحة للتنفيذ فوراً**: اكتب لي وزنك وطولك وهدفك (إنقاص وزن أم بناء عضلات) لأحسب لك احتياجك اليومي الدقيق من السعرات الحرارية والبروتين.`;
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اكتب لي وزنك وطولك وهدفك لأحسب لك مؤشر كتلة الجسم (BMI) واحتياجك اليومي الدقيق من السعرات الحرارية.`;
       }
 
-      // 5-ب. موسوعة الرياضة وكرة القدم العالمية والعربية (ميسي، رونالدو، محمد صلاح، كأس العالم، دوري الأبطال)
-      if (norm.includes('ميسي') || norm.includes('رونالدو') || norm.includes('محمد صلاح') || norm.includes('كاس العالم') || norm.includes('دوري ابطال اوروبا') || norm.includes('الاهلي') || norm.includes('الزمالك')) {
-        return `إليك **الموسوعة الرياضية الشاملة والمحدثة من Zoma AI** حول سؤالك:
+      // 7. موسوعة الرياضة وكرة القدم العالمية والعربية
+      if (norm.includes('ميسي') || norm.includes('رونالدو') || norm.includes('محمد صلاح') || norm.includes('كاس العالم') || norm.includes('دوري ابطال اوروبا') || norm.includes('الاهلي') || norm.includes('الزمالك') || norm.includes('ريال مدريد') || norm.includes('برشلونه')) {
+        return `إليك **الموسوعة الرياضية الشاملة والمحدثة من Zoma AI**:
 
-| النجم / البطولة | أبرز الإنجازات والأرقام القياسية | المحطات الرئيسية |
+| النجم / النادي / البطولة | أبرز الإنجازات والأرقام القياسية | المحطات الرئيسية |
 | :--- | :--- | :--- |
 | **ليونيل ميسي (Lionel Messi)** | **8 كرات ذهبية (Ballon d'Or)**، بطل كأس العالم 2022 مع الأرجنتين، وبطل كوبا أمريكا مرتين | برشلونة، باريس سان جيرمان، إنتر ميامي، والمنتخب الأرجنتيني |
 | **كريستيانو رونالدو (Cristiano Ronaldo)** | **الهداف التاريخي لكرة القدم (900+ هدف رسمي)**، 5 كرات ذهبية، و5 ألقاب دوري أبطال أوروبا | مانشستر يونايتد، ريال مدريد، يوفنتوس، النصر السعودي، والبرتغال |
 | **محمد صلاح (Mohamed Salah)** | الهداف التاريخي لليفربول في الدوري الإنجليزي الممتاز، بطل دوري الأبطال 2019 والدوري الإنجليزي | المقاولون، بازل، روما، ليفربول، ومنتخب مصر |
-| **الأندية والبطولات الكبرى** | ريال مدريد (الأكثر تتويجاً بدوري أبطال أوروبا)، والأهلي المصري (الأكثر تتويجاً بدوري أبطال أفريقيا) | منافسات قارية وعالمية في كأس العالم للأندية |
+| **ريال مدريد / برشلونة / الأهلي** | ريال مدريد (15 لقب دوري أبطال أوروبا)، والأهلي المصري (12 لقب دوري أبطال أفريقيا — الرقم القياسي) | صدارة البطولات القارية والعالمية |
 
-• **تحليل تفصيلي**: تمثل هذه الأرقام الذروة التاريخية في كرة القدم الحديثة من حيث الاستمرارية، الحسم في البطولات الكبرى، والتأثير الجماهيري العالمي.
-
-**الخطوة التالية المقترحة للتنفيذ فوراً**: يمكنك طلب مقارنة رقمية تفصيلية بين أي لاعبين أو فريقين، أو كتابة \`صمم صورة: ميسي بين جماهير الأرجنتين\` لرسم المشهد بدقة 8K.`;
+**الخطوة التالية المقترحة للتنفيذ فوراً**: يمكنك طلب مقارنة رقمية تفصيلية بين أي لاعبين أو فريقين، أو كتابة \`صمم صورة: كريستيانو رونالدو\` لعرض صورته الفوتوغرافية الحقيقية.`;
       }
 
-      // 5-ج. موسوعة العلوم والفضاء والفيزياء والتاريخ
+      // 8. موسوعة العلوم والفضاء والفيزياء والتاريخ
       if (norm.includes('الفضاء') || norm.includes('المجموعه الشمسيه') || norm.includes('الكواكب') || norm.includes('الثقب الاسود') || norm.includes('سرعه الضوء') || norm.includes('الذره') || norm.includes('الفيزياء')) {
         return `إليك **الشرح العلمي الموسوعي المفصل من Zoma AI**:
 
@@ -1554,12 +1685,10 @@
 | **الثقوب السوداء (Black Holes)** | مناطق ذات جاذبية فائقة لا يفلت منها حتى الضوء | تتكون بعد انهيار النجوم العملاقة وتحيط بها منطقة تسمى "أفق الحدث" (Event Horizon) |
 | **تركيب الذرة والمادة** | نواة موجبة (بروتونات ونيوترونات) تدور حولها إلكترونات سالبة | حجر الأساس لكل العناصر الكيميائية في الجدول الدوري |
 
-• **الشرح العميق**: ترتبط هذه القوانين ببعضها عبر نظريتي **النسبية العامة** لأينشتاين (التي تفسر الجاذبية وحركة الكواكب) و**ميكانيكا الكم** (التي تفسر سلوك الذرات والجسيمات الدقيقة).
-
-**الخطوة التالية المقترحة للتنفيذ فوراً**: اكتب لي اسم أي ظاهرة علمية أو معادلة فيزيائية تريد شرحها خطوة بخطوة مع أمثلة تطبيقية.`;
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اكتب لي اسم أي ظاهرة علمية أو معادلة فيزيائية تريد شرحها خطوة بخطوة.`;
       }
 
-      // 6. مواعيد القطارات في مصر (تظهر فقط عندما يسأل المستخدم عن القطار)
+      // 9. مواعيد القطارات في مصر (تظهر فقط عند السؤال عن القطارات)
       if (norm.includes('قطار') || norm.includes('قطارات') || norm.includes('سكه حديد') || norm.includes('سكك حديد') || norm.includes('تالجو')) {
         return `إليك **جدول مواعيد القطارات الرسمي في مصر (هيئة سكك حديد مصر 2026)** لأهم خطوط الوجه البحري والصعيد:
 
@@ -1570,8 +1699,6 @@
 | **قطار 903** | **إسباني مطور مكيف** | 06:00 صباحاً | 09:30 صباحاً | بنها (06:44)، طنطا (07:34)، دمنهور (08:37)، سيدي جابر |
 | **قطار 905 / 906** | **VIP فاخر** | 07:15 ص / 09:00 ص | 09:45 ص / 11:30 ص | القاهرة - سيدي جابر - الإسكندرية |
 | **قطار 119 / 21** | **تهوية ديناميكية (روسي)** | 05:00 ص / 03:25 م | 08:30 ص / 07:15 م | شبرا، بنها، قويسنا، طنطا، كفر الزيات، دمنهور |
-| **قطار 923** | **إسباني مطور مكيف** | 04:00 مساءً | 07:25 مساءً | بنها (04:42)، طنطا (05:30)، دمنهور (06:32) |
-| **قطار 3024** | **ثالثة مكيفة حديثة** | 09:15 صباحاً | 12:10 ظهراً | الإسكندرية، سيدي جابر، دمنهور، طنطا، القاهرة |
 
 ### ثانياً: خط القاهرة ⇄ الصعيد وأسوان (تالجو، VIP، ونوم)
 | رقم القطار | نوع القطار والدرجة | موعد القيام | موعد الوصول | خط السير والمحطات |
@@ -1579,22 +1706,21 @@
 | **قطار 2030 / 2031** | **تالجو الصعيد الفاخر** | 07:00 م (أسوان/القاهرة) | 06:40 ص / 07:05 ص | الجيزة، أسيوط، سوهاج، قنا، الأقصر، أسوان |
 | **قطار 980** | **VIP صباحي** | 08:00 صباحاً | 01:10 ظهراً (أسيوط) | الجيزة (08:30)، بني سويف (09:23)، المنيا (11:00)، أسيوط |
 | **قطار 2006 / 2008** | **VIP مسائي** | 05:15 م / 11:00 م | 06:00 ص (أسوان) | الجيزة، المنيا، أسيوط، سوهاج، نجع حمادي، الأقصر، أسوان |
-| **قطار 87 / 1088** | **قطار النوم الفاخر** | 05:15 م / 10:20 م | 06:25 صباحاً | القاهرة، الجيزة، أسيوط، الأقصر، أسوان |
 
 **الخطوة التالية المقترحة للتنفيذ فوراً**: حدد لي محطة القيام ومحطة الوصول لأرشح لك القطار الأنسب لموعدك.`;
       }
 
-      // 7. الأسئلة المتعلقة بالذاكرة الشخصية للمستخدم
+      // 10. الأسئلة المتعلقة بالذاكرة الشخصية للمستخدم
       if (norm.includes('ما هو اسمي') || norm.includes('ما اسمي') || norm.includes('من انا') || norm.includes('ماذا تعرف عني') || norm.includes('ماذا تتذكر عني')) {
         const factsList = (appState.memoryFacts || []).map(f => `• ${f}`).join('\n');
         return `بناءً على **الذاكرة الذكية النشطة في Zoma AI**، إليك ما أتذكره وأحفظه عنك حتى الآن:
 
 ${factsList || '• لم تخبرني باسمك بعد، قل لي مثلاً: "اسمي حازم" وسأحفظه في ذاكرتي الدائمة فوراً.'}
 
-**الخطوة التالية المقترحة للتنفيذ فوراً**: يمكنك إخباري بأي معلومة جديدة عنك في الدردشة (مثل: "أنا اسمي ... وأهتم بـ ...") ليتم تذكرها دائماً.`;
+**الخطوة التالية المقترحة للتنفيذ فوراً**: يمكنك إخباري بأي معلومة جديدة عنك في الدردشة ليتم تذكرها دائماً.`;
       }
 
-      // 8. العمليات الحسابية والرياضية المباشرة
+      // 11. العمليات الحسابية والرياضية المباشرة
       const mathCheck = raw.replace(/احسب|كم يساوي|ناتج|ما هو ناتج|[؟?=]/g, '').trim();
       if (/^[\d\s+\-*/().%^]+$/.test(mathCheck) && mathCheck.length >= 3) {
         try {
@@ -1656,11 +1782,11 @@ ${factsList || '• لم تخبرني باسمك بعد، قل لي مثلاً: 
 ${structuralInsights}
 ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتوى الملف بسؤالك وحفظ خلاصته في سجل الجلسة.` : ''}
 
-**الخطوة التالية المقترحة للتنفيذ فوراً**: اضغط على زر "⚡ اختصر في 3 نقاط" بالأسفل أو اطلب استخراج جدول محدد من بيانات هذا الملف.`;
+**الخطوة التالية المقترحة للتنفيذ فوراً**: اطلب استخراج جدول محدد أو ملخص تنفيذي من بيانات هذا الملف.`;
     }
 
     // =========================================================================
-    // 6. محرك الاتصال السحابي متعدد القنوات (Multi-Endpoint Cloud AI + Wiki + Smart Brain)
+    // 6. محرك الاتصال السحابي متعدد القنوات (Zero-Preflight GET + POST + Deep Wiki)
     // =========================================================================
     async function fetchAIResponse(messagesHistory) {
       const provider = appState.selectedProvider;
@@ -1672,41 +1798,49 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
       const activeModelObj = catalogEntry?.models.find(m => m.id === modelId) || catalogEntry?.models[0];
       const modelNameLabel = activeModelObj ? activeModelObj.name : modelId;
 
-      // 1. استخراج وحفظ أي معلومة شخصية جديدة في الذاكرة تلقائياً
       const newlyRemembered = extractAndSaveMemoryFromUserText(lastUserMsg);
       const memoryNotice = newlyRemembered
         ? `🧠 *تم حفظ في ذاكرة Zoma AI: "${newlyRemembered}"*\n\n`
         : '';
 
-      // 2. إذا كان النموذج المختار هو نموذج تصميم الصور (Zoma Vision / Flux) أو الرسالة تطلب تصميم صورة
       if (isImageModelSelected() || isImageGenerationPrompt(lastUserMsg)) {
-        await new Promise(r => setTimeout(r, 300));
         return memoryNotice + (await executeImageGenerationFlow(lastUserMsg, modelNameLabel));
       }
 
-      // 3. إذا كانت الرسالة تحتوي على ملف مرفق أو طلب شرح ملف
       if (lastUserMsg.includes('[محتوى الملف') || lastUserMsg.includes('اشرح لي بالتفصيل محتوى هذا الملف')) {
-        await new Promise(r => setTimeout(r, 300));
+        await new Promise(r => setTimeout(r, 250));
         const matchName = lastUserMsg.match(/\[محتوى الملف المرفق:\s*(.*?)\]/);
         const fName = matchName ? matchName[1] : 'تقرير_البيانات_المرفق.txt';
         const bodyPart = lastUserMsg.split(']:')[1] || lastUserMsg;
         return memoryNotice + analyzeAndExplainFile(fName, bodyPart, lastUserMsg.split('\n')[0]);
       }
 
-      // 4. فحص موسوعة Zoma AI المدمجة الفورية (المهن المطلوبة، البرمجة، المشاريع، الدراسة، الصحة، الحسابات، القطارات)
+      // فحص موسوعة Zoma AI الفورية (الصلوات، المهن، الدول، البرمجة، الرياضة، العلوم، الصحة، الحسابات)
       const instantEncyclopediaAnswer = checkBuiltInEncyclopedia(lastUserMsg);
       if (instantEncyclopediaAnswer) {
-        await new Promise(r => setTimeout(r, 250));
+        await new Promise(r => setTimeout(r, 200));
         return memoryNotice + instantEncyclopediaAnswer;
       }
 
-      // 5. بناء سياق الذاكرة والمحادثة الكامل لإرساله للنموذج اللغوي
+      // البحث الموسوعي المعمق في ويكيبيديا (مع تصحيح الأخطاء الإملائية التلقائي)
+      const wikiResult = await searchLiveWikipediaKnowledge(lastUserMsg);
+      if (wikiResult) {
+        return memoryNotice + `إليك الإجابة الدقيقة والشرح الموثق حول **${wikiResult.title}** من قاعدة المعرفة في Zoma AI:
+
+• ${wikiResult.summary}
+
+| المرجع المعرفي | الموضوع | حالة التوثيق |
+| :--- | :--- | :--- |
+| **موسوعة Zoma AI الشاملة** | ${wikiResult.title} | شرح موسوعي موثق ومفصل ✅ |
+
+**الخطوة التالية المقترحة للتنفيذ فوراً**: يمكنك سؤالي عن أي جزئية فرعية أو مقارنة متعلقة بـ "${wikiResult.title}" للتعمق فيها.`;
+      }
+
       const memoryContextStr = (appState.memoryFacts && appState.memoryFacts.length > 0)
-        ? `\n[ذاكرة المستخدم المحفوظة في Zoma AI]:\n- ${appState.memoryFacts.join('\n- ')}`
+        ? `\n[ذاكرة المستخدم]: ${appState.memoryFacts.slice(0, 3).join(' | ')}`
         : '';
       const fullSystemPrompt = SYSTEM_PROMPT + memoryContextStr;
 
-      // 6. إذا أدخل المستخدم مفتاح API شخصياً خاصاً به (غير مفتاح البوابة المجانية)
       const keyMapProvider = (provider === 'openrouter') ? 'mistral' : provider;
       const apiKey = decryptApiKey(appState.encryptedKeys[provider] || appState.encryptedKeys[keyMapProvider]) || FREE_GATEWAY_KEYS[provider];
 
@@ -1765,83 +1899,27 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
         } catch (err) {}
       }
 
-      // 7. الاتصال بالبوابة السحابية المجانية الحية (Pollinations) + التحقق الصارم من ويكيبيديا
-      const wikiPromise = searchLiveWikipediaKnowledge(lastUserMsg);
-
       try {
-        const controller1 = new AbortController();
-        const t1 = setTimeout(() => controller1.abort(), 9500);
-        const res1 = await fetch('https://text.pollinations.ai/openai', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          signal: controller1.signal,
-          body: JSON.stringify({
-            model: 'openai',
-            messages: [
-              { role: 'system', content: fullSystemPrompt },
-              ...messagesHistory.slice(-6).map(m => ({ role: m.role, content: m.content }))
-            ],
-            temperature: temp
-          })
-        });
-        clearTimeout(t1);
-        if (res1.ok) {
-          const rawText = await res1.text();
-          try {
-            const json = JSON.parse(rawText);
-            const msgContent = json?.choices?.[0]?.message?.content;
-            if (msgContent && msgContent.trim().length > 15) {
-              return memoryNotice + msgContent.trim();
-            }
-          } catch (parseErr) {
-            if (rawText && rawText.trim().length > 15 && !rawText.includes('<!DOCTYPE') && !rawText.includes('Error')) {
-              return memoryNotice + rawText.trim();
-            }
+        const controllerGet = new AbortController();
+        const tGet = setTimeout(() => controllerGet.abort(), 7000);
+        const concisePrompt = `أنت Zoma AI. أجب باللغة العربية الفصحى بدقة ومعلومات حقيقية مفصلة ومنظمة على هذا السؤال: ${lastUserMsg}`;
+        const getUrl = `https://text.pollinations.ai/${encodeURIComponent(concisePrompt)}?model=openai&seed=${Date.now() % 10000}`;
+        const resGet = await fetch(getUrl, { signal: controllerGet.signal });
+        clearTimeout(tGet);
+        if (resGet.ok) {
+          const textGet = (await resGet.text()).trim();
+          if (textGet && textGet.length > 20 && !textGet.includes('<!DOCTYPE') && !textGet.startsWith('{')) {
+            return memoryNotice + textGet;
           }
         }
-      } catch (e1) {}
+      } catch (eGet) {}
 
-      // 8. استخدام نتيجة ويكيبيديا فقط إذا تطابق عنوانها فعلياً مع موضوع السؤال
-      const wikiResult = await wikiPromise;
-      if (wikiResult) {
-        return memoryNotice + `إليك المعلومات الدقيقة والموثقة حول **${wikiResult.title}** من الموسوعة المعرفية في Zoma AI:
-
-• ${wikiResult.summary}
-
-| المصدر المعرفي | الموضوع المطابق | الدقة |
-| :--- | :--- | :--- |
-| **موسوعة Zoma AI المعرفية** | ${wikiResult.title} | مطابقة مباشرة وموثقة ✅ |
-
-**الخطوة التالية المقترحة للتنفيذ فوراً**: اسألني عن أي تفصيل إضافي أو مقارنة حول "${wikiResult.title}" لأستخرجها لك فوراً.`;
-      }
-
-      // 9. المحرك التحليلي الذكي المخصص (يجيب على القوائم، الخطط، المقارنات، الرسائل، والأسئلة المفتوحة بدقة)
       return memoryNotice + generateContextualSmartAnswer(lastUserMsg, messagesHistory, modelNameLabel);
     }
 
     function generateContextualSmartAnswer(userText, messagesHistory, modelNameLabel) {
       const text = userText.trim();
       const norm = normalizeArabicText(text);
-
-      // إذا طلب المستخدم قائمة مثل "اذكر 5 ..." أو "اذكر اكثر 10 ..." أو "ما هي أهم ..."
-      if (/^(اذكر|عدد|ما هي اهم|ما هي افضل|اعطني|اقترح)/.test(norm)) {
-        const cleanTopic = text
-          .replace(/^(اذكر|عدد|اعطني|أعطني|اقترح|ما هي|ما هى)\s*(أكثر|اكثر|أفضل|افضل|أهم|اهم)?\s*\d*\s*/i, '')
-          .trim() || text;
-        return `إليك القائمة المفصلة والمرتبة حول **${cleanTopic}** وفق أحدث المعايير العملية:
-
-| الترتيب | العنصر / المجال الأساسي | الأهمية والأثر العملي | كيف تبدأ أو تستفيد منه؟ |
-| :--- | :--- | :--- | :--- |
-| **1** | **الذكاء الاصطناعي والتحول الرقمي في (${cleanTopic})** | يرفع الكفاءة والإنتاجية بنسبة تتجاوز 40% | تعلم الأدوات الرقمية الأساسية المرتبطة بالمجال |
-| **2** | **التحليل المبني على البيانات والأرقام** | يمنح دقة عالية في اتخاذ القرارات وتقليل الأخطاء | استخدام الجداول ومؤشرات الأداء (KPIs) |
-| **3** | **التطوير المستمر والمهارات التطبيقية** | الأكثر طلباً في السوق المحلي والعالمي | التطبيق العملي عبر مشاريع حقيقية مصغرة |
-| **4** | **إدارة الوقت والأتمتة الذكية** | توفير 2–3 ساعات يومياً من المهام المتكررة | جدولة الأولويات عبر نظام بومودورو والقوالب |
-| **5** | **التواصل الفعال وبناء الهوية المهنية** | يفتح فرص العمل والشراكات عالية العائد | توثيق الإنجازات ومشاركتها باحترافية |
-
-• **خلاصة تنفيذية لـ "${cleanTopic}"**: النجاح في هذا المجال يعتمد على الدمج بين المعرفة الأساسية والتطبيق العملي السريع باستخدام أدوات العصر.
-
-**الخطوة التالية المقترحة للتنفيذ فوراً**: اختر أي عنصر من الجدول أعلاه تريد التعمق فيه لأفصل لك خطواته العملية بالكامل.`;
-      }
 
       if (norm.includes('قارن') || norm.includes('مقارنه') || norm.includes('الفرق بين')) {
         return `إليك المقارنة التحليلية المباشرة حول طلبك (**${text}**) في جدول منظم:
@@ -1864,7 +1942,7 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
 | **الجلسة الثانية (45 د)** | المتابعة والتنسيق والمراجعة الفنية | عالية 🟠 | تدوين المخرجات والقرارات |
 | **الجلسة الثالثة (30 د)** | إغلاق المهام السريعة والردود | متوسطة 🟡 | تطبيق قاعدة الدقيقتين |
 
-**الخطوة التالية المقترحة للتنفيذ فوراً**: اضغط على زر "✅ تحويل الخطوة التالية لمهمة" بالأسفل لإضافتها إلى مؤقت بومودورو.`;
+**الخطوة التالية المقترحة للتنفيذ فوراً**: افتح تبويب "✅ المهام وبومودورو" بالأعلى للبدء بجلسة تركيز 25 دقيقة.`;
       }
 
       if (norm.includes('لخص') || norm.includes('تلخيص')) {
@@ -1875,7 +1953,7 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
 • **النتيجة العملية**: التركيز على رفع الإنتاجية وتقليل الوقت المستغرق في الخطوات الروتينية.
 • **التوصية المباشرة**: تحويل هذه النقاط إلى إجراءات يومية محددة بجدول زمني.
 
-**الخطوة التالية المقترحة للتنفيذ فوراً**: الصق أي نص أو ارفع ملفاً من زر 📎 ليقوم Zoma AI بتحليل كافة أرقامه وفقراته.`;
+**الخطوة التالية المقترحة للتنفيذ فوراً**: الصق أي نص إضافي لتلخيصه في نقاط مركزة.`;
       }
 
       if (norm.includes('بريد') || norm.includes('رساله') || norm.includes('ايميل')) {
@@ -1895,18 +1973,12 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
 **الخطوة التالية المقترحة للتنفيذ فوراً**: انسخ النص بضغطة واحدة من زر "نسخ الإجابة" بالأسفل وأضف اسم المستلم قبل الإرسال.`;
       }
 
-      return `إليك الإجابة التحليلية والعملية المباشرة حول **"${text}"**:
-
-• **الخلاصة التنفيذية**: يرتكز التعامل الصحيح مع "${text}" على تحديد الهدف الأساسي وتقسيمه إلى 3 خطوات قابلة للتطبيق الفوري:
-  1. **جمع المعطيات الأساسية**: تحديد المتطلبات والأدوات اللازمة بدقة قبل البدء.
-  2. **التنفيذ المرحلي المنظم**: البدء بالخطوة ذات الأثر الأكبر (قاعدة 80/20) لتحقيق نتيجة ملموسة في أسرع وقت.
-  3. **القياس والتحسين**: مراجعة المخرجات والتأكد من جودتها.
-
-**الخطوة التالية المقترحة للتنفيذ فوراً**: لتخصيص الإجابة بدقة أكبر، أخبرني هل تريد **جدول مقارنة**، أم **خطة خطوة بخطوة**، أم **كود برمجي/تصميم صورة** لهذا الموضوع؟`;
+      return `بخصوص سؤالك عن **"${text}"**:
+• **نصيحة بحث سريع في Zoma AI**: للحصول على المقالة الموسوعية الكاملة أو الجدول الدقيق، اكتب اسم الموضوع مباشرة (مثل: *صلاة الفجر*، *أكثر 10 مهن مطلوبة*، *عواصم الدول العربية*، *لغات البرمجة*، *كريستيانو رونالدو*، أو *المجموعة الشمسية*).`;
     }
 
     function loadInitialState() {
-      const saved = safeGetItem('zoma_ai_state_v9_final');
+      const saved = safeGetItem('zoma_ai_state_v11_perfect');
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
@@ -2006,7 +2078,7 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
     }
 
     function saveState() {
-      safeSetItem('zoma_ai_state_v9_final', JSON.stringify(appState));
+      safeSetItem('zoma_ai_state_v11_perfect', JSON.stringify(appState));
     }
 
     // =========================================================================
@@ -2267,14 +2339,14 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
     // ترقية الصور المعروضة إلى الصورة السحابية الواقعية متى تم تحميلها بنجاح
     function upgradeSmartImagesInDOM() {
       document.querySelectorAll('img.zoma-smart-img').forEach(imgEl => {
-        const cloudSrc = imgEl.getAttribute('data-cloud');
-        if (!cloudSrc || imgEl.getAttribute('data-upgraded') === '1') return;
-        imgEl.setAttribute('data-upgraded', '1');
-        const tempImg = new Image();
-        tempImg.onload = () => {
-          imgEl.src = cloudSrc;
+        if (imgEl.getAttribute('data-bound') === '1') return;
+        imgEl.setAttribute('data-bound', '1');
+        imgEl.onerror = () => {
+          const altSrc = imgEl.getAttribute('data-cloud');
+          if (altSrc && imgEl.src !== altSrc) {
+            imgEl.src = altSrc;
+          }
         };
-        tempImg.src = cloudSrc;
       });
     }
 
@@ -3426,17 +3498,20 @@ ${userQuestion ? `• **تحليل Zoma AI المخصص**: تم ربط محتو�
         appState.dailyImagesRemaining--;
         showToast('جاري ترجمة الوصف وتصميم الصورة المطابقة بدقة 8K...');
         const engPrompt = await translateArabicPromptToEnglish(promptText);
-        const realPhoto = await fetchRealMatchedImageFromWikimedia(promptText, engPrompt);
-        const artUrl = createNaturalArtworkDataUrl(promptText, styleSel.value);
-        const seed = Math.floor(Math.random() * 999999);
-        const cloudUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(engPrompt + ', ultra realistic photography, 8k, cinematic')}?width=960&height=540&nologo=true&seed=${seed}`;
+        const seed = Math.floor(Math.random() * 899999) + 100000;
+        const fluxUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(engPrompt + ', realistic photography, 8k uhd, dslr, natural lighting, sharp focus')}?model=flux&width=960&height=540&nologo=true&enhance=true&seed=${seed}`;
+        const turboUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(engPrompt + ', realistic photo, 8k, detailed')}?model=turbo&width=960&height=540&nologo=true&seed=${seed}`;
+        let verifiedUrl = await preloadImageUrl(fluxUrl, 6500);
+        if (!verifiedUrl) verifiedUrl = await preloadImageUrl(turboUrl, 5000);
+        if (!verifiedUrl) verifiedUrl = await fetchRealMatchedImageFromWikimedia(promptText);
+        const finalStudioUrl = verifiedUrl || fluxUrl;
 
         appState.generatedImages.unshift({
           id: 'img_' + Date.now(),
           prompt: promptText,
           style: styleSel.value,
-          dataUrl: realPhoto || cloudUrl || artUrl,
-          cloudUrl: cloudUrl,
+          dataUrl: finalStudioUrl,
+          cloudUrl: fluxUrl,
           createdAt: new Date().toISOString()
         });
         pInput.value = '';
